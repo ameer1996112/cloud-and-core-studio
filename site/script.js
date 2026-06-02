@@ -435,12 +435,12 @@
   // ── 7. Social Proof Toasts ──
   const toastContainer = document.getElementById('toast-container');
   const toastMessages = [
-    { name: 'מ', text: 'מיכל מחיפה', action: 'נרשמה לשיעור ניסיון 🎉' },
-    { name: 'ס', text: 'סופיה ובתה', action: 'הזמינו סדנת אמא ובת ✨' },
-    { name: 'נ', text: 'נועה מנשר', action: 'רכשה כרטיסיית 10 שיעורים 🌸' },
-    { name: 'ר', text: 'רותם מכרמיאל', action: 'נרשמה למנוי שנתי ⭐' },
-    { name: 'ד', text: 'דנה ומשפחתה', action: 'הזמינו שיעור יום הולדת 🎈' },
-    { name: 'ל', text: 'ליה מעכו', action: 'הצטרפה לשיעורי ילדים 👧' },
+    { name: 'מ', text: 'מיכל ממעלות', action: 'נרשמה לשיעור ניסיון 🎉' },
+    { name: 'ס', text: 'סמר ובתה מחורפיש', action: 'הזמינו סדנת אמא ובת ✨' },
+    { name: 'נ', text: 'נועה מכפר ורדים', action: 'רכשה כרטיסיית 10 שיעורים 🌸' },
+    { name: 'ר', text: 'רותם מיאנוח', action: 'נרשמה למנוי שנתי ⭐' },
+    { name: 'ד', text: 'דנה ומשפחתה מחורפיש', action: 'הזמינו שיעור יום הולדת 🎈' },
+    { name: 'ל', text: 'ליה מפקיעין', action: 'הצטרפה לשיעורי ילדים 👧' },
   ];
   let toastIndex = 0;
   let toastPaused = false;
