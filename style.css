@@ -2266,3 +2266,13 @@ html[dir="rtl"] *::after {
   pointer-events: none !important;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
+/* 3. Global Mobile Bottom Spacing Offset to prevent fixed Sticky CTA overlays */
+@media(max-width: 768px) {
+  .section-pad {
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important;
+  }
+  footer {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
+  }
+}
