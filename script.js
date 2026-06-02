@@ -90,17 +90,23 @@
     });
   });
 
-  // ── Testimonials Carousel (mobile) ──
+  // ── Testimonials Carousel (mobile swipe-snapped) ──
   const track = document.getElementById('tTrack');
   const dots = document.querySelectorAll('.t-dot');
   let currentSlide = 0;
   let autoSlideTimer;
+  let isScrolling = false;
 
   function goToSlide(idx) {
     currentSlide = idx;
     if (window.innerWidth < 769) {
-      track.style.transform = `translateX(${idx * 100}%)`;
-      track.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1)';
+      const cards = track.querySelectorAll('.t-card');
+      if (cards[idx]) {
+        isScrolling = true;
+        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Clear flag after smooth scroll completes
+        setTimeout(() => { isScrolling = false; }, 600);
+      }
     }
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
   }
@@ -119,6 +125,21 @@
     });
   });
 
+  // Native swipe scroll sync
+  if (track) {
+    track.addEventListener('scroll', () => {
+      if (window.innerWidth < 769 && !isScrolling) {
+        const slideWidth = track.getBoundingClientRect().width;
+        const scrollOffset = Math.abs(track.scrollLeft);
+        const activeIdx = Math.round(scrollOffset / slideWidth);
+        if (activeIdx >= 0 && activeIdx < dots.length) {
+          currentSlide = activeIdx;
+          dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+        }
+      }
+    }, { passive: true });
+  }
+
   // Setup mobile carousel
   function setupCarousel() {
     if (window.innerWidth < 769) {
@@ -131,8 +152,7 @@
       startAutoSlide();
     } else {
       clearInterval(autoSlideTimer);
-      track.style.transform = '';
-      track.style.transition = '';
+      track.style.display = '';
       track.querySelectorAll('.t-card').forEach(card => {
         card.style.flex = '1';
       });
@@ -162,15 +182,21 @@
   document.getElementById('contactForm').addEventListener('submit', e => {
     e.preventDefault();
     const btn = e.target.querySelector('.btn-form');
-    btn.textContent = '✓ הפרטים נשלחו בהצלחה!';
-    btn.style.background = '#8A9E8C';
+    
+    // Disable form fields and button during simulated transfer
     btn.disabled = true;
+    btn.textContent = 'שולח פרטים…';
+    
     setTimeout(() => {
-      btn.textContent = 'שליחת פרטים';
-      btn.style.background = '';
-      btn.disabled = false;
-      e.target.reset();
-    }, 3000);
+      btn.textContent = '✓ הפרטים נשלחו בהצלחה!';
+      btn.style.background = '#8A9E8C';
+      setTimeout(() => {
+        btn.textContent = 'שליחת פרטים';
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 2500);
+    }, 1000);
   });
 
   // ── Cursor Light Effect ──

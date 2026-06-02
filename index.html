@@ -536,12 +536,18 @@
       <div class="contact-form-wrap reveal reveal-d2">
         <form id="contactForm">
           <div class="form-row">
-            <div class="ig"><label>שם מלא</label><input type="text" placeholder="שירה לוי" required></div>
-            <div class="ig"><label>מספר טלפון</label><input type="tel" placeholder="052-3318478" required></div>
+            <div class="ig">
+              <label for="fullname">שם מלא</label>
+              <input type="text" id="fullname" name="fullname" autocomplete="name" placeholder="שירה לוי" required>
+            </div>
+            <div class="ig">
+              <label for="phone">מספר טלפון</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="052-3318478" required>
+            </div>
           </div>
           <div class="ig">
-            <label>מסלול מועדף</label>
-            <select required>
+            <label for="plan">מסלול מועדף</label>
+            <select id="plan" name="plan" required>
               <option value="" disabled selected>בחרי אפשרות...</option>
               <option>מסלול ילדים (7-17)</option>
               <option>מסלול מבוגרים (17+)</option>
