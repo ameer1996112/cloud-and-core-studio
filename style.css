@@ -255,7 +255,7 @@ button { font-family: var(--sans); cursor: pointer; }
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 100;
+  z-index: 200;
   padding: 1.5rem 0;
   transition: all .6s var(--ease);
   background: var(--bg-glass);
@@ -353,13 +353,13 @@ button { font-family: var(--sans); cursor: pointer; }
   background: rgba(27, 35, 45, 0.95);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
-  z-index: 150;
+  z-index: 190;
   padding: 7rem 3rem 4rem;
   display: flex;
   flex-direction: column;
   gap: 0;
   transition: left .6s var(--ease);
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5);
 }
 .mobile-drawer.open { left: 0; }
 .mobile-drawer a {
@@ -378,7 +378,7 @@ button { font-family: var(--sans); cursor: pointer; }
   background: rgba(19, 25, 32, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 140;
+  z-index: 180;
   opacity: 0;
   visibility: hidden;
   transition: all .5s var(--ease);
