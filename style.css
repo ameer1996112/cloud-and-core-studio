@@ -583,6 +583,45 @@ button { font-family: var(--sans); cursor: pointer; }
     margin-bottom: 2rem;
     text-shadow: 0 4px 12px rgba(0,0,0,0.6);
   }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 1rem;
+    margin-bottom: 3.5rem;
+  }
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 1.2rem 2.8rem;
+  }
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+  }
+  .hero-stats > div {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  .hero-stat-num {
+    font-size: 2.2rem !important;
+    min-width: 75px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .hero-stat-label {
+    font-size: 0.8rem !important;
+    margin-top: 0;
+    text-align: right;
+    letter-spacing: 0.05em;
+  }
 }
 
 /* ═════════════════════════════
