@@ -2093,3 +2093,22 @@ body:hover .cursor-aura {
   overflow: hidden;
   will-change: border-radius;
 }
+
+/* ═══════════════════════════════════════════
+   RTL & HEBREW TYPOGRAPHY OVERRIDES
+   ═══════════════════════════════════════════ */
+
+/* 1. Global Hebrew letter-spacing reset (breaks Hebrew words if enabled) */
+html[dir="rtl"] *,
+html[dir="rtl"] *::before,
+html[dir="rtl"] *::after {
+  letter-spacing: normal !important;
+}
+
+/* 2. Hide WhatsApp floating button when Mobile Menu is open to prevent overlapping clashing buttons */
+.mobile-drawer.open ~ .whatsapp-btn {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: all 0.3s ease;
+}
