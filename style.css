@@ -313,7 +313,7 @@ button { font-family: var(--sans); cursor: pointer; }
   content: '';
   position: absolute;
   bottom: 0;
-  left: 0;
+  right: 0;
   width: 0;
   height: 1.5px;
   background: var(--gold);
@@ -347,7 +347,7 @@ button { font-family: var(--sans); cursor: pointer; }
 /* Mobile Drawer */
 .mobile-drawer {
   position: fixed;
-  top: 0; right: -100%;
+  top: 0; left: -100%;
   width: min(85vw, 400px);
   height: 100vh;
   background: rgba(27, 35, 45, 0.95);
@@ -358,10 +358,10 @@ button { font-family: var(--sans); cursor: pointer; }
   display: flex;
   flex-direction: column;
   gap: 0;
-  transition: right .6s var(--ease);
+  transition: left .6s var(--ease);
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
 }
-.mobile-drawer.open { right: 0; }
+.mobile-drawer.open { left: 0; }
 .mobile-drawer a {
   font-family: var(--serif);
   font-size: 1.8rem;
@@ -603,7 +603,7 @@ button { font-family: var(--sans); cursor: pointer; }
   transition: all .5s var(--ease);
 }
 .about-feat:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-.about-feat:hover { padding-left: 1rem; background: linear-gradient(to left, transparent, rgba(212,175,55,0.03)); }
+.about-feat:hover { padding-right: 1rem; background: linear-gradient(to right, transparent, rgba(212,175,55,0.03)); }
 .about-feat-num {
   font-family: var(--serif);
   font-size: 2.2rem;
