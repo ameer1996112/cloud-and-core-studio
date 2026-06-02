@@ -1,9 +1,12 @@
 (function() {
   'use strict';
 
+  document.documentElement.classList.add('js-enabled');
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── Scroll Reveal ──
+  const revealElements = Array.from(document.querySelectorAll('.reveal'));
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -11,15 +14,28 @@
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  function revealSkippedElements() {
+    revealElements.forEach(el => {
+      if (el.classList.contains('visible')) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92 || rect.bottom < 0) {
+        el.classList.add('visible');
+        revealObserver.unobserve(el);
+      }
+    });
+  }
+
+  revealElements.forEach(el => revealObserver.observe(el));
+  requestAnimationFrame(revealSkippedElements);
 
   // ── Navbar Scroll ──
   const navbar = document.getElementById('navbar');
   let lastScroll = 0;
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', scrollY > 50);
+    revealSkippedElements();
   }, { passive: true });
 
   // ── Parallax Elements ──
@@ -207,14 +223,27 @@
   // ── Form Submit Handler ──
   document.getElementById('contactForm').addEventListener('submit', e => {
     e.preventDefault();
-    const btn = e.target.querySelector('.btn-form');
-    const status = e.target.querySelector('.form-status');
+    const form = e.target;
+    const btn = form.querySelector('.btn-form');
+    const status = form.querySelector('.form-status');
+    const fallback = form.querySelector('.form-fallback');
     status.textContent = '';
-    
+    status.classList.remove('error');
+    fallback.classList.remove('visible');
+
+    if (!form.checkValidity()) {
+      const invalidField = form.querySelector(':invalid');
+      status.textContent = 'חסר פרט קטן. מלאי את השדות המסומנים וננסה שוב.';
+      status.classList.add('error');
+      if (invalidField) invalidField.focus();
+      form.reportValidity();
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'שולח פרטים…';
-    
-    setTimeout(() => {
+
+    const showSuccess = () => {
       btn.textContent = 'הפרטים נשלחו בהצלחה!';
       status.textContent = 'הפרטים התקבלו. אחזור אלייך בהקדם.';
       btn.style.background = '#8A9E8C';
@@ -222,9 +251,33 @@
         btn.textContent = 'שליחת פרטים';
         btn.style.background = '';
         btn.disabled = false;
-        e.target.reset();
+        form.reset();
       }, 2500);
-    }, 1000);
+    };
+
+    const showFailure = () => {
+      btn.textContent = 'שליחת פרטים';
+      btn.disabled = false;
+      status.textContent = 'לא הצלחתי לשלוח כרגע. אפשר לנסות שוב או לשלוח WhatsApp ישירות.';
+      status.classList.add('error');
+      fallback.classList.add('visible');
+    };
+
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) {
+      setTimeout(showSuccess, 1000);
+      return;
+    }
+
+    fetch(endpoint, {
+      method: 'POST',
+      body: new FormData(form),
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('Form submission failed');
+        showSuccess();
+      })
+      .catch(showFailure);
   });
 
   // ── Cursor Light Effect ──
@@ -335,26 +388,23 @@
       galleryTrack.scrollLeft = scrollLeft - walk;
     });
 
-    // Auto-scroll the gallery slowly
-    let galleryAutoScroll = setInterval(() => {
-      if (!isDown) {
-        galleryTrack.scrollLeft += 1;
-        // Reset to start when near end
-        if (galleryTrack.scrollLeft >= galleryTrack.scrollWidth - galleryTrack.clientWidth - 10) {
-          galleryTrack.scrollLeft = 0;
-        }
-      }
-    }, 20);
-
-    galleryTrack.addEventListener('mouseenter', () => clearInterval(galleryAutoScroll));
-    galleryTrack.addEventListener('mouseleave', () => {
+    let galleryAutoScroll;
+    function startGalleryAutoScroll() {
+      if (reduceMotion) return;
+      clearInterval(galleryAutoScroll);
       galleryAutoScroll = setInterval(() => {
-        galleryTrack.scrollLeft += 1;
-        if (galleryTrack.scrollLeft >= galleryTrack.scrollWidth - galleryTrack.clientWidth - 10) {
-          galleryTrack.scrollLeft = 0;
+        if (!isDown) {
+          galleryTrack.scrollLeft += 1;
+          if (galleryTrack.scrollLeft >= galleryTrack.scrollWidth - galleryTrack.clientWidth - 10) {
+            galleryTrack.scrollLeft = 0;
+          }
         }
-      }, 20);
-    });
+      }, 35);
+    }
+
+    startGalleryAutoScroll();
+    galleryTrack.addEventListener('mouseenter', () => clearInterval(galleryAutoScroll));
+    galleryTrack.addEventListener('mouseleave', startGalleryAutoScroll);
   }
 
   // ── 6. Sticky CTA Bar ──
