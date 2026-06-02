@@ -6,6 +6,7 @@
 <title>Cloud & Core Studio | סטודיו יוגה אווירית פרימיום ביאנוח וחורפיש</title>
 <meta name="description" content="סטודיו בוטיק ליוגה ערסלים ואקרו-יוגה פרימיום לנשים וילדים ביאנוח ג'ת ובחורפיש. שחרור עמוד השדרה, חיזוק הליבה ורוגע עמוק באוויר. הרשמו לשיעור היכרות השבוע!">
 <meta name="robots" content="index, follow">
+<meta name="theme-color" content="#131920">
 <meta property="og:title" content="Cloud & Core Studio | יוגה אווירית ביאנוח וחורפיש">
 <meta property="og:description" content="להתנתק מכוח המשיכה, למצוא את הליבה. שיעורי יוגה ערסלים לנשים וילדים בקבוצות בוטיק ביאנוח ג'ת ובחורפיש.">
 <meta property="og:image" content="images/hero.png">
@@ -18,21 +19,14 @@
 
 </head>
 <body>
+<a class="skip-link" href="#main">דלגו לתוכן</a>
 <!-- Ambient Background Orbs -->
-<div class="ambient-orb orb-1"></div>
-<div class="ambient-orb orb-2"></div>
-<div class="cursor-aura"></div>
-
-<!-- ═══════ PRELOADER ═══════ -->
-<div id="preloader">
-  <img src="images/logo-transparent.png" class="preloader-logo" alt="Cloud & Core">
-  <div class="preloader-bar-wrap">
-    <div class="preloader-bar"></div>
-  </div>
-</div>
+<div class="ambient-orb orb-1" aria-hidden="true"></div>
+<div class="ambient-orb orb-2" aria-hidden="true"></div>
+<div class="cursor-aura" aria-hidden="true"></div>
 
 <!-- ═══════ STICKY CTA BAR ═══════ -->
-<div id="sticky-cta" aria-hidden="true">
+<div id="sticky-cta" aria-hidden="true" inert>
   <p class="sticky-cta-text"><strong>Cloud &amp; Core Studio</strong> — יאנוח וחורפיש</p>
   <a href="#contact" class="btn btn-primary magnetic" style="padding:.8rem 2rem;font-size:.8rem;">שיעור היכרות ←</a>
 </div>
@@ -41,17 +35,17 @@
 <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <!-- Ambient Glow Orbs -->
-<div class="ambient-glow glow-1"></div>
-<div class="ambient-glow glow-2"></div>
-<div class="ambient-glow glow-3"></div>
-<div class="cursor-light" id="cursorLight"></div>
+<div class="ambient-glow glow-1" aria-hidden="true"></div>
+<div class="ambient-glow glow-2" aria-hidden="true"></div>
+<div class="ambient-glow glow-3" aria-hidden="true"></div>
+<div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
 
 <!-- ═══════ NAVBAR ═══════ -->
-<nav class="navbar" id="navbar">
+<nav class="navbar" id="navbar" aria-label="ניווט ראשי">
   <div class="nav-inner">
     <a href="#hero" class="nav-brand">
       <div class="nav-logo">
-        <img src="images/logo-transparent.png" alt="Cloud &amp; Core Studio Logo" />
+        <img src="images/logo-transparent.png" width="471" height="136" alt="Cloud &amp; Core Studio Logo" />
       </div>
     </a>
     <div class="nav-links">
@@ -64,15 +58,15 @@
     <div class="nav-cta">
       <a href="#contact" class="btn btn-primary magnetic">שיעור היכרות</a>
     </div>
-    <button class="hamburger" id="hamburger" aria-label="תפריט">
+    <button type="button" class="hamburger" id="hamburger" aria-label="תפריט" aria-controls="mobileDrawer" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
 <!-- Mobile Drawer -->
-<div class="mobile-overlay" id="mobileOverlay"></div>
-<div class="mobile-drawer" id="mobileDrawer">
+<div class="mobile-overlay" id="mobileOverlay" aria-hidden="true"></div>
+<div class="mobile-drawer" id="mobileDrawer" aria-hidden="true" inert>
   <a href="#about">הפילוסופיה שלי</a>
   <a href="#classes">מסלולים</a>
   <a href="#pricing">מחירון</a>
@@ -81,15 +75,16 @@
   <a href="#contact" class="btn btn-gold">שיעור היכרות</a>
 </div>
 
+<main id="main">
 <!-- ═══════ HERO ═══════ -->
 <section class="hero" id="hero">
   <div class="hero-content">
-    <h1 class="kicker reveal">ברוכות הבאות לסטודיו שלי ביאנוח וחורפיש</h1>
-    <h2 class="heading-xl hero-h1 reveal reveal-d1">
+    <p class="kicker reveal">ברוכות הבאות לסטודיו שלי ביאנוח וחורפיש</p>
+    <h1 class="heading-xl hero-h1 reveal reveal-d1">
       מקום לנשום,<br>
       <em class="text-outline">להתמתח,</em><br>
       ופשוט לעוף.
-    </h2>
+    </h1>
     <p class="hero-desc reveal reveal-d2">
       הסטודיו שלי הוא הבית השני שלכן. מקום שבו אנחנו משאירות את הדאגות מחוץ לדלת, נכנסות לתוך ערסל רך, ונותנות לגוף ולנפש את המרחב שהם צריכים. מושלם לנשים וילדים בכל הרמות.
     </p>
@@ -113,9 +108,9 @@
     </div>
   </div>
   <div class="hero-visual">
-    <img src="images/hero.png" alt="יוגה ערסלים בסטודיו Cloud & Core" id="heroImg" fetchpriority="high" loading="eager" class="float parallax" data-speed="0.05">
+    <img src="images/hero.png" width="1024" height="1024" alt="יוגה ערסלים בסטודיו Cloud & Core" id="heroImg" fetchpriority="high" loading="eager" class="float parallax" data-speed="0.05">
   </div>
-  <div class="hero-scroll">
+  <div class="hero-scroll" aria-hidden="true">
     <div class="hero-scroll-line"></div>
     <span>גלול</span>
   </div>
@@ -183,8 +178,8 @@
         </div>
       </div>
       <div class="about-imgs reveal reveal-d2">
-        <img src="images/studio-interior.png" alt="סטודיו Cloud & Core" class="about-img-main float">
-        <img src="images/women-class.png" alt="שיעור נשים" class="about-img-sub float float-d1">
+        <img src="images/studio-interior.png" width="1024" height="1024" alt="סטודיו Cloud & Core" class="about-img-main float">
+        <img src="images/women-class.png" width="1024" height="1024" alt="שיעור נשים" class="about-img-sub float float-d1">
         <div class="about-badge">5.0<span>גוגל</span></div>
       </div>
     </div>
@@ -197,7 +192,7 @@
     <div class="founder-grid">
       <div class="founder-img-wrap reveal">
         <div class="founder-glow"></div>
-        <img src="images/founder.png" alt="מייסדת ומדריכה" class="founder-img img-progressive parallax" data-speed="0.03">
+        <img src="images/founder.png" width="1024" height="1024" alt="מייסדת ומדריכה" class="founder-img img-progressive parallax" data-speed="0.03">
       </div>
       <div class="founder-content">
         <div class="kicker reveal">מי אני?</div>
@@ -234,7 +229,7 @@
       <div class="premium-class-row reveal">
         <div class="p-class-visual">
           <div class="p-class-img-arch">
-            <img src="images/class_kids.png" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy">
+            <img src="images/class_kids.png" width="1024" height="1024" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy">
           </div>
           <div class="p-class-badge">👧 גילאי 7-17</div>
         </div>
@@ -250,7 +245,7 @@
       <div class="premium-class-row reversed reveal reveal-d1">
         <div class="p-class-visual">
           <div class="p-class-img-arch">
-            <img src="images/class_adults.png" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy">
+            <img src="images/class_adults.png" width="1024" height="1024" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy">
           </div>
           <div class="p-class-badge">🌸 גילאי 17+</div>
         </div>
@@ -266,7 +261,7 @@
       <div class="premium-class-row reveal reveal-d1">
         <div class="p-class-visual">
           <div class="p-class-img-arch">
-            <img src="images/class_birthdays.png" alt="ימי הולדת בסטודיו ליוגה ערסלים" loading="lazy">
+            <img src="images/class_birthdays.png" width="1024" height="1024" alt="ימי הולדת בסטודיו ליוגה ערסלים" loading="lazy">
           </div>
           <div class="p-class-badge">🎈 חגיגה באוויר</div>
         </div>
@@ -282,7 +277,7 @@
       <div class="premium-class-row reversed reveal reveal-d2">
         <div class="p-class-visual">
           <div class="p-class-img-arch">
-            <img src="images/class_couples.png" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy">
+            <img src="images/class_couples.png" width="1024" height="1024" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy">
           </div>
           <div class="p-class-badge">❤️ זמן בשניים</div>
         </div>
@@ -298,7 +293,7 @@
       <div class="premium-class-row reveal reveal-d2">
         <div class="p-class-visual">
           <div class="p-class-img-arch">
-            <img src="images/class_mother_daughter.png" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy">
+            <img src="images/class_mother_daughter.png" width="1024" height="1024" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy">
           </div>
           <div class="p-class-badge">👩‍👧 זיכרונות מתוקים</div>
         </div>
@@ -324,8 +319,8 @@
     <div class="pricing-toggle reveal">
       <div class="ptoggle">
         <div class="ptoggle-bg" id="ptBg"></div>
-        <button class="active" data-t="adults">מבוגרים</button>
-        <button data-t="kids">ילדים</button>
+        <button type="button" class="active" data-t="adults" aria-pressed="true">מבוגרים</button>
+        <button type="button" data-t="kids" aria-pressed="false">ילדים</button>
       </div>
     </div>
 
@@ -381,7 +376,7 @@
 
 <!-- ═══════ STUDIO STRIP ═══════ -->
 <div class="studio-strip">
-  <img src="images/group-class.png" alt="סטודיו Cloud & Core" id="studioImg">
+  <img src="images/group-class.png" width="1024" height="1024" alt="סטודיו Cloud & Core" id="studioImg">
   <div class="studio-strip-overlay">
     <p class="studio-quote reveal">"הגוף שלך, השמיים הם הגבול."</p>
   </div>
@@ -430,9 +425,9 @@
       </div>
     </div>
     <div class="t-dots" id="tDots">
-      <button class="t-dot active" data-slide="0"></button>
-      <button class="t-dot" data-slide="1"></button>
-      <button class="t-dot" data-slide="2"></button>
+      <button type="button" class="t-dot active" data-slide="0" aria-label="המלצה 1" aria-current="true"></button>
+      <button type="button" class="t-dot" data-slide="1" aria-label="המלצה 2" aria-current="false"></button>
+      <button type="button" class="t-dot" data-slide="2" aria-label="המלצה 3" aria-current="false"></button>
     </div>
   </div>
 </section>
@@ -450,28 +445,28 @@
     <div class="gallery-fade-left"></div>
     <div class="gallery-track" id="galleryTrack">
       <div class="gallery-item">
-        <img src="images/gallery-1.png" alt="שיעור קבוצתי בסטודיו" loading="lazy" class="img-progressive">
+        <img src="images/gallery-1.png" width="1024" height="1024" alt="שיעור קבוצתי בסטודיו" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/class_adults.png" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy" class="img-progressive">
+        <img src="images/class_adults.png" width="1024" height="1024" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/gallery-2.png" alt="פרטי הסטודיו" loading="lazy" class="img-progressive">
+        <img src="images/gallery-2.png" width="1024" height="1024" alt="פרטי הסטודיו" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/class_mother_daughter.png" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy" class="img-progressive">
+        <img src="images/class_mother_daughter.png" width="1024" height="1024" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/studio-interior.png" alt="פנים הסטודיו" loading="lazy" class="img-progressive">
+        <img src="images/studio-interior.png" width="1024" height="1024" alt="פנים הסטודיו" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/class_couples.png" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy" class="img-progressive">
+        <img src="images/class_couples.png" width="1024" height="1024" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/class_kids.png" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy" class="img-progressive">
+        <img src="images/class_kids.png" width="1024" height="1024" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy" class="img-progressive">
       </div>
       <div class="gallery-item">
-        <img src="images/group-class.png" alt="שיעור קבוצתי" loading="lazy" class="img-progressive">
+        <img src="images/group-class.png" width="1024" height="1024" alt="שיעור קבוצתי" loading="lazy" class="img-progressive">
       </div>
     </div>
   </div>
@@ -484,23 +479,23 @@
       <h2 class="heading-lg" style="text-align:center;">שאלות נפוצות.</h2>
     </div>
     <div class="faq-item">
-      <button class="faq-q"><span>האם זה בטוח? מה קורה אם הערסל נקרע?</span><span class="faq-icon"></span></button>
+      <button type="button" class="faq-q" aria-expanded="false"><span>האם זה בטוח? מה קורה אם הערסל נקרע?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-ans"><p>בטיחות היא אבן היסוד שלנו. כל ערסל עשוי מבד משי ייעודי בעל כושר נשיאה של עד 450 ק"ג, ומחובר לקורות פלדה הנדסיות. מעולם לא היה אירוע בטיחות בסטודיו.</p></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q"><span>אין לי רקע קודם ביוגה, האם זה מתאים לי?</span><span class="faq-icon"></span></button>
+      <button type="button" class="faq-q" aria-expanded="false"><span>אין לי רקע קודם ביוגה, האם זה מתאים לי?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-ans"><p>בהחלט! רוב המתאמנות מגיעות ללא כל רקע קודם. המדריכות מתאימות את גובה הערסל וקושי התנוחות באופן אישי לכל מתאמנת.</p></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q"><span>מאיזה גיל מתאימים שיעורי הילדים?</span><span class="faq-icon"></span></button>
+      <button type="button" class="faq-q" aria-expanded="false"><span>מאיזה גיל מתאימים שיעורי הילדים?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-ans"><p>השיעורים מותאמים לילדים וילדות החל מגיל 7 עד 12. הקבוצות מחולקות לפי שכבות גיל להתאמה מיטבית.</p></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q"><span>מה מגבלת המשקל לריחוף בערסלים?</span><span class="faq-icon"></span></button>
+      <button type="button" class="faq-q" aria-expanded="false"><span>מה מגבלת המשקל לריחוף בערסלים?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-ans"><p>הערסלים נושאים משקל רב, אך מגבלת המשקל המעשית לאימון נוח היא עד 120 ק"ג למתאמנת.</p></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q"><span>האם הכיתות מופרדות ילדים ומבוגרים?</span><span class="faq-icon"></span></button>
+      <button type="button" class="faq-q" aria-expanded="false"><span>האם הכיתות מופרדות ילדים ומבוגרים?</span><span class="faq-icon" aria-hidden="true"></span></button>
       <div class="faq-ans"><p>כן, בהחלט. שיעורי הילדים (7-12) מופרדים לגמרי משיעורי המבוגרים. כל קבוצה מקבלת תוכנית מותאמת לגיל ולמטרות שלה.</p></div>
     </div>
   </div>
@@ -538,17 +533,17 @@
           <div class="form-row">
             <div class="ig">
               <label for="fullname">שם מלא</label>
-              <input type="text" id="fullname" name="fullname" autocomplete="name" placeholder="שירה לוי" required>
+              <input type="text" id="fullname" name="fullname" autocomplete="name" placeholder="לדוגמה: שירה לוי" required>
             </div>
             <div class="ig">
               <label for="phone">מספר טלפון</label>
-              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="052-3318478" required>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="לדוגמה: 052-3318478" required>
             </div>
           </div>
           <div class="ig">
             <label for="plan">מסלול מועדף</label>
             <select id="plan" name="plan" required>
-              <option value="" disabled selected>בחרי אפשרות...</option>
+              <option value="" disabled selected>בחרי אפשרות…</option>
               <option>מסלול ילדים (7-17)</option>
               <option>מסלול מבוגרים (17+)</option>
               <option>מסלול ימי הולדת</option>
@@ -557,12 +552,14 @@
             </select>
           </div>
           <button type="submit" class="btn-form">שליחת פרטים</button>
+          <p class="form-status" aria-live="polite"></p>
           <p class="form-note">הפרטים מאובטחים · אחזור אלייך בהקדם</p>
         </form>
       </div>
     </div>
   </div>
 </section>
+</main>
 
 <!-- ═══════ WHATSAPP ═══════ -->
 <a href="https://wa.me/972523318478" target="_blank" rel="noopener" class="whatsapp-btn" aria-label="שלחו הודעת WhatsApp">
@@ -578,15 +575,15 @@
       <!-- Column 1: Brand -->
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="images/logo-transparent.png" alt="Cloud &amp; Core Studio Logo" />
+          <img src="images/logo-transparent.png" width="471" height="136" alt="Cloud &amp; Core Studio Logo" />
         </div>
         <p>סטודיו ליוגה ערסלים באווירה ביתית ביאנוח וחורפיש.<br>מקום ליהנות מהתנועה, לפרוק מתח ולעוף יחד.</p>
         <div class="footer-socials">
           <a href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
           <a href="#" aria-label="Facebook">
-            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
         </div>
       </div>

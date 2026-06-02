@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ── Scroll Reveal ──
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -23,23 +25,25 @@
   // ── Parallax Elements ──
   const parallaxElements = document.querySelectorAll('.parallax');
   let ticking = false;
-  
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        parallaxElements.forEach(el => {
-          const rect = el.parentElement.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            const speed = parseFloat(el.getAttribute('data-speed')) || 0.05;
-            const yOffset = (window.innerHeight - rect.top) * speed;
-            el.style.transform = `translateY(${yOffset}px)`;
-          }
+
+  if (!reduceMotion) {
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          parallaxElements.forEach(el => {
+            const rect = el.parentElement.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              const speed = parseFloat(el.getAttribute('data-speed')) || 0.05;
+              const yOffset = (window.innerHeight - rect.top) * speed;
+              el.style.transform = `translateY(${yOffset}px)`;
+            }
+          });
+          ticking = false;
         });
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
 
   // ── Mobile Menu ──
   const hamburger = document.getElementById('hamburger');
@@ -48,10 +52,15 @@
 
   function toggleMenu() {
     const isOpen = drawer.classList.contains('open');
-    hamburger.classList.toggle('active');
-    drawer.classList.toggle('open');
-    overlay.classList.toggle('open');
-    document.body.style.overflow = isOpen ? '' : 'hidden';
+    const nextOpen = !isOpen;
+    hamburger.classList.toggle('active', nextOpen);
+    hamburger.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+    drawer.classList.toggle('open', nextOpen);
+    drawer.toggleAttribute('inert', !nextOpen);
+    drawer.setAttribute('aria-hidden', nextOpen ? 'false' : 'true');
+    overlay.classList.toggle('open', nextOpen);
+    overlay.setAttribute('aria-hidden', nextOpen ? 'false' : 'true');
+    document.body.style.overflow = nextOpen ? 'hidden' : '';
   }
 
   hamburger.addEventListener('click', toggleMenu);
@@ -64,14 +73,17 @@
 
   // ── FAQ Accordion ──
   document.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-q').addEventListener('click', () => {
+    const button = item.querySelector('.faq-q');
+    button.addEventListener('click', () => {
       const isOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item').forEach(i => {
         i.classList.remove('open');
         i.querySelector('.faq-ans').style.maxHeight = null;
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
       });
       if (!isOpen) {
         item.classList.add('open');
+        button.setAttribute('aria-expanded', 'true');
         item.querySelector('.faq-ans').style.maxHeight =
           item.querySelector('.faq-ans').scrollHeight + 'px';
       }
@@ -82,8 +94,12 @@
   const ptBg = document.getElementById('ptBg');
   document.querySelectorAll('.ptoggle button').forEach((btn, idx) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.ptoggle button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.ptoggle button').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
       ptBg.style.transform = idx === 1 ? 'translateX(-100%)' : 'translateX(0)';
       document.querySelectorAll('.pgrid').forEach(g => g.classList.remove('active'));
       document.getElementById('pg-' + btn.dataset.t).classList.add('active');
@@ -97,31 +113,36 @@
   let autoSlideTimer;
   let isScrolling = false;
 
+  function updateDots(idx) {
+    dots.forEach((d, i) => {
+      const active = i === idx;
+      d.classList.toggle('active', active);
+      d.setAttribute('aria-current', active ? 'true' : 'false');
+    });
+  }
+
   function goToSlide(idx) {
     currentSlide = idx;
     if (window.innerWidth < 769) {
       const cards = track.querySelectorAll('.t-card');
       if (cards[idx]) {
         isScrolling = true;
-        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        cards[idx].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
         // Clear flag after smooth scroll completes
         setTimeout(() => { isScrolling = false; }, 600);
       }
     }
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    updateDots(idx);
   }
 
   function startAutoSlide() {
-    autoSlideTimer = setInterval(() => {
-      goToSlide((currentSlide + 1) % 3);
-    }, 5000);
+    clearInterval(autoSlideTimer);
   }
 
   dots.forEach(dot => {
     dot.addEventListener('click', () => {
       clearInterval(autoSlideTimer);
       goToSlide(parseInt(dot.dataset.slide));
-      startAutoSlide();
     });
   });
 
@@ -134,7 +155,11 @@
         const activeIdx = Math.round(scrollOffset / slideWidth);
         if (activeIdx >= 0 && activeIdx < dots.length) {
           currentSlide = activeIdx;
-          dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+          dots.forEach((d, i) => {
+            const active = i === activeIdx;
+            d.classList.toggle('active', active);
+            d.setAttribute('aria-current', active ? 'true' : 'false');
+          });
         }
       }
     }, { passive: true });
@@ -148,8 +173,7 @@
         card.style.flex = '0 0 100%';
         card.style.minWidth = '0';
       });
-      goToSlide(currentSlide);
-      startAutoSlide();
+      updateDots(currentSlide);
     } else {
       clearInterval(autoSlideTimer);
       track.style.display = '';
@@ -168,12 +192,14 @@
   // ── Smooth Scroll ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
       const href = a.getAttribute('href');
       if (href === '#') return;
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        history.pushState(null, '', href);
       }
     });
   });
@@ -182,13 +208,15 @@
   document.getElementById('contactForm').addEventListener('submit', e => {
     e.preventDefault();
     const btn = e.target.querySelector('.btn-form');
+    const status = e.target.querySelector('.form-status');
+    status.textContent = '';
     
-    // Disable form fields and button during simulated transfer
     btn.disabled = true;
     btn.textContent = 'שולח פרטים…';
     
     setTimeout(() => {
-      btn.textContent = '✓ הפרטים נשלחו בהצלחה!';
+      btn.textContent = 'הפרטים נשלחו בהצלחה!';
+      status.textContent = 'הפרטים התקבלו. אחזור אלייך בהקדם.';
       btn.style.background = '#8A9E8C';
       setTimeout(() => {
         btn.textContent = 'שליחת פרטים';
@@ -201,7 +229,7 @@
 
   // ── Cursor Light Effect ──
   const cursorLight = document.getElementById('cursorLight');
-  if (cursorLight && window.innerWidth > 768) {
+  if (cursorLight && window.innerWidth > 768 && !reduceMotion) {
     let raf;
     document.addEventListener('mousemove', (e) => {
       if (raf) cancelAnimationFrame(raf);
@@ -213,21 +241,6 @@
         }
       });
     });
-  }
-
-  // ── 1. Preloader ──
-  const preloader = document.getElementById('preloader');
-  if (preloader) {
-    const alreadySeen = sessionStorage.getItem('preloaderSeen');
-    if (alreadySeen) {
-      preloader.style.display = 'none';
-    } else {
-      sessionStorage.setItem('preloaderSeen', '1');
-      setTimeout(() => {
-        preloader.classList.add('hide');
-        setTimeout(() => { preloader.style.display = 'none'; }, 1000);
-      }, 2200);
-    }
   }
 
   // ── 2. Animated Number Counters ──
@@ -350,6 +363,7 @@
   const contactSection = document.getElementById('contact');
   const whatsappBtn = document.querySelector('.whatsapp-btn');
   if (stickyCta) {
+    stickyCta.inert = true;
     window.addEventListener('scroll', () => {
       if (!heroSection || !contactSection) return;
       const heroBottom = heroSection.getBoundingClientRect().bottom;
@@ -357,10 +371,12 @@
       if (heroBottom < 0 && contactTop > window.innerHeight) {
         stickyCta.classList.add('visible');
         stickyCta.setAttribute('aria-hidden', 'false');
+        stickyCta.inert = false;
         if (whatsappBtn) whatsappBtn.classList.add('lifted');
       } else {
         stickyCta.classList.remove('visible');
         stickyCta.setAttribute('aria-hidden', 'true');
+        stickyCta.inert = true;
         if (whatsappBtn) whatsappBtn.classList.remove('lifted');
       }
     }, { passive: true });
