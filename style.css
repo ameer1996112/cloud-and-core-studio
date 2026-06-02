@@ -327,22 +327,27 @@ button { font-family: var(--sans); cursor: pointer; }
 .hamburger {
   display: none;
   flex-direction: column;
-  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
-  padding: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
   z-index: 200;
+  padding: 0;
 }
 .hamburger span {
-  width: 26px;
+  width: 24px;
   height: 1.5px;
   background: var(--gold);
   transition: all .4s var(--ease);
   transform-origin: center;
 }
-.hamburger.active span:first-child { transform: translateY(9.5px) rotate(45deg); }
+.hamburger.active span:first-child { transform: translateY(7.5px) rotate(45deg); }
 .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger.active span:last-child { transform: translateY(-9.5px) rotate(-45deg); }
+.hamburger.active span:last-child { transform: translateY(-7.5px) rotate(-45deg); }
 
 /* Mobile Drawer */
 .mobile-drawer {
