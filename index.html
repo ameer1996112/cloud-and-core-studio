@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud & Core Studio | סטודיו יוגה אווירית פרימיום ביאנוח וחורפיש</title>
+<meta name="description" content="סטודיו בוטיק ליוגה ערסלים ואקרו-יוגה פרימיום לנשים וילדים ביאנוח ג'ת ובחורפיש. שחרור עמוד השדרה, חיזוק הליבה ורוגע עמוק באוויר. הרשמו לשיעור היכרות השבוע!">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Cloud & Core Studio | יוגה אווירית ביאנוח וחורפיש">
+<meta property="og:description" content="להתנתק מכוח המשיכה, למצוא את הליבה. שיעורי יוגה ערסלים לנשים וילדים בקבוצות בוטיק ביאנוח ג'ת ובחורפיש.">
+<meta property="og:image" content="images/hero.png">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://cloudandcore.co.il/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<!-- Ambient Background Orbs -->
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+<div class="cursor-aura"></div>
+
+<!-- ═══════ PRELOADER ═══════ -->
+<div id="preloader">
+  <img src="images/logo-transparent.png" class="preloader-logo" alt="Cloud & Core">
+  <div class="preloader-bar-wrap">
+    <div class="preloader-bar"></div>
+  </div>
+</div>
+
+<!-- ═══════ STICKY CTA BAR ═══════ -->
+<div id="sticky-cta" aria-hidden="true">
+  <p class="sticky-cta-text"><strong>Cloud &amp; Core Studio</strong> — יאנוח וחורפיש</p>
+  <a href="#contact" class="btn btn-primary magnetic" style="padding:.8rem 2rem;font-size:.8rem;">שיעור היכרות ←</a>
+</div>
+
+<!-- ═══════ SOCIAL PROOF TOASTS ═══════ -->
+<div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Ambient Glow Orbs -->
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+<div class="ambient-glow glow-3"></div>
+<div class="cursor-light" id="cursorLight"></div>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-brand">
+      <div class="nav-logo">
+        <img src="images/logo-transparent.png" alt="Cloud &amp; Core Studio Logo" />
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#about">הפילוסופיה שלי</a>
+      <a href="#classes">מסלולים</a>
+      <a href="#pricing">מחירון</a>
+      <a href="#testimonials">המלצות</a>
+      <a href="#faq">שאלות</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-primary magnetic">שיעור היכרות</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="תפריט">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="#about">הפילוסופיה שלי</a>
+  <a href="#classes">מסלולים</a>
+  <a href="#pricing">מחירון</a>
+  <a href="#testimonials">המלצות</a>
+  <a href="#faq">שאלות נפוצות</a>
+  <a href="#contact" class="btn btn-gold">שיעור היכרות</a>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <h1 class="kicker reveal">ברוכות הבאות לסטודיו שלי ביאנוח וחורפיש</h1>
+    <h2 class="heading-xl hero-h1 reveal reveal-d1">
+      מקום לנשום,<br>
+      <em class="text-outline">להתמתח,</em><br>
+      ופשוט לעוף.
+    </h2>
+    <p class="hero-desc reveal reveal-d2">
+      הסטודיו שלי הוא הבית השני שלכן. מקום שבו אנחנו משאירות את הדאגות מחוץ לדלת, נכנסות לתוך ערסל רך, ונותנות לגוף ולנפש את המרחב שהם צריכים. מושלם לנשים וילדים בכל הרמות.
+    </p>
+    <div class="hero-actions reveal reveal-d3">
+      <a href="#contact" class="btn btn-primary magnetic">בואו לעוף איתי</a>
+      <a href="#classes" class="btn btn-outline">מה אנחנו עושות פה?</a>
+    </div>
+    <div class="hero-stats reveal reveal-d4">
+      <div>
+        <span class="hero-stat-num" data-count="5.0" data-suffix="">5.0</span>
+        <span class="hero-stat-label">★★★★★ ביקורות גוגל</span>
+      </div>
+      <div>
+        <span class="hero-stat-num" data-count="500" data-suffix="+">500+</span>
+        <span class="hero-stat-label">מתאמנות מרוצות</span>
+      </div>
+      <div>
+        <span class="hero-stat-num" data-count="100" data-suffix="%">100%</span>
+        <span class="hero-stat-label">בטיחות וליווי צמוד</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img src="images/hero.png" alt="יוגה ערסלים בסטודיו Cloud & Core" id="heroImg" fetchpriority="high" loading="eager" class="float parallax" data-speed="0.05">
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>גלול</span>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item">יוגה ערסלים באווירה ביתית<span class="marquee-dot"></span></span>
+    <span class="marquee-item">זמן איכות אמא ובת<span class="marquee-dot"></span></span>
+    <span class="marquee-item">קבוצות קטנות ואינטימיות<span class="marquee-dot"></span></span>
+    <span class="marquee-item">המון צחוק ורוגע<span class="marquee-dot"></span></span>
+    <span class="marquee-item">תמיכה אישית שלי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">מקום להיות את<span class="marquee-dot"></span></span>
+    <span class="marquee-item">יאנוח וחורפיש<span class="marquee-dot"></span></span>
+    <span class="marquee-item">ניקוי ראש אמיתי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">יוגה ערסלים באווירה ביתית<span class="marquee-dot"></span></span>
+    <span class="marquee-item">זמן איכות אמא ובת<span class="marquee-dot"></span></span>
+    <span class="marquee-item">קבוצות קטנות ואינטימיות<span class="marquee-dot"></span></span>
+    <span class="marquee-item">המון צחוק ורוגע<span class="marquee-dot"></span></span>
+    <span class="marquee-item">תמיכה אישית שלי<span class="marquee-dot"></span></span>
+    <span class="marquee-item">מקום להיות את<span class="marquee-dot"></span></span>
+    <span class="marquee-item">יאנוח וחורפיש<span class="marquee-dot"></span></span>
+    <span class="marquee-item">ניקוי ראש אמיתי<span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<section class="about section-pad" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="kicker reveal">למה פתחתי את הסטודיו?</div>
+        <h2 class="heading-lg about-h2 reveal reveal-d1">לעשות פאוזה לרעש,<br>ולנשום מחדש.</h2>
+        <p class="about-p reveal reveal-d2">אני רואה כמה כולנו רצות סביב השעון—עבודה, ילדים, לחצים, מסכים. חיפשתי מקום שבו אפשר פשוט לעצור, לפרוק את המתח מהכתפיים, ולתת לגוף חיבוק אמיתי. וכשלא מצאתי בדיוק את מה שרציתי, החלטתי ליצור אותו.</p>
+        <p class="about-p reveal reveal-d2">ככה נולד הסטודיו. לא עוד "מכון כושר קשוח", אלא מקום חם, עוטף, ובטוח. מקום שבו אפשר גם לצחוק כשנופלים מהערסל, וגם למצוא שקט עמוק בסוף השיעור.</p>
+        
+        <div class="ai-seo-definition reveal reveal-d2" style="margin: 2rem 0; padding: 1.5rem; background: rgba(255,255,255,0.03); border-right: 4px solid var(--gold); border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.06); border-right: 4px solid var(--gold);">
+          <h3 style="font-size: 1.1rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 600;">מה אנחנו בעצם עושות ביוגה ערסלים?</h3>
+          <p style="font-size: 0.95rem; line-height: 1.7; color: rgba(255,255,255,0.65); margin-bottom: 0;"><strong>יוגה ערסלים (Aerial Yoga)</strong> היא דרך מדהימה לחזק את הגוף ולשחרר את הגב, הכל בעזרת ערסל משי תלוי שנותן תמיכה מלאה. הערסל מחזיק אותך, עוזר לך להימתח בלי כאב, ונותן תחושה של קלילות וריחוף. אין צורך בניסיון קודם—כל אחת יכולה להתחיל לעוף.</p>
+        </div>
+
+        <div class="about-features">
+          <div class="about-feat reveal reveal-d1">
+            <span class="about-feat-num">01</span>
+            <div>
+              <h3>בטיחות מעל הכל</h3>
+              <p>אל תדאגו—הערסלים שלנו חזקים במיוחד (מחזיקים עד 450 ק"ג!), כדי שתוכלו לשחרר ולהרפות בביטחון מלא.</p>
+            </div>
+          </div>
+          <div class="about-feat reveal reveal-d2">
+            <span class="about-feat-num">02</span>
+            <div>
+              <h3>יד ביד איתי</h3>
+              <p>אני פה ללוות אתכן. גם אם מעולם לא התאמנתן, אני אסביר, אתמוך ואעזור בכל תנוחה בקצב שלכן.</p>
+            </div>
+          </div>
+          <div class="about-feat reveal reveal-d3">
+            <span class="about-feat-num">03</span>
+            <div>
+              <h3>אינטימי ומשפחתי</h3>
+              <p>אין פה המון אנשים ורעש. הקבוצות קטנות, ככה שאני רואה ומכירה כל אחת ואחת שמגיעה אליי.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-imgs reveal reveal-d2">
+        <img src="images/studio-interior.png" alt="סטודיו Cloud & Core" class="about-img-main float">
+        <img src="images/women-class.png" alt="שיעור נשים" class="about-img-sub float float-d1">
+        <div class="about-badge">5.0<span>גוגל</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOUNDER BIO ═══════ -->
+<section class="founder section-pad" id="founder">
+  <div class="container">
+    <div class="founder-grid">
+      <div class="founder-img-wrap reveal">
+        <div class="founder-glow"></div>
+        <img src="images/founder.png" alt="מייסדת ומדריכה" class="founder-img img-progressive parallax" data-speed="0.03">
+      </div>
+      <div class="founder-content">
+        <div class="kicker reveal">מי אני?</div>
+        <blockquote class="founder-quote reveal reveal-d1">
+          "האמנתי שכולנו צריכות מקום אחד שבו אפשר לנשום, <em>לצחוק ולעוף</em> — אז יצרתי אותו."
+        </blockquote>
+        <div class="reveal reveal-d2">
+          <p class="founder-name">ירין</p>
+          <p class="founder-title">מייסדת ומדריכה ראשית · Cloud &amp; Core Studio</p>
+        </div>
+        <p class="about-p reveal reveal-d2" style="font-size:1rem;">
+          התחלתי לתרגל יוגה ערסלים אחרי שנים של כאבי גב כרוניים. כשגיליתי כמה שחרור הגוף בתוך הערסל משנה הכל — הבנתי שזה מה שאני רוצה לתת לנשים אחרות. כיום אני מדריכה מוסמכת עם שנות ניסיון, ולכל שיעור אני מגיעה עם אותו לב פתוח.
+        </p>
+        <div class="founder-badges reveal reveal-d3">
+          <span class="founder-badge">✦ 8+ שנות ניסיון</span>
+          <span class="founder-badge">✦ הסמכה בינלאומית</span>
+          <span class="founder-badge">✦ 500+ מתאמנות</span>
+          <span class="founder-badge">✦ דירוג 5.0 בגוגל</span>
+        </div>
+        <a href="#contact" class="btn btn-primary reveal reveal-d3" style="margin-top:1rem;align-self:flex-start;">בואי להכיר אותי ←</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CLASSES ═══════ -->
+<section class="classes section-pad" id="classes">
+  <div class="container">
+    <div class="kicker reveal">מה קורה אצלנו בסטודיו?</div>
+    <h2 class="heading-lg reveal reveal-d1">בואי למצוא את<br><span class="text-outline">הקצב שלך.</span></h2>
+    <div class="premium-classes-list">
+      
+      <!-- Class 1 -->
+      <div class="premium-class-row reveal">
+        <div class="p-class-visual">
+          <div class="p-class-img-arch">
+            <img src="images/class_kids.png" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy">
+          </div>
+          <div class="p-class-badge">👧 גילאי 7-17</div>
+        </div>
+        <div class="p-class-info">
+          <div class="p-class-meta"><span>⏱ 45 דקות</span><span>🤸‍♀️ המון אנרגיה</span></div>
+          <h3>מסלול ילדים ונערות</h3>
+          <p>המקום המושלם לגילאי 7 עד 17 לפרוק אנרגיה, להתחזק, ולבנות ביטחון עצמי דרך תנועה, משחק והמון כיף באוויר.</p>
+          <a href="#contact" class="p-class-link">לפרטים והרשמה ←</a>
+        </div>
+      </div>
+
+      <!-- Class 2 -->
+      <div class="premium-class-row reversed reveal reveal-d1">
+        <div class="p-class-visual">
+          <div class="p-class-img-arch">
+            <img src="images/class_adults.png" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy">
+          </div>
+          <div class="p-class-badge">🌸 גילאי 17+</div>
+        </div>
+        <div class="p-class-info">
+          <div class="p-class-meta"><span>⏱ 60 דקות</span><span>✨ קבוצת בוגרות</span></div>
+          <h3>מסלול מבוגרים (17+)</h3>
+          <p>זמן שהוא רק שלך (מגיל 17 ומעלה). נתחיל בחימום רך, נעבור לחיזוק שרירי הליבה, ונסיים בהרפיה עמוקה בתוך הערסל שעוטף אותנו כמו גולם.</p>
+          <a href="#contact" class="p-class-link">דברי איתי לקביעת שיעור ←</a>
+        </div>
+      </div>
+
+      <!-- Class 3 -->
+      <div class="premium-class-row reveal reveal-d1">
+        <div class="p-class-visual">
+          <div class="p-class-img-arch">
+            <img src="images/class_birthdays.png" alt="ימי הולדת בסטודיו ליוגה ערסלים" loading="lazy">
+          </div>
+          <div class="p-class-badge">🎈 חגיגה באוויר</div>
+        </div>
+        <div class="p-class-info">
+          <div class="p-class-meta"><span>⏱ 90 דקות</span><span>🎉 מסיבה ייחודית</span></div>
+          <h3>מסלול ימי הולדת</h3>
+          <p>בואו לחגוג יום הולדת שונה ומיוחד! פעילות חווייתית ובלתי נשכחת באוויר לכל החברות, מלאה בצחוק, תמונות מהממות וכיף משותף.</p>
+          <a href="#contact" class="p-class-link">לשריון תאריך למסיבה ←</a>
+        </div>
+      </div>
+
+      <!-- Class 4 -->
+      <div class="premium-class-row reversed reveal reveal-d2">
+        <div class="p-class-visual">
+          <div class="p-class-img-arch">
+            <img src="images/class_couples.png" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy">
+          </div>
+          <div class="p-class-badge">❤️ זמן בשניים</div>
+        </div>
+        <div class="p-class-info">
+          <div class="p-class-meta"><span>⏱ 75 דקות</span><span>✨ חיבור וצחוק</span></div>
+          <h3>סדנאות לזוגות</h3>
+          <p>דייט מסוג אחר. סדנה חווייתית לזוגות שמשלבת אמון, מגע, עבודת צוות והמון צחוק כשמנסים לרחף ביחד בערסל.</p>
+          <a href="#contact" class="p-class-link">לתיאום דייט באוויר ←</a>
+        </div>
+      </div>
+
+      <!-- Class 5 -->
+      <div class="premium-class-row reveal reveal-d2">
+        <div class="p-class-visual">
+          <div class="p-class-img-arch">
+            <img src="images/class_mother_daughter.png" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy">
+          </div>
+          <div class="p-class-badge">👩‍👧 זיכרונות מתוקים</div>
+        </div>
+        <div class="p-class-info">
+          <div class="p-class-meta"><span>⏱ 75 דקות</span><span>✨ זמן איכות</span></div>
+          <h3>סדנאות אימא ובת</h3>
+          <p>שעתיים של נטו יחד, בלי מסכים ובלי הפרעות. אנחנו משחקות, מתרגלות תנוחות משותפות ויוצרות זיכרונות שישארו איתכן לתמיד.</p>
+          <a href="#contact" class="p-class-link">לבדיקת מועדים קרובים ←</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PRICING ═══════ -->
+<section class="pricing section-pad" id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="kicker kicker-center">כמה זה עולה?</div>
+      <h2 class="heading-lg">בואי נתחיל בקטן,<br>או בגדול.</h2>
+    </div>
+    <div class="pricing-toggle reveal">
+      <div class="ptoggle">
+        <div class="ptoggle-bg" id="ptBg"></div>
+        <button class="active" data-t="adults">מבוגרים</button>
+        <button data-t="kids">ילדים</button>
+      </div>
+    </div>
+
+    <!-- Adults -->
+    <div class="pgrid active" id="pg-adults">
+      <div class="pcard reveal">
+        <h3>שיעור התנסות או בודד</h3>
+        <p class="pdesc">בואי לנסות פעם אחת, לראות אם את מתחברת. בלי התחייבות, רק את והערסל.</p>
+        <div class="pprice">₪100</div>
+        <a href="#contact" class="btn btn-outline">לקביעת שיעור</a>
+      </div>
+      <div class="pcard featured reveal reveal-d1 tilt-card">
+        <div class="tilt-inner-light"></div>
+        <div class="pcard-badge">הבחירה של רוב הבנות</div>
+        <h3>מנוי שנתי צמוד</h3>
+        <p class="pdesc">פעם בשבוע מובטח לך מקום בקבוצה הקבועה שלך. התמדה שמביאה לתוצאות אמיתיות.</p>
+        <div class="pprice">₪273<span class="pprice-sub">לחודש · פריסה נוחה לתשלומים</span></div>
+        <div class="urgency-badge"><span class="urgency-dot"></span> נשארו 3 מקומות השבוע</div>
+        <a href="#contact" class="btn btn-outline" style="margin-top:1rem;">דברי איתי להרשמה</a>
+      </div>
+      <div class="pcard reveal reveal-d2">
+        <h3>כרטיסיית 10 שיעורים</h3>
+        <p class="pdesc">מתאים למי שהלו"ז שלה צפוף ורוצה גמישות. אפשר לבוא מתי שמסתדר לך במהלך 3 חודשים.</p>
+        <div class="pprice">₪880</div>
+        <a href="#contact" class="btn btn-outline">לרכישת כרטיסייה</a>
+      </div>
+    </div>
+
+    <!-- Kids -->
+    <div class="pgrid" id="pg-kids">
+      <div class="pcard reveal">
+        <h3>שיעור ניסיון לילדים</h3>
+        <p class="pdesc">תביאו את הילד.ה לשיעור ניסיון, נראה אם הם נהנים מזה כמונו (רמז: כן!).</p>
+        <div class="pprice">₪80</div>
+        <a href="#contact" class="btn btn-outline">תיאום שיעור ניסיון</a>
+      </div>
+      <div class="pcard featured reveal reveal-d1">
+        <div class="pcard-badge">כמו חוג רגיל רק יותר שווה</div>
+        <h3>מנוי שנתי חוג ילדים</h3>
+        <p class="pdesc">במקום חוג התעמלות רגיל, חוג שנותן להם ביטחון עצמי, כוח ושיווי משקל כל השנה.</p>
+        <div class="pprice">₪220<span class="pprice-sub">לחודש · פריסה נוחה</span></div>
+        <a href="#contact" class="btn btn-outline">הרשמה לחוג</a>
+      </div>
+      <div class="pcard reveal reveal-d2">
+        <h3>כרטיסיית 10 לילדים</h3>
+        <p class="pdesc">הכרטיסייה יכולה לעבור בין אחים! ככה שכולם יכולים לקפוץ לבקר בסטודיו מתי שנוח.</p>
+        <div class="pprice">₪700</div>
+        <a href="#contact" class="btn btn-outline">לרכישת כרטיסייה</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ STUDIO STRIP ═══════ -->
+<div class="studio-strip">
+  <img src="images/group-class.png" alt="סטודיו Cloud & Core" id="studioImg">
+  <div class="studio-strip-overlay">
+    <p class="studio-quote reveal">"הגוף שלך, השמיים הם הגבול."</p>
+  </div>
+</div>
+
+<!-- ═══════ TESTIMONIALS ═══════ -->
+<section class="testimonials section-pad" id="testimonials">
+  <div class="container">
+    <div class="testimonials-header reveal">
+      <div class="kicker kicker-center">מה אומרות המתאמנות שלי</div>
+      <h2 class="heading-lg">חוות דעת מהערסל.</h2>
+    </div>
+    <div class="testimonials-track reveal" id="tTrack">
+      <div class="t-card tilt-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"כעורכת דין שעובדת 10 שעות ביום מול מסכים, סבלתי מכאבי גב כרוניים. הערסלים שינו לי את החיים. השקט המנטלי עמוק וממכר."</p>
+        <div class="t-author">
+          <div class="t-avatar">מ</div>
+          <div>
+            <strong>מיכל ר.</strong>
+            <span>מתאמנת כ-8 חודשים</span>
+          </div>
+        </div>
+      </div>
+      <div class="t-card tilt-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"חיפשתי פעילות לבת שלי בת ה-9. מהרגע הראשון שנכנסה ל-Cloud & Core היא פרחה. המדריכות רגישות ומקצועיות, והיא מחכה לכל שיעור."</p>
+        <div class="t-author">
+          <div class="t-avatar">ס</div>
+          <div>
+            <strong>סופיה ש.</strong>
+            <span>אמא של יציב (9)</span>
+          </div>
+        </div>
+      </div>
+      <div class="t-card tilt-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"עשינו סדנה משותפת לאימהות ובנות לחגיגת בת מצווה — החוויה הייתה מטורפת! הצחוקים, האמון ההדדי וההרגשה המרוממת באוויר."</p>
+        <div class="t-author">
+          <div class="t-avatar">נ</div>
+          <div>
+            <strong>נועה ד.</strong>
+            <span>סדנת בת מצווה זוגית</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="t-dots" id="tDots">
+      <button class="t-dot active" data-slide="0"></button>
+      <button class="t-dot" data-slide="1"></button>
+      <button class="t-dot" data-slide="2"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ GALLERY ═══════ -->
+<section class="gallery section-pad" id="gallery">
+  <div class="container">
+    <div class="gallery-header reveal">
+      <div class="kicker kicker-center">רגעים מהסטודיו</div>
+      <h2 class="heading-lg">ככה נראה<br>אצלנו.</h2>
+    </div>
+  </div>
+  <div class="gallery-track-wrap">
+    <div class="gallery-fade-right"></div>
+    <div class="gallery-fade-left"></div>
+    <div class="gallery-track" id="galleryTrack">
+      <div class="gallery-item">
+        <img src="images/gallery-1.png" alt="שיעור קבוצתי בסטודיו" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/class_adults.png" alt="יוגה ערסלים למבוגרים בחורפיש ויאנוח" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/gallery-2.png" alt="פרטי הסטודיו" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/class_mother_daughter.png" alt="סדנת יוגה אווירית אמא וילדה" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/studio-interior.png" alt="פנים הסטודיו" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/class_couples.png" alt="סדנת יוגה ערסלים זוגית באזור חורפיש ויאנוח" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/class_kids.png" alt="יוגה ערסלים לילדים ונוער ביאנוח וחורפיש" loading="lazy" class="img-progressive">
+      </div>
+      <div class="gallery-item">
+        <img src="images/group-class.png" alt="שיעור קבוצתי" loading="lazy" class="img-progressive">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FAQ ═══════ -->
+<section class="faq section-pad" id="faq">
+  <div class="container-sm">
+    <div class="faq-header reveal">
+      <h2 class="heading-lg" style="text-align:center;">שאלות נפוצות.</h2>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>האם זה בטוח? מה קורה אם הערסל נקרע?</span><span class="faq-icon"></span></button>
+      <div class="faq-ans"><p>בטיחות היא אבן היסוד שלנו. כל ערסל עשוי מבד משי ייעודי בעל כושר נשיאה של עד 450 ק"ג, ומחובר לקורות פלדה הנדסיות. מעולם לא היה אירוע בטיחות בסטודיו.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>אין לי רקע קודם ביוגה, האם זה מתאים לי?</span><span class="faq-icon"></span></button>
+      <div class="faq-ans"><p>בהחלט! רוב המתאמנות מגיעות ללא כל רקע קודם. המדריכות מתאימות את גובה הערסל וקושי התנוחות באופן אישי לכל מתאמנת.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>מאיזה גיל מתאימים שיעורי הילדים?</span><span class="faq-icon"></span></button>
+      <div class="faq-ans"><p>השיעורים מותאמים לילדים וילדות החל מגיל 7 עד 12. הקבוצות מחולקות לפי שכבות גיל להתאמה מיטבית.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>מה מגבלת המשקל לריחוף בערסלים?</span><span class="faq-icon"></span></button>
+      <div class="faq-ans"><p>הערסלים נושאים משקל רב, אך מגבלת המשקל המעשית לאימון נוח היא עד 120 ק"ג למתאמנת.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>האם הכיתות מופרדות ילדים ומבוגרים?</span><span class="faq-icon"></span></button>
+      <div class="faq-ans"><p>כן, בהחלט. שיעורי הילדים (7-12) מופרדים לגמרי משיעורי המבוגרים. כל קבוצה מקבלת תוכנית מותאמת לגיל ולמטרות שלה.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CONTACT ═══════ -->
+<section class="contact section-pad" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="kicker reveal">הצעד הראשון</div>
+        <h2 class="heading-lg reveal reveal-d1">בואי נדבר<br>ונקבע שיעור.</h2>
+        <p class="reveal reveal-d2">את לא צריכה להתחייב מראש, רק להשאיר לי הודעה. אני אענה לך, נבין מה בדיוק את צריכה ונתאם שיעור בקצב שלך.</p>
+        <div class="contact-benefits reveal reveal-d3">
+          <div class="contact-benefit">
+            <span class="contact-benefit-check">✓</span>
+            <span>בלי מנוי מחייב מיד בהתחלה</span>
+          </div>
+          <div class="contact-benefit">
+            <span class="contact-benefit-check">✓</span>
+            <span>יחס סופר אישי וקבוצות קטנות</span>
+          </div>
+          <div class="contact-benefit">
+            <span class="contact-benefit-check">✓</span>
+            <span>אווירה ביתית, בלי אגו</span>
+          </div>
+          <div class="contact-benefit">
+            <span class="contact-benefit-check">✓</span>
+            <span>התאמה גם למי שמעולם לא התאמנה</span>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-wrap reveal reveal-d2">
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="ig"><label>שם מלא</label><input type="text" placeholder="שירה לוי" required></div>
+            <div class="ig"><label>מספר טלפון</label><input type="tel" placeholder="052-3318478" required></div>
+          </div>
+          <div class="ig">
+            <label>מסלול מועדף</label>
+            <select required>
+              <option value="" disabled selected>בחרי אפשרות...</option>
+              <option>מסלול ילדים (7-17)</option>
+              <option>מסלול מבוגרים (17+)</option>
+              <option>מסלול ימי הולדת</option>
+              <option>סדנאות לזוגות</option>
+              <option>סדנאות אימא ובת</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-form">שליחת פרטים</button>
+          <p class="form-note">הפרטים מאובטחים · אחזור אלייך בהקדם</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ WHATSAPP ═══════ -->
+<a href="https://wa.me/972523318478" target="_blank" rel="noopener" class="whatsapp-btn" aria-label="שלחו הודעת WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+
+  <div class="footer-container">
+    <div class="footer-grid">
+      
+      <!-- Column 1: Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="images/logo-transparent.png" alt="Cloud &amp; Core Studio Logo" />
+        </div>
+        <p>סטודיו ליוגה ערסלים באווירה ביתית ביאנוח וחורפיש.<br>מקום ליהנות מהתנועה, לפרוק מתח ולעוף יחד.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2: Navigation -->
+      <div class="footer-col footer-nav">
+        <h4>ניווט באתר</h4>
+        <a href="#about">הפילוסופיה שלי</a>
+        <a href="#classes">המסלולים</a>
+        <a href="#pricing">מחירון</a>
+        <a href="#testimonials">המלצות</a>
+        <a href="#faq">שאלות נפוצות</a>
+      </div>
+
+      <!-- Column 3: Contact -->
+      <div class="footer-col footer-contact">
+        <h4>צרו קשר</h4>
+        <span>יאנוח וחורפיש</span>
+        <a href="tel:0523318478" dir="ltr" style="text-align:right;">052-3318478</a>
+        <a href="https://wa.me/972523318478" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+
+      <!-- Column 4: CTA -->
+      <div class="footer-col">
+        <div class="footer-cta">
+          <h4>מחכה לראות אותך!</h4>
+          <p>בואי לפנות שעה ביום שמוקדשת נטו לעצמך ולגוף שלך.</p>
+          <a href="#contact" class="btn btn-gold">דברי איתי</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Cloud & Core Studio. כל הזכויות שמורות.</p>
+      <p>עודכן לאחרונה: יוני 2026</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════ JAVASCRIPT ═══════ -->
+<script src="script.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HealthAndBeautyBusiness",
+      "name": "Cloud & Core Studio",
+      "description": "סטודיו בוטיק יוקרתי ליוגה אווירית ביאנוח וחורפיש. חוויית ריחוף יוקרתית בתוך ערסלי משי בטוחים — לנשים ולילדים בהדרכה צמודה ואישית.",
+      "image": "https://example.com/images/logo-transparent.png",
+      "telephone": "052-3318478",
+      "address": [
+        {
+          "@type": "PostalAddress",
+          "addressLocality": "יאנוח",
+          "addressCountry": "IL"
+        },
+        {
+          "@type": "PostalAddress",
+          "addressLocality": "חורפיש",
+          "addressCountry": "IL"
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "500"
+      }
+    },
+    {
+      "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "האם זה בטוח? מה קורה אם הערסל נקרע?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "בטיחות היא אבן היסוד בסטודיו שלנו. כל ערסל משי מחובר ישירות לקורות פלדה הנדסיות באמצעות ציוד טיפוס מקצועי. הערסלים נבדקים מדי יום, עשויים מבד משי ייעודי בעל כושר נשיאה עצום של עד 450 ק\"ג, ומאושרים לפי תקני הבטיחות האירופיים המחמירים ביותר."
+    }
+  },{
+    "@type": "Question",
+    "name": "אין לי רקע קודם ביוגה או ספורט, האם השיעור יתאים לי?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "בהחלט כן! רוב המשתתפות שלנו מגיעות ללא כל רקע קודם. המדריכות המקצועיות שלנו מתאימות את גובה הערסל וקושי התנוחות באופן אישי לכל מתאמנת, ומלוות אותך צעד אחר צעד בקצב האישי שלך."
+    }
+  },{
+    "@type": "Question",
+    "name": "מאיזה גיל מתאימים שיעורי הילדים והנוער?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "השיעורים מותאמים לילדים וילדות החל מגיל 7 ועד גיל 17. הקבוצות מחולקות לפי שכבות גיל כדי להבטיח את רמת העניין הפיזי והחברתי הטובה ביותר."
+    }
+  },{
+    "@type": "Question",
+    "name": "האם יש הגבלת משקל לאימון על הערסל?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "הערסלים ונקודות העיגון הנדסיות מיועדים לשאת משקל עצום ללא שום קושי. מגבלת המשקל המעשית לאימון היא עד 120 ק\"ג למתאמנת, על מנת להבטיח תנועה נוחה, גמישה ובטוחה בתוך הבד."
+    }
+  }]
+    }
+  ]
+}
+</script>
+</body>
+</html>
