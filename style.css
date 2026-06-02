@@ -1470,11 +1470,13 @@ button { font-family: var(--sans); cursor: pointer; }
 
 @media(max-width: 768px) {
   .whatsapp-btn {
-    bottom: 5.5rem; /* Lift above sticky CTA */
+    bottom: 2.2rem; /* Clean bottom spacing, no clashing with stats */
     width: 56px;
     height: 56px;
   }
-  .whatsapp-btn.lifted { bottom: 6.5rem; }
+  .whatsapp-btn.lifted {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom)); /* Auto-lift above the safe-area sticky CTA */
+  }
   .whatsapp-btn svg { width: 28px; height: 28px; }
 }
 
@@ -2072,7 +2074,7 @@ footer::before {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 1rem 2rem;
+  padding: 1rem 2rem calc(1.2rem + env(safe-area-inset-bottom)); /* Lift cleanly above iOS Home Indicator safe area */
   display: flex;
   align-items: center;
   justify-content: space-between;
