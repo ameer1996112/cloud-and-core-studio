@@ -2358,9 +2358,19 @@ html[dir="rtl"] *::after {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
+  .founder-img-wrap {
+    max-width: 340px;
+    margin: 0 auto;
+    width: 100%;
+  }
   .founder-img {
-    aspect-ratio: 4/3;
-    border-radius: var(--radius-xl);
+    aspect-ratio: 3/4;
+    border-radius: 160px 160px 30px 30px;
+    width: 100%;
+    object-fit: cover;
+  }
+  .founder-glow {
+    border-radius: 160px 160px 30px 30px;
   }
 
   /* ── 4. Premium Class Cards ── */
