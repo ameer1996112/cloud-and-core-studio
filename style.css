@@ -521,110 +521,9 @@ button { font-family: var(--sans); cursor: pointer; }
   font-weight: 500;
 }
 
-@media(max-width:1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: 5rem;
-  }
-  .hero-content {
-    padding: 3rem 1.5rem 2rem;
-    order: 2;
-    width: 100%;
-  }
-  .hero-visual {
-    height: 60vw;
-    order: 1;
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .hero-visual::after {
-    background: linear-gradient(to top, var(--bg-dark) 0%, transparent 50%);
-  }
-  .hero-scroll { display: none; }
-}
 
-@media(max-width: 768px) {
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 5rem;
-    padding-top: 0;
-  }
-  .hero-visual {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 1;
-    order: unset;
-  }
-  .hero-visual::after {
-    background: linear-gradient(to top, rgba(18, 20, 26, 0.98) 15%, rgba(18, 20, 26, 0.6) 50%, rgba(18, 20, 26, 0.2) 100%) !important;
-    z-index: 2;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 3;
-    padding: 2rem 1.5rem;
-    order: unset;
-    text-align: right;
-    width: 100%;
-  }
-  .hero-content .kicker {
-    font-size: 0.85rem;
-    margin-bottom: 0.8rem;
-    color: var(--gold);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  }
-  .hero-h1 {
-    font-size: clamp(2.2rem, 9vw, 3rem) !important;
-    line-height: 1.25 !important;
-    margin-bottom: 2rem;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  }
-  .hero-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 1rem;
-    margin-bottom: 3.5rem;
-  }
-  .hero-actions .btn {
-    width: 100%;
-    justify-content: center;
-    padding: 1.2rem 2.8rem;
-  }
-  .hero-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    width: 100%;
-  }
-  .hero-stats > div {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    width: 100%;
-  }
-  .hero-stat-num {
-    font-size: 2.2rem !important;
-    min-width: 75px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-  .hero-stat-label {
-    font-size: 0.8rem !important;
-    margin-top: 0;
-    text-align: right;
-    letter-spacing: 0.05em;
-  }
-}
+
+
 
 /* ═════════════════════════════
    3. MARQUEE
@@ -780,16 +679,8 @@ button { font-family: var(--sans); cursor: pointer; }
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-15px) rotate(3deg); }
 }
-@media(max-width:1024px) {
-  .about-grid { grid-template-columns: 1fr; }
-  .about-imgs { height: 450px; margin-top: 3rem; }
-  .about-badge { width: 110px; height: 110px; font-size: 2rem; }
-}
-@media(max-width: 600px) {
-  .about-imgs { height: 360px; margin-top: 2rem; }
-  .about-badge { width: 95px; height: 95px; font-size: 1.8rem; }
-  .about-badge span { font-size: 0.55rem; letter-spacing: 0.15em; }
-}
+
+
 
 /* ═════════════════════════════
    5. CLASSES
@@ -902,33 +793,7 @@ button { font-family: var(--sans); cursor: pointer; }
   border-bottom-color: var(--gold);
 }
 
-@media(max-width: 900px) {
-  .premium-class-row, .premium-class-row:nth-child(even) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .premium-class-row {
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    transition: transform 0.4s var(--ease);
-  }
-  .premium-class-row:hover {
-    transform: translateY(-5px);
-  }
-  .p-class-visual {
-    height: 240px;
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .premium-class-row:nth-child(even) .p-class-visual { order: 1; }
-  .premium-class-row:nth-child(even) .p-class-info { order: 2; }
-  .p-class-badge { right: auto; left: 1rem; bottom: 1rem; }
-  .p-class-info { padding: 0.5rem 0.2rem; }
-  .p-class-info h3 { font-size: 2.2rem; }
-}
+
 
 /* ═════════════════════════════
    6. PRICING
@@ -1081,31 +946,7 @@ button { font-family: var(--sans); cursor: pointer; }
   color: var(--bg-dark);
   border-color: var(--gold);
 }
-@media(max-width:900px) {
-  .pgrid {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1.5rem;
-    padding: 1.5rem clamp(1.5rem, 5vw, 4rem) 2.5rem;
-    margin: 1.5rem calc(-1 * clamp(1.5rem, 5vw, 4rem)) 0;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .pgrid::-webkit-scrollbar {
-    display: none;
-  }
-  .pcard {
-    flex: 0 0 82vw;
-    max-width: 320px;
-    scroll-snap-align: center;
-    margin: 0;
-  }
-  .pcard.featured { transform: scale(1); z-index: 1; }
-  .pcard.featured:hover { transform: translateY(-5px); }
-}
+
 
 /* ═════════════════════════════
    7. STUDIO STRIP
@@ -1162,18 +1003,7 @@ button { font-family: var(--sans); cursor: pointer; }
   overflow: hidden;
   position: relative;
 }
-@media(max-width: 768px) {
-  .testimonials-track {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .testimonials-track::-webkit-scrollbar {
-    display: none;
-  }
-}
+
 @media(min-width:769px) {
   .testimonials-track.reveal,
   .testimonials-track.visible { overflow: visible; }
@@ -1192,11 +1022,7 @@ button { font-family: var(--sans); cursor: pointer; }
   transition: transform 0.4s var(--ease), opacity 0.4s var(--ease), box-shadow 0.4s var(--ease);
   box-shadow: var(--shadow-sm);
 }
-@media(max-width: 768px) {
-  .t-card {
-    scroll-snap-align: center;
-  }
-}
+
 .t-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
@@ -1456,10 +1282,7 @@ button { font-family: var(--sans); cursor: pointer; }
   color: rgba(255, 255, 255, 0.4);
   margin-top: 1.5rem;
 }
-@media(max-width:900px) {
-  .contact-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-}
+
 
 /* ═════════════════════════════
    11. WHATSAPP
@@ -1496,17 +1319,7 @@ button { font-family: var(--sans); cursor: pointer; }
 }
 .whatsapp-btn svg { width: 32px; height: 32px; fill: #fff; }
 
-@media(max-width: 768px) {
-  .whatsapp-btn {
-    bottom: 2.2rem; /* Clean bottom spacing, no clashing with stats */
-    width: 56px;
-    height: 56px;
-  }
-  .whatsapp-btn.lifted {
-    bottom: calc(5.5rem + env(safe-area-inset-bottom)); /* Auto-lift above the safe-area sticky CTA */
-  }
-  .whatsapp-btn svg { width: 28px; height: 28px; }
-}
+
 
 /* ═════════════════════════════
    12. FOOTER
@@ -2028,10 +1841,7 @@ footer::before {
   letter-spacing: 0.05em;
   background: rgba(210,196,177,0.05);
 }
-@media(max-width: 900px) {
-  .founder-grid { grid-template-columns: 1fr; }
-  .founder-img { aspect-ratio: 4/3; border-radius: var(--radius-xl); }
-}
+
 
 /* ── 6. Photo Gallery Section ── */
 .gallery { background: var(--bg-surface); overflow: hidden; }
@@ -2088,9 +1898,7 @@ footer::before {
   pointer-events: none;
   z-index: 2;
 }
-@media(max-width: 768px) {
-  .gallery-item { flex: 0 0 240px; }
-}
+
 
 /* ── 7. Sticky CTA Bar ── */
 #sticky-cta {
@@ -2118,10 +1926,7 @@ footer::before {
   color: var(--text-muted);
 }
 .sticky-cta-text strong { color: var(--text-main); }
-@media(max-width: 600px) {
-  .sticky-cta-text { display: none; }
-  #sticky-cta { justify-content: center; }
-}
+
 
 /* ── 8. Social Proof Toasts ── */
 #toast-container {
@@ -2267,8 +2072,282 @@ html[dir="rtl"] *::after {
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* 3. Global Mobile Bottom Spacing Offset to prevent fixed Sticky CTA overlays */
-@media(max-width: 768px) {
+/* ═══════════════════════════════════════════
+   UNIFIED PREMIUM MOBILE-FIRST RESPONSIVE BLOCK
+   Target: Smartphone Viewports (max-width: 768px)
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  
+  /* ── 1. Navigation & Mobile Drawer ── */
+  .mobile-drawer {
+    position: fixed;
+    top: 0; left: 0;
+    width: min(85vw, 360px);
+    height: 100vh;
+    background: rgba(20, 24, 33, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 999;
+    padding: 6rem 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transform: translateX(-100%);
+    transition: transform 0.4s var(--ease);
+    box-shadow: 15px 0 45px rgba(0,0,0,0.6);
+  }
+  .mobile-drawer.open { transform: translateX(0); }
+  .mobile-drawer a {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    color: var(--text-muted);
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    text-align: right;
+    transition: color 0.3s ease, padding-right 0.3s ease;
+  }
+  .mobile-drawer a:hover,
+  .mobile-drawer a:active {
+    color: var(--gold);
+    padding-right: 0.8rem;
+  }
+  .mobile-drawer .btn {
+    margin-top: 3.5rem;
+    padding: 1.1rem 2rem;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 12, 16, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  .mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* ── 2. Immersive Hero Cover ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    padding-top: 0;
+  }
+  .hero-visual {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+  .hero-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(19, 25, 32, 1) 0%, rgba(19, 25, 32, 0.7) 40%, rgba(19, 25, 32, 0.2) 100%) !important;
+    z-index: 2;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    padding: 2.5rem 1.8rem;
+    text-align: right;
+    width: 100%;
+  }
+  .hero-content .kicker {
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+    color: var(--gold);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+  .hero-h1 {
+    font-size: clamp(2.4rem, 10vw, 3.4rem) !important;
+    line-height: 1.2 !important;
+    margin-bottom: 1.8rem;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    color: var(--text-muted);
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 1rem;
+    margin-bottom: 3.5rem;
+  }
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 1.2rem 2.8rem;
+  }
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+  }
+  .hero-stats > div {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  .hero-stat-num {
+    font-size: 2.4rem !important;
+    min-width: 75px;
+    text-align: right;
+    flex-shrink: 0;
+    color: var(--gold);
+  }
+  .hero-stat-label {
+    font-size: 0.85rem !important;
+    margin-top: 0;
+    text-align: right;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  /* ── 3. About & Founder Spacing ── */
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .about-imgs {
+    height: clamp(300px, 80vw, 420px);
+    margin-top: 2rem;
+  }
+  .about-badge {
+    width: 95px; height: 95px;
+    font-size: 1.8rem;
+  }
+  .about-badge span {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+  }
+  .founder-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .founder-img {
+    aspect-ratio: 4/3;
+    border-radius: var(--radius-xl);
+  }
+
+  /* ── 4. Premium Class Cards ── */
+  .premium-class-row,
+  .premium-class-row:nth-child(even) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .premium-class-row {
+    background: rgba(27, 35, 45, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-xl);
+    padding: 1.8rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+  .premium-class-row:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+  }
+  .p-class-visual {
+    height: clamp(200px, 60vw, 260px);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .premium-class-row:nth-child(even) .p-class-visual { order: 1; }
+  .premium-class-row:nth-child(even) .p-class-info { order: 2; }
+  .p-class-badge {
+    right: auto; left: 1.2rem;
+    bottom: 1.2rem;
+  }
+  .p-class-info {
+    padding: 0.5rem 0.2rem;
+  }
+  .p-class-info h3 {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* ── 5. Swipeable Carousels (Pricing & Testimonials) ── */
+  /* Pricing Touch-Snap Track */
+  .pgrid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding: 1.5rem clamp(1.5rem, 5vw, 3.5rem) 2.5rem;
+    margin: 1.5rem calc(-1 * clamp(1.5rem, 5vw, 3.5rem)) 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .pgrid::-webkit-scrollbar { display: none; }
+  .pcard {
+    flex: 0 0 82vw;
+    max-width: 320px;
+    scroll-snap-align: center;
+    margin: 0;
+  }
+  .pcard.featured { transform: scale(1); z-index: 1; }
+  .pcard.featured:hover { transform: translateY(-5px); }
+
+  /* Testimonials Touch-Snap Track */
+  .testimonials-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .testimonials-track::-webkit-scrollbar { display: none; }
+  .t-card {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+
+  /* ── 6. Form, WhatsApp & Footer Spacing ── */
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .form-row { grid-template-columns: 1fr; }
+  
+  .gallery-item { flex: 0 0 240px; }
+  
+  .whatsapp-btn {
+    bottom: 2.2rem;
+    width: 56px; height: 56px;
+  }
+  .whatsapp-btn.lifted {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+  .whatsapp-btn svg { width: 28px; height: 28px; }
+  
+  .sticky-cta-text { display: none; }
+  #sticky-cta { justify-content: center; }
+  
+  .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-bottom { flex-direction: column; text-align: center; justify-content: center; }
+
+  /* Universal Sticky CTA Clearance offsets */
   .section-pad {
     padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important;
   }
@@ -2276,3 +2355,5 @@ html[dir="rtl"] *::after {
     padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
   }
 }
+
+
