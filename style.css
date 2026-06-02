@@ -2313,6 +2313,9 @@ html[dir="rtl"] *::after {
   .pcard.featured:hover { transform: translateY(-5px); }
 
   /* Testimonials Touch-Snap Track */
+  .testimonials-header {
+    margin-bottom: 1.8rem !important;
+  }
   .testimonials-track {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -2324,6 +2327,20 @@ html[dir="rtl"] *::after {
   .t-card {
     flex: 0 0 100%;
     scroll-snap-align: center;
+    padding: 1.8rem !important; /* Compact mobile card padding */
+  }
+  .t-stars {
+    margin-bottom: 1.2rem !important;
+  }
+  .t-text {
+    margin-bottom: 1.5rem !important;
+    font-size: 1.15rem !important; /* Compact text size to conserve vertical space */
+  }
+  .t-author {
+    padding-top: 1.2rem !important;
+  }
+  .t-dots {
+    margin-top: 1.5rem !important; /* Compact spacing above indicators */
   }
 
   /* ── 6. Form, WhatsApp & Footer Spacing ── */
@@ -2349,6 +2366,7 @@ html[dir="rtl"] *::after {
 
   /* Universal Sticky CTA Clearance offsets */
   .section-pad {
+    padding-top: 3.5rem !important; /* Compact mobile top padding */
     padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important;
   }
   footer {
