@@ -29,9 +29,7 @@ Key emotional needs:
 
 ## Design System
 
-There is no standalone `DESIGN.md` yet. Until one exists, the implementation should use these page-level design decisions as the source of truth.
-
-Before the next implementation pass, extract this section into a standalone `DESIGN.md`. That file should become the durable source of truth for brand/interface decisions so future edits do not reintroduce generic gradients, bad Hebrew tracking, decorative filler, or inconsistent mobile behavior.
+The standalone `DESIGN.md` is now the durable source of truth for brand/interface decisions. Keep this plan focused on implementation flow and review history.
 
 ### Visual Tokens
 
@@ -61,16 +59,7 @@ Motion:
 - Decorative parallax and cursor effects are optional enhancement only.
 - `prefers-reduced-motion` must disable nonessential motion.
 
-Required `DESIGN.md` contents:
-- Brand promise and audience.
-- Color tokens and usage rules.
-- Typography rules, including Hebrew letter-spacing constraints.
-- Layout and spacing scale.
-- Button, card, nav, drawer, pricing, FAQ, form, and proof-section patterns.
-- Motion rules and reduced-motion fallback.
-- RTL-specific requirements.
-- Accessibility rules.
-- AI-slop blacklist for this brand.
+Update `DESIGN.md` whenever a brand/interface rule changes.
 
 ## Information Architecture
 
@@ -317,11 +306,11 @@ Failure behavior:
 ## What Already Exists
 
 Implemented files:
-- `index.html`: full static landing page.
-- `style.css`: design tokens, responsive layout, motion, forms, nav, cards.
-- `script.js`: mobile menu, FAQ, pricing tabs, testimonials, form success, effects.
-- `images/`: active visual assets.
-- `netlify.toml`: static deploy config and headers.
+- `site/index.html`: full static landing page.
+- `site/style.css`: design tokens, responsive layout, motion, forms, nav, cards.
+- `site/script.js`: mobile menu, FAQ, pricing tabs, testimonials, form success, effects.
+- `site/images/`: active visual assets.
+- `netlify.toml`: static deploy config, headers, and `site/` publish directory.
 
 Existing patterns to reuse:
 - Dark premium studio palette.
@@ -345,7 +334,7 @@ Studio Proof rules:
 3. Pricing cards should keep the card pattern but add a `Best for` line for fast scanning.
 4. Gallery should become `Studio Proof` with 4-5 useful captioned images.
 5. Contact form needs production failure states and WhatsApp fallback, not success-only behavior.
-6. `DESIGN.md` should be created before the next implementation pass.
+6. `DESIGN.md` was created as the durable brand/interface source of truth.
 7. Pre-deploy desktop/mobile verification is required before publishing changes.
 
 ## Review Target

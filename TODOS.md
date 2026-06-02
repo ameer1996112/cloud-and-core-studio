@@ -2,7 +2,7 @@
 
 ## Create `DESIGN.md`
 
-**Status:** Pending.
+**Status:** Done. `DESIGN.md` now exists at the repo root and is safe from Netlify public serving because Netlify publishes `site/`.
 
 **What:** Create a standalone design-system document for Cloud & Core Studio.
 
@@ -14,7 +14,7 @@
 
 **Context:** The repo history shows repeated restyling and mobile fixes. A dedicated design-system document reduces regressions like bad Hebrew tracking, generic gradients, decorative filler, and horizontal overflow.
 
-**Depends on / blocked by:** Decide whether docs stay uncommitted, move outside the Netlify publish root, or Netlify publish structure changes.
+**Depends on / blocked by:** Completed after Netlify publish structure changed to `site/`.
 
 ## Protect Docs From Netlify Publish
 
