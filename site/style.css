@@ -1863,6 +1863,7 @@ footer::before {
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
+  object-position: center 20%;
   border-radius: 300px 300px 40px 40px;
   box-shadow: 0 40px 80px rgba(0,0,0,0.4);
 }
@@ -2368,6 +2369,7 @@ html[dir="rtl"] *::after {
     border-radius: 160px 160px 30px 30px;
     width: 100%;
     object-fit: cover;
+    object-position: center 20%;
   }
   .founder-glow {
     border-radius: 160px 160px 30px 30px;

@@ -42,7 +42,8 @@
   const parallaxElements = document.querySelectorAll('.parallax');
   let ticking = false;
 
-  if (!reduceMotion) {
+  const isMobile = window.innerWidth <= 768;
+  if (!reduceMotion && !isMobile) {
     window.addEventListener('scroll', () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -59,6 +60,8 @@
         ticking = true;
       }
     }, { passive: true });
+  } else if (isMobile) {
+    parallaxElements.forEach(el => el.style.transform = '');
   }
 
   // ── Mobile Menu ──
@@ -496,10 +499,11 @@
 
   // ── 9. Progressive Image Loading ──
   document.querySelectorAll('.img-progressive').forEach(img => {
-    if (img.complete && img.naturalWidth > 0) {
+    if (img.complete) {
       img.classList.add('loaded');
     } else {
-      img.addEventListener('load', () => img.classList.add('loaded'));
+      img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+      img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
     }
   });
 
