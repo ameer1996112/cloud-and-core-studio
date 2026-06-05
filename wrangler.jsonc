@@ -1,0 +1,7 @@
+{
+  "name": "cloud-core-studio-live",
+  "compatibility_date": "2026-06-05",
+  "assets": {
+    "directory": "./site"
+  }
+}
