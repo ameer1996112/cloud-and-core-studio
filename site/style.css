@@ -2429,26 +2429,26 @@ html[dir="rtl"] *::after {
   }
 
   /* ── 5. Swipeable Carousels (Pricing & Testimonials) ── */
-  /* Pricing Touch-Snap Track */
+  /* Pricing Vertical Stack on Mobile */
   .pgrid {
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1.5rem;
-    padding: 1.5rem 1.25rem 2.5rem !important;
-    margin: 1.5rem -1.25rem 0 !important;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: 1.5rem 0 !important;
+    margin: 0 !important;
+    overflow-x: visible;
   }
-  .pgrid::-webkit-scrollbar { display: none; }
   .pcard {
-    flex: 0 0 82vw;
-    max-width: 320px;
-    scroll-snap-align: center;
+    width: 100%;
+    max-width: none;
+    padding: 2.2rem 1.8rem !important; /* Compact mobile padding */
     margin: 0;
   }
-  .pcard.featured { transform: scale(1); z-index: 1; }
+  .pcard.featured {
+    transform: scale(1);
+    z-index: 1;
+    border-color: rgba(177, 168, 152, 0.3) !important;
+  }
   .pcard.featured:hover { transform: translateY(-5px); }
 
   /* Testimonials Touch-Snap Track */
