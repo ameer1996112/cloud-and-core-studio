@@ -2178,6 +2178,12 @@ html[dir="rtl"] *::after {
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
   
+  /* ── 0. Global Mobile Containers ── */
+  .container, .container-sm {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+  
   /* ── 1. Navigation & Mobile Drawer ── */
   .mobile-drawer {
     position: fixed;
@@ -2196,6 +2202,8 @@ html[dir="rtl"] *::after {
     visibility: hidden;
     transition: transform 0.4s var(--ease), visibility 0.4s var(--ease);
     box-shadow: 15px 0 45px rgba(0,0,0,0.6);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .mobile-drawer.open { transform: translateX(0); visibility: visible; }
   .mobile-drawer a {
@@ -2365,7 +2373,7 @@ html[dir="rtl"] *::after {
     width: 100%;
   }
   .founder-img {
-    aspect-ratio: 3/4;
+    aspect-ratio: 1/1; /* Square aspect ratio shows more landscape details on mobile */
     border-radius: 160px 160px 30px 30px;
     width: 100%;
     object-fit: cover;
@@ -2373,6 +2381,12 @@ html[dir="rtl"] *::after {
   }
   .founder-glow {
     border-radius: 160px 160px 30px 30px;
+  }
+  .founder-content .btn {
+    width: 100%;
+    justify-content: center;
+    align-self: stretch !important;
+    margin-top: 1.5rem !important;
   }
 
   /* ── 4. Premium Class Cards ── */
@@ -2421,8 +2435,8 @@ html[dir="rtl"] *::after {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 1.5rem;
-    padding: 1.5rem clamp(1.5rem, 5vw, 3.5rem) 2.5rem;
-    margin: 1.5rem calc(-1 * clamp(1.5rem, 5vw, 3.5rem)) 0;
+    padding: 1.5rem 1.25rem 2.5rem !important;
+    margin: 1.5rem -1.25rem 0 !important;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     scrollbar-width: none;

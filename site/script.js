@@ -499,12 +499,19 @@
 
   // ── 9. Progressive Image Loading ──
   document.querySelectorAll('.img-progressive').forEach(img => {
-    if (img.complete) {
-      img.classList.add('loaded');
+    const markLoaded = () => img.classList.add('loaded');
+    if (img.complete && img.naturalWidth > 0) {
+      markLoaded();
     } else {
-      img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-      img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true });
+      // Fallback for Safari cached load race conditions
+      setTimeout(() => {
+        if (img.complete) markLoaded();
+      }, 100);
     }
+    // Ultimate safety fallback to prevent any permanent blur on slow connections
+    setTimeout(markLoaded, 1200);
   });
 
 })();
