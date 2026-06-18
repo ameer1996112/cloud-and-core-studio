@@ -1,0 +1,153 @@
+import { useState } from "react";
+import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
+import { ConciergePanel } from "@/components/ConciergePanel";
+import { MembershipHealthPanel } from "@/components/MembershipHealthPanel";
+import { Screen } from "@/components/Screen";
+import { premiumExperience } from "@/fixtures/premiumExperience";
+import { useCopy } from "@/i18n/LocaleProvider";
+import { registerForPushNotificationsAsync } from "@/lib/notifications";
+import { colors, radii } from "@/theme/colors";
+
+export default function ProfileScreen() {
+  const { t, locale, setLocale, direction } = useCopy();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const align = direction === "rtl" ? "right" : "left";
+
+  async function toggleNotifications(value: boolean) {
+    setNotificationsEnabled(value);
+    if (value) {
+      await registerForPushNotificationsAsync();
+    }
+  }
+
+  return (
+    <Screen>
+      <Text style={[styles.title, { textAlign: align }]}>{t.profile}</Text>
+      <MembershipHealthPanel membership={premiumExperience.membership} />
+      <ConciergePanel requests={premiumExperience.concierge} />
+
+      <View style={styles.card}>
+        <Text style={[styles.label, { textAlign: align }]}>{t.language}</Text>
+        <View style={[styles.segment, direction === "rtl" && styles.rowReverse]}>
+          <Pressable onPress={() => setLocale("he")} style={[styles.segmentButton, locale === "he" && styles.selected]}>
+            <Text style={styles.segmentText}>עברית</Text>
+          </Pressable>
+          <Pressable onPress={() => setLocale("en")} style={[styles.segmentButton, locale === "en" && styles.selected]}>
+            <Text style={styles.segmentText}>English</Text>
+          </Pressable>
+        </View>
+      </View>
+
+      <View style={[styles.rowCard, direction === "rtl" && styles.rowReverse]}>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.label, { textAlign: align }]}>{t.notifications}</Text>
+          <Text style={[styles.body, { textAlign: align }]}>
+            {locale === "he"
+              ? "התראות חכמות להזמנות, המתנה ומנוי."
+              : "Smart alerts for bookings, waitlist, and membership."}
+          </Text>
+        </View>
+        <Switch value={notificationsEnabled} onValueChange={toggleNotifications} />
+      </View>
+
+      <View style={styles.premiumCard}>
+        <Text style={[styles.premiumTitle, { textAlign: align }]}>{t.instructorMode}</Text>
+        <Text style={[styles.premiumBody, { textAlign: align }]}>
+          {locale === "he"
+            ? "כניסה מהירה לרשימת משתתפות, נוכחות והערות פנימיות."
+            : "Fast access to participant lists, attendance, and internal notes."}
+        </Text>
+      </View>
+
+      <Pressable style={styles.deleteButton}>
+        <Text style={styles.deleteText}>{t.accountDeletion}</Text>
+      </Pressable>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  title: {
+    color: colors.navy,
+    fontSize: 34,
+    fontWeight: "900",
+  },
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: radii.large,
+    borderWidth: 1,
+    borderColor: colors.sand,
+    padding: 18,
+    gap: 12,
+  },
+  rowCard: {
+    backgroundColor: colors.white,
+    borderRadius: radii.large,
+    borderWidth: 1,
+    borderColor: colors.sand,
+    padding: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 14,
+  },
+  rowReverse: {
+    flexDirection: "row-reverse",
+  },
+  label: {
+    color: colors.navy,
+    fontWeight: "900",
+    fontSize: 16,
+  },
+  body: {
+    color: colors.slate,
+    lineHeight: 21,
+    marginTop: 4,
+  },
+  segment: {
+    flexDirection: "row",
+    borderRadius: 16,
+    backgroundColor: colors.sand,
+    padding: 4,
+  },
+  segmentButton: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 12,
+    borderRadius: 14,
+  },
+  selected: {
+    backgroundColor: colors.white,
+  },
+  segmentText: {
+    color: colors.navy,
+    fontWeight: "900",
+  },
+  premiumCard: {
+    backgroundColor: colors.navy,
+    borderRadius: radii.hero,
+    padding: 20,
+    gap: 8,
+  },
+  premiumTitle: {
+    color: colors.gold,
+    fontSize: 22,
+    fontWeight: "900",
+  },
+  premiumBody: {
+    color: colors.white,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  deleteButton: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.danger,
+    padding: 14,
+    alignItems: "center",
+  },
+  deleteText: {
+    color: colors.danger,
+    fontWeight: "900",
+  },
+});
