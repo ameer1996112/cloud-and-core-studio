@@ -1,0 +1,92 @@
+# UX Sitemap
+
+## Mobile App
+
+- Onboarding
+  - Language selection
+  - Sign in/sign up
+  - Phone OTP
+  - Apple/Google login
+  - Terms, privacy, cancellation consent
+  - Optional waiver/health declaration
+- Home
+  - Next booking
+  - Next available classes
+  - Membership status
+  - Quick booking
+  - Studio announcements
+- Schedule
+  - Weekly calendar
+  - List view
+  - Filters: type, instructor, level, location, availability, time
+  - Class detail
+  - Book, cancel, join waitlist
+- Bookings
+  - Upcoming
+  - Waitlist
+  - History
+  - Add to calendar
+- Membership
+  - Active plan
+  - Credits and expiry
+  - Purchase packages
+  - Freeze request
+  - Payment history
+- Inbox
+  - Booking updates
+  - Waitlist promotions
+  - Studio announcements
+- Profile
+  - Personal details
+  - Medical notes and emergency contact
+  - Notification preferences
+  - Legal documents
+  - Account deletion request
+- Instructor Mode
+  - Today's classes
+  - Participant list
+  - Attendance/no-show marking
+  - Internal notes
+
+## Admin Dashboard
+
+- Overview
+  - Occupancy
+  - Revenue
+  - Attendance
+  - No-shows
+  - Trial funnel
+- Calendar
+  - Sessions
+  - Templates
+  - Recurrence
+  - Capacity and rooms
+- Bookings
+  - Registrations
+  - Waitlists
+  - Manual promotion
+  - Cancellations
+- Members
+  - Profiles
+  - Credits
+  - Memberships
+  - Notes
+- Payments
+  - Transactions
+  - Refunds
+  - Webhook events
+  - Invoice integration status
+- Communications
+  - Push
+  - Email
+  - Optional SMS/WhatsApp
+- Reports
+  - CSV exports
+  - Retention
+  - Instructor performance
+- Settings
+  - Legal content
+  - Staff permissions
+  - Payment provider
+  - Notification providers
+  - App content

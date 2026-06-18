@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Cloud&Core Studio",
+    "slug": "cloud-core-studio",
+    "scheme": "cloudcore",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF7F2"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "studio.cloudcore.app",
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "Cloud&Core sends class reminders, booking confirmations, and waitlist updates."
+      }
+    },
+    "android": {
+      "package": "studio.cloudcore.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF7F2"
+      },
+      "permissions": [
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#0B1D3A"
+        }
+      ],
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "replace-with-eas-project-id"
+      }
+    },
+    "experiments": {
+      "autolinkingModuleResolution": true
+    }
+  }
+}
