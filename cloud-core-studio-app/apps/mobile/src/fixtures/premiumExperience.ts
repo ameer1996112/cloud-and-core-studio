@@ -6,6 +6,23 @@ export interface LocalizedText {
   en: string;
 }
 
+export type EditorialImageKey = "homeHero" | "classMood" | "instructorMoment";
+
+export type EditorialCopy = LocalizedText;
+
+export interface EditorialExperience {
+  heroLine: EditorialCopy;
+  recommendationLine: EditorialCopy;
+  classContext: EditorialCopy;
+  membershipLine: EditorialCopy;
+  conciergeLine: EditorialCopy;
+  images: {
+    homeHero: EditorialImageKey;
+    classMood: EditorialImageKey;
+    instructorMoment: EditorialImageKey;
+  };
+}
+
 export interface SessionInsight {
   sessionId: string;
   fitScore: number;
@@ -43,6 +60,7 @@ export interface PremiumExperience {
     summary: LocalizedText;
     primaryCta: LocalizedText;
   };
+  editorial: EditorialExperience;
   membership: MembershipHealth;
   sessionInsights: SessionInsight[];
   concierge: ConciergeRequest[];
@@ -69,6 +87,33 @@ export const premiumExperience: PremiumExperience = {
     primaryCta: {
       he: "להזמין את השיעור המתאים",
       en: "Book my best class",
+    },
+  },
+  editorial: {
+    heroLine: {
+      he: "נועה, מאיה שמרה לך מקום שקט.",
+      en: "Noa, Maya saved a quiet spot for you.",
+    },
+    recommendationLine: {
+      he: "מתיחות וזרימה הוא השיעור הנכון להיום.",
+      en: "Stretch & Flow is the right class today.",
+    },
+    classContext: {
+      he: "שיעור ערב רך עם קהילה קטנה, מאיה, וחלון אישור ברור אם יתפנה מקום.",
+      en: "A calm evening class with a small community, Maya, and a clear confirmation window if a spot opens.",
+    },
+    membershipLine: {
+      he: "המנוי שלך בקצב טוב, עם מספיק קרדיטים לשמור על רצף שבועי.",
+      en: "Your membership is in a good rhythm, with enough credits to keep a weekly routine.",
+    },
+    conciergeLine: {
+      he: "הסטודיו כבר מטפל בבקשות הפעילות שלך.",
+      en: "The studio is already taking care of your active requests.",
+    },
+    images: {
+      homeHero: "homeHero",
+      classMood: "classMood",
+      instructorMoment: "instructorMoment",
     },
   },
   membership: {
@@ -157,6 +202,10 @@ export const premiumExperience: PremiumExperience = {
 
 export function getLocalizedText(text: LocalizedText, locale: Locale) {
   return text[locale];
+}
+
+export function getEditorialLine(copy: EditorialCopy, locale: Locale) {
+  return copy[locale];
 }
 
 export function getSessionInsight(sessionId: string, experience: PremiumExperience) {
