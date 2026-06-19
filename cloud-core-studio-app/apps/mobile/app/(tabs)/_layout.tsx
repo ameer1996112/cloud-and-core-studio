@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors } from "@/theme/colors";
+import { colors, fitness } from "@/theme/colors";
 
 export default function TabsLayout() {
   const { t } = useCopy();
@@ -9,17 +9,22 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.navy,
-        tabBarInactiveTintColor: colors.slate,
+        tabBarActiveTintColor: colors.gold,
+        tabBarInactiveTintColor: fitness.textMuted,
         tabBarStyle: {
-          backgroundColor: colors.ivory,
-          borderTopColor: colors.sand,
-          height: 86,
+          backgroundColor: fitness.surface,
+          borderTopColor: fitness.border,
+          height: 88,
           paddingBottom: 24,
           paddingTop: 8,
         },
-        headerStyle: { backgroundColor: colors.ivory },
-        headerTintColor: colors.navy,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "800",
+        },
+        headerStyle: { backgroundColor: fitness.appBg },
+        headerTintColor: fitness.textPrimary,
+        headerTitleStyle: { fontWeight: "900" },
       }}
     >
       <Tabs.Screen
