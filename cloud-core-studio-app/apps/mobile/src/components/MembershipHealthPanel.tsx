@@ -15,7 +15,14 @@ export function MembershipHealthPanel({ membership }: { membership: MembershipHe
     : locale === "he"
       ? "פתוח"
       : "Open";
-  const freeze = membership.entitlement.status === "active" ? (locale === "he" ? "זכאית" : "Eligible") : getLocalizedText(membership.status, locale);
+  const freeze =
+    membership.entitlement.status === "active"
+      ? locale === "he"
+        ? "זכאית"
+        : "Eligible"
+      : locale === "he"
+        ? "לא פעיל"
+        : "Not active";
 
   return (
     <View style={styles.panel}>

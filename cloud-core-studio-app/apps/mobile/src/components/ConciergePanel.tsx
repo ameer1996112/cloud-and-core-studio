@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { getEditorialLine, getLocalizedText, premiumExperience, type ConciergeRequest } from "@/fixtures/premiumExperience";
+import { getLocalizedText, type ConciergeRequest } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
 import { colors, fitness, radii } from "@/theme/colors";
 
@@ -12,7 +12,9 @@ export function ConciergePanel({ requests }: { requests: ConciergeRequest[] }) {
       <Text style={[styles.title, { textAlign: align }]}>
         {locale === "he" ? "טיפול הסטודיו" : "Studio care"}
       </Text>
-      <Text style={[styles.body, { textAlign: align }]}>{getEditorialLine(premiumExperience.editorial.conciergeLine, locale)}</Text>
+      <Text style={[styles.body, { textAlign: align }]}>
+        {locale === "he" ? "בקשות פעילות ומענה מהיר מהצוות." : "Active requests and quick team follow-up."}
+      </Text>
       {requests.map((request) => (
         <View key={request.id} style={[styles.requestRow, direction === "rtl" && styles.rowReverse]}>
           <View style={[styles.requestDot, request.tone === "approved" && styles.requestDotApproved]} />
