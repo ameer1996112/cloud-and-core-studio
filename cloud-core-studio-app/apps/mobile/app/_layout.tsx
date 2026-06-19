@@ -1,11 +1,21 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { LocaleProvider } from "@/i18n/LocaleProvider";
+import { LocaleProvider, useCopy } from "@/i18n/LocaleProvider";
 import { colors } from "@/theme/colors";
 
 export default function RootLayout() {
   return (
     <LocaleProvider>
+      <AppNavigator />
+    </LocaleProvider>
+  );
+}
+
+function AppNavigator() {
+  const { t } = useCopy();
+
+  return (
+    <>
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -16,8 +26,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="class/[id]/index" options={{ title: "Class" }} />
+        <Stack.Screen name="class/[id]/index" options={{ title: t.classTitle }} />
       </Stack>
-    </LocaleProvider>
+    </>
   );
 }

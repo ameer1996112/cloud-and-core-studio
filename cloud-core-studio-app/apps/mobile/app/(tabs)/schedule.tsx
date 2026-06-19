@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Screen } from "@/components/Screen";
 import { TimelineClassCard } from "@/components/TimelineClassCard";
 import { sessions } from "@/fixtures/classes";
@@ -15,6 +16,14 @@ export default function ScheduleScreen() {
   const { t, locale, direction } = useCopy();
   const align = direction === "rtl" ? "right" : "left";
   const orderedSessions = getRecommendedSessions(sessions, premiumExperience);
+  const localizedIntents = intents[locale];
+  const [selectedIntent, setSelectedIntent] = useState(localizedIntents[0]);
+  const filterStatus =
+    locale === "he" ? `סינון פעיל: ${selectedIntent}` : `Active filter: ${selectedIntent}`;
+
+  useEffect(() => {
+    setSelectedIntent(localizedIntents[0]);
+  }, [locale]);
 
   return (
     <Screen>
@@ -30,12 +39,17 @@ export default function ScheduleScreen() {
         </Text>
       </View>
       <View style={[styles.filters, direction === "rtl" && styles.rowReverse]}>
-        {intents[locale].map((intent, index) => (
-          <Pressable key={intent} style={[styles.filter, index === 0 && styles.selectedFilter]}>
-            <Text style={[styles.filterText, index === 0 && styles.selectedFilterText]}>{intent}</Text>
+        {localizedIntents.map((intent) => (
+          <Pressable
+            key={intent}
+            onPress={() => setSelectedIntent(intent)}
+            style={[styles.filter, selectedIntent === intent && styles.selectedFilter]}
+          >
+            <Text style={[styles.filterText, selectedIntent === intent && styles.selectedFilterText]}>{intent}</Text>
           </Pressable>
         ))}
       </View>
+      <Text style={[styles.filterStatus, { textAlign: align }]}>{filterStatus}</Text>
       <Text style={[styles.dayLabel, { textAlign: align }]}>
         {locale === "he" ? "מומלץ עבורך" : "Recommended for you"}
       </Text>
@@ -97,6 +111,11 @@ const styles = StyleSheet.create({
   },
   selectedFilterText: {
     color: colors.navy,
+  },
+  filterStatus: {
+    color: colors.slate,
+    fontSize: 13,
+    fontWeight: "700",
   },
   dayLabel: {
     color: colors.navy,

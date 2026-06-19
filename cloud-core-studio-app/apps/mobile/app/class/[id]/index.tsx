@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { decideBooking } from "@cloud-core/shared";
 import { useLocalSearchParams } from "expo-router";
 import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
@@ -10,6 +11,7 @@ import { colors, editorial, radii } from "@/theme/colors";
 export default function ClassDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, locale, direction } = useCopy();
+  const [bookingState, setBookingState] = useState<null | "booked" | "waitlisted" | "blocked">(null);
   const session = sessions.find((item) => item.id === id) ?? sessions[0];
   const insight = getSessionInsight(session.id, premiumExperience);
   const decision = decideBooking(session, entitlement);
@@ -22,6 +24,34 @@ export default function ClassDetailScreen() {
     : decision.mode === "waitlist"
       ? t.joinWaitlist
       : t.book;
+  const bookingStatusText =
+    bookingState === "booked"
+      ? locale === "he"
+        ? "המקום נשמר מקומית. האישור מוצג כאן בלי חיבור לשרת."
+        : "Spot reserved locally. Confirmation is shown here without a backend."
+      : bookingState === "waitlisted"
+        ? locale === "he"
+          ? "נכנסת לרשימת ההמתנה המקומית. נציג עדכון כאן אם יתפנה מקום."
+          : "You joined the local waitlist. We show the status here if a spot opens."
+        : bookingState === "blocked"
+          ? locale === "he"
+            ? "אי אפשר להשלים הזמנה במצב הזה. בדקי מנוי, קרדיטים או זמינות שיעור."
+            : "This booking cannot be completed in the current state. Check membership, credits, or class availability."
+          : null;
+
+  function handleBookingPress() {
+    if (decision.mode === "book") {
+      setBookingState("booked");
+      return;
+    }
+
+    if (decision.mode === "waitlist") {
+      setBookingState("waitlisted");
+      return;
+    }
+
+    setBookingState("blocked");
+  }
 
   return (
     <Screen>
@@ -90,9 +120,19 @@ export default function ClassDetailScreen() {
         </View>
       ) : null}
 
-      <Pressable style={[styles.primaryButton, decision.mode === "waitlist" && styles.waitlistButton]}>
+      <Pressable
+        onPress={handleBookingPress}
+        style={[
+          styles.primaryButton,
+          decision.mode === "waitlist" && styles.waitlistButton,
+          decision.mode === "blocked" && styles.blockedButton,
+        ]}
+      >
         <Text style={styles.primaryText}>{cta}</Text>
       </Pressable>
+      {bookingStatusText ? (
+        <Text style={[styles.statusText, { textAlign: align }]}>{bookingStatusText}</Text>
+      ) : null}
     </Screen>
   );
 }
@@ -210,9 +250,18 @@ const styles = StyleSheet.create({
   waitlistButton: {
     backgroundColor: colors.gold,
   },
+  blockedButton: {
+    backgroundColor: colors.slate,
+  },
   primaryText: {
     color: colors.white,
     fontWeight: "900",
     fontSize: 17,
+  },
+  statusText: {
+    color: colors.slate,
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: "700",
   },
 });

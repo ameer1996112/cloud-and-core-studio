@@ -11,14 +11,62 @@ import { colors } from "@/theme/colors";
 export default function ProfileScreen() {
   const { t, locale, setLocale, direction } = useCopy();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationsStatus, setNotificationsStatus] = useState<"idle" | "checking" | "enabled" | "disabled" | "unavailable">(
+    "idle",
+  );
+  const [accountDeletionRequested, setAccountDeletionRequested] = useState(false);
   const align = direction === "rtl" ? "right" : "left";
 
   async function toggleNotifications(value: boolean) {
-    setNotificationsEnabled(value);
-    if (value) {
-      await registerForPushNotificationsAsync();
+    if (!value) {
+      setNotificationsEnabled(false);
+      setNotificationsStatus("disabled");
+      return;
     }
+
+    try {
+      setNotificationsStatus("checking");
+      const token = await registerForPushNotificationsAsync();
+      if (token) {
+        setNotificationsEnabled(true);
+        setNotificationsStatus("enabled");
+        return;
+      }
+    } catch {
+      // Keep the UI local and explicit when registration fails.
+    }
+
+    setNotificationsEnabled(false);
+    setNotificationsStatus("unavailable");
   }
+
+  const notificationsStatusText =
+    notificationsStatus === "enabled"
+      ? locale === "he"
+        ? "ההתראות פעילות במכשיר הזה."
+        : "Notifications are enabled on this device."
+      : notificationsStatus === "disabled"
+        ? locale === "he"
+          ? "ההתראות כבויות כרגע."
+          : "Notifications are currently turned off."
+        : notificationsStatus === "checking"
+          ? locale === "he"
+            ? "בודקים הרשאה והתאמת מכשיר להתראות."
+            : "Checking notification permission and device availability."
+          : notificationsStatus === "unavailable"
+            ? locale === "he"
+              ? "התראות אינן זמינות כרגע במכשיר או בפרויקט הזה."
+              : "Notifications are unavailable on this device or in this project right now."
+            : locale === "he"
+              ? "אפשר להפעיל התראות לאחר שהרישום למכשיר מצליח."
+              : "Notifications can be enabled after device registration succeeds.";
+  const deletionStatusText = accountDeletionRequested
+    ? locale === "he"
+      ? "בקשת המחיקה נשמרה מקומית לבדיקה לפני שליחה."
+      : "Your deletion request was saved locally for review before sending."
+    : locale === "he"
+      ? "כפתור זה שומר בקשה מקומית בלבד בשלב הזה."
+      : "This button stores a local-only request at this stage.";
 
   return (
     <Screen>
@@ -63,8 +111,13 @@ export default function ProfileScreen() {
               ? "התראות חכמות להזמנות, המתנה ומנוי."
               : "Smart alerts for bookings, waitlist, and membership."}
           </Text>
+          <Text style={[styles.statusText, { textAlign: align }]}>{notificationsStatusText}</Text>
         </View>
-        <Switch value={notificationsEnabled} onValueChange={toggleNotifications} />
+        <Switch
+          disabled={notificationsStatus === "checking"}
+          value={notificationsEnabled}
+          onValueChange={toggleNotifications}
+        />
       </View>
 
       <View style={styles.premiumCard}>
@@ -76,9 +129,10 @@ export default function ProfileScreen() {
         </Text>
       </View>
 
-      <Pressable style={styles.deleteButton}>
+      <Pressable onPress={() => setAccountDeletionRequested(true)} style={styles.deleteButton}>
         <Text style={styles.deleteText}>{t.accountDeletion}</Text>
       </Pressable>
+      <Text style={[styles.statusText, { textAlign: align }]}>{deletionStatusText}</Text>
     </Screen>
   );
 }
@@ -151,6 +205,13 @@ const styles = StyleSheet.create({
     color: colors.slate,
     lineHeight: 21,
     marginTop: 4,
+  },
+  statusText: {
+    color: colors.slate,
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: "700",
+    marginTop: 8,
   },
   segment: {
     flexDirection: "row",

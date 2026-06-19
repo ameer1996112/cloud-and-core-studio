@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Screen } from "@/components/Screen";
 import { sessions } from "@/fixtures/classes";
 import { useCopy } from "@/i18n/LocaleProvider";
@@ -6,24 +7,60 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function BookingsScreen() {
   const { t, direction, locale } = useCopy();
+  const [savedToCalendar, setSavedToCalendar] = useState(false);
+  const [bookingCancelled, setBookingCancelled] = useState(false);
   const next = sessions[0];
   const title = locale === "he" ? next.titleHe : next.titleEn;
+  const align = direction === "rtl" ? "right" : "left";
+  const statusText = bookingCancelled
+    ? locale === "he"
+      ? "ההזמנה בוטלה מקומית. אפשר לחזור ללוח ולהזמין מחדש."
+      : "Booking cancelled locally. You can return to the schedule and book again."
+    : savedToCalendar
+      ? locale === "he"
+        ? "נשמר תזכורת מקומית ליומן עבור השיעור הקרוב."
+        : "A local calendar reminder was saved for your next class."
+      : locale === "he"
+        ? "ההזמנה נשמרת מקומית עד שתבחרי פעולה."
+        : "Your booking is kept locally until you choose an action.";
 
   return (
     <Screen>
-      <Text style={[styles.title, { textAlign: direction === "rtl" ? "right" : "left" }]}>{t.bookings}</Text>
+      <Text style={[styles.title, { textAlign: align }]}>{t.bookings}</Text>
       <View style={styles.card}>
-        <Text style={[styles.label, { textAlign: direction === "rtl" ? "right" : "left" }]}>{t.nextBooking}</Text>
-        <Text style={[styles.classTitle, { textAlign: direction === "rtl" ? "right" : "left" }]}>{title}</Text>
-        <Text style={[styles.meta, { textAlign: direction === "rtl" ? "right" : "left" }]}>19 Jun · 18:30 · {next.roomName}</Text>
+        <Text style={[styles.label, { textAlign: align }]}>{t.nextBooking}</Text>
+        <Text style={[styles.classTitle, { textAlign: align }]}>{title}</Text>
+        <Text style={[styles.meta, { textAlign: align }]}>19 Jun · 18:30 · {next.roomName}</Text>
         <View style={[styles.actions, direction === "rtl" && styles.rowReverse]}>
-          <Pressable style={styles.secondaryButton}>
-            <Text style={styles.secondaryText}>Calendar</Text>
+          <Pressable
+            disabled={bookingCancelled}
+            onPress={() => setSavedToCalendar(true)}
+            style={[
+              styles.secondaryButton,
+              savedToCalendar && !bookingCancelled && styles.activeButton,
+              bookingCancelled && styles.disabledButton,
+            ]}
+          >
+            <Text style={[styles.secondaryText, bookingCancelled && styles.disabledText]}>
+              {savedToCalendar && !bookingCancelled
+                ? locale === "he"
+                  ? "נשמר ביומן"
+                  : "Saved"
+                : t.calendar}
+            </Text>
           </Pressable>
-          <Pressable style={styles.cancelButton}>
-            <Text style={styles.cancelText}>{t.cancel}</Text>
+          <Pressable
+            disabled={bookingCancelled}
+            onPress={() => {
+              setBookingCancelled(true);
+              setSavedToCalendar(false);
+            }}
+            style={[styles.cancelButton, bookingCancelled && styles.disabledButton]}
+          >
+            <Text style={[styles.cancelText, bookingCancelled && styles.disabledText]}>{t.cancel}</Text>
           </Pressable>
         </View>
+        <Text style={[styles.statusText, { textAlign: align }]}>{statusText}</Text>
       </View>
     </Screen>
   );
@@ -85,5 +122,23 @@ const styles = StyleSheet.create({
   cancelText: {
     color: colors.danger,
     fontWeight: "900",
+  },
+  statusText: {
+    color: colors.slate,
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: "700",
+    marginTop: 4,
+  },
+  disabledButton: {
+    borderColor: colors.sand,
+    backgroundColor: colors.ivory,
+  },
+  disabledText: {
+    color: colors.slate,
+  },
+  activeButton: {
+    borderColor: colors.gold,
+    backgroundColor: colors.goldSoft,
   },
 });
