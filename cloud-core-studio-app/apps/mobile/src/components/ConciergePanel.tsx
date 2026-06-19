@@ -3,12 +3,6 @@ import { getEditorialLine, getLocalizedText, premiumExperience, type ConciergeRe
 import { useCopy } from "@/i18n/LocaleProvider";
 import { colors, editorial } from "@/theme/colors";
 
-const toneColor: Record<ConciergeRequest["tone"], string> = {
-  approved: colors.success,
-  waiting: colors.warning,
-  reply: colors.plum,
-};
-
 export function ConciergePanel({ requests }: { requests: ConciergeRequest[] }) {
   const { locale, direction } = useCopy();
   const align = direction === "rtl" ? "right" : "left";
@@ -24,7 +18,7 @@ export function ConciergePanel({ requests }: { requests: ConciergeRequest[] }) {
           <Text style={[styles.requestTitle, { textAlign: align }]}>
             {getLocalizedText(request.title, locale)}
           </Text>
-          <Text style={[styles.status, { color: toneColor[request.tone] }]}>
+          <Text style={[styles.status, { color: colors.slate }]}>
             {getLocalizedText(request.status, locale)}
           </Text>
         </View>
