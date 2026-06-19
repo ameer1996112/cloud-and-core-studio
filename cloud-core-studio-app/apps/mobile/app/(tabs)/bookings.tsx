@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Screen } from "@/components/Screen";
 import { sessions } from "@/fixtures/classes";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii } from "@/theme/colors";
+import { colors, fitness, radii } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function BookingsScreen() {
@@ -28,9 +28,24 @@ export default function BookingsScreen() {
     <Screen>
       <Text style={[styles.title, { textAlign: align }]}>{t.bookings}</Text>
       <View style={styles.card}>
-        <Text style={[styles.label, { textAlign: align }]}>{t.nextBooking}</Text>
-        <Text style={[styles.classTitle, { textAlign: align }]}>{title}</Text>
-        <Text style={[styles.meta, { textAlign: align }]}>19 Jun · 18:30 · {next.roomName}</Text>
+        <View style={[styles.headerRow, direction === "rtl" && styles.rowReverse]}>
+          <View style={styles.timeBadge}>
+            <Text style={styles.timeText}>18:30</Text>
+            <Text style={styles.timeLabel}>{locale === "he" ? "היום" : "Today"}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.label, { textAlign: align }]}>{t.nextBooking}</Text>
+            <Text style={[styles.classTitle, { textAlign: align }]}>{title}</Text>
+            <Text style={[styles.meta, { textAlign: align }]}>19 Jun · {next.roomName}</Text>
+          </View>
+        </View>
+        <View style={styles.note}>
+          <Text style={[styles.noteText, { textAlign: align }]}>
+            {locale === "he"
+              ? "הגיעי 8 דקות לפני השיעור. הסטודיו ישמור לך מקום שקט."
+              : "Arrive 8 minutes early. The studio will keep your spot ready."}
+          </Text>
+        </View>
         <View style={[styles.actions, direction === "rtl" && styles.rowReverse]}>
           <Pressable
             disabled={bookingCancelled}
@@ -68,34 +83,75 @@ export default function BookingsScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 30,
     fontWeight: "900",
   },
   card: {
-    backgroundColor: colors.white,
+    backgroundColor: fitness.surface,
     borderRadius: radii.large,
     borderWidth: 1,
-    borderColor: colors.sand,
-    padding: 20,
-    gap: 10,
+    borderColor: fitness.border,
+    padding: 18,
+    gap: 14,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 14,
+  },
+  timeBadge: {
+    width: 72,
+    borderRadius: 18,
+    backgroundColor: fitness.goldGlow,
+    borderWidth: 1,
+    borderColor: fitness.borderStrong,
+    padding: 10,
+    alignItems: "center",
+  },
+  timeText: {
+    color: colors.gold,
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  timeLabel: {
+    color: fitness.textSecondary,
+    fontSize: 12,
+    fontWeight: "900",
+    marginTop: 2,
   },
   label: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontWeight: "800",
   },
   classTitle: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 24,
     fontWeight: "900",
+    marginTop: 3,
   },
   meta: {
-    color: colors.slate,
+    color: fitness.textMuted,
+    fontWeight: "700",
+    marginTop: 4,
+  },
+  note: {
+    borderRadius: radii.medium,
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    paddingHorizontal: 13,
+    paddingVertical: 12,
+  },
+  noteText: {
+    color: fitness.textSecondary,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "700",
   },
   actions: {
     flexDirection: "row",
     gap: 10,
-    marginTop: 8,
   },
   rowReverse: {
     flexDirection: "row-reverse",
@@ -103,18 +159,21 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     borderWidth: 1,
-    borderColor: colors.navy,
+    borderColor: fitness.borderStrong,
     borderRadius: radii.small,
     padding: 12,
     alignItems: "center",
+    backgroundColor: fitness.surfaceRaised,
   },
   secondaryText: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontWeight: "900",
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: colors.sand,
+    backgroundColor: fitness.dangerGlow,
+    borderWidth: 1,
+    borderColor: "rgba(166,66,66,0.42)",
     borderRadius: radii.small,
     padding: 12,
     alignItems: "center",
@@ -124,21 +183,20 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   statusText: {
-    color: colors.slate,
+    color: fitness.textMuted,
     fontSize: 14,
     lineHeight: 21,
     fontWeight: "700",
-    marginTop: 4,
   },
   disabledButton: {
-    borderColor: colors.sand,
-    backgroundColor: colors.ivory,
+    borderColor: fitness.border,
+    backgroundColor: fitness.surfaceSoft,
   },
   disabledText: {
-    color: colors.slate,
+    color: fitness.textMuted,
   },
   activeButton: {
-    borderColor: colors.gold,
-    backgroundColor: colors.goldSoft,
+    borderColor: fitness.borderStrong,
+    backgroundColor: fitness.goldGlow,
   },
 });

@@ -6,7 +6,7 @@ import { Screen } from "@/components/Screen";
 import { premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
 import { registerForPushNotificationsAsync } from "@/lib/notifications";
-import { colors } from "@/theme/colors";
+import { colors, fitness, radii } from "@/theme/colors";
 
 export default function ProfileScreen() {
   const { t, locale, setLocale, direction } = useCopy();
@@ -71,19 +71,19 @@ export default function ProfileScreen() {
   return (
     <Screen>
       <Text style={[styles.title, { textAlign: align }]}>{t.profile}</Text>
-      <View style={[styles.editorialRow, direction === "rtl" && styles.rowReverse]}>
+      <View style={[styles.memberHero, direction === "rtl" && styles.rowReverse]}>
         <Image source={require("../../assets/editorial/instructor-maya.png")} style={styles.editorialImage} />
         <View style={styles.editorialCopy}>
           <Text style={[styles.editorialEyebrow, { textAlign: align }]}>
-            {locale === "he" ? "קשר סטודיו" : "Studio care"}
+            {locale === "he" ? "חברת סטודיו" : "Studio member"}
           </Text>
           <Text style={[styles.editorialTitle, { textAlign: align }]}>
-            {locale === "he" ? "מאיה עוקבת אחרי הקצב וההעדפות שלך." : "Maya keeps track of your pace and preferences."}
+            {locale === "he" ? "נועה - מנוי פרימיום פעיל" : "Noa - Premium membership active"}
           </Text>
           <Text style={[styles.editorialBody, { textAlign: align }]}>
             {locale === "he"
-              ? "הערות מדריכה, נוכחות והתאמות נשמרות יחד כדי שההמשך יהיה אישי ושקט."
-              : "Instructor notes, attendance, and class adjustments stay together for a quieter, more personal follow-up."}
+              ? "קרדיטים, התראות ובקשות סטודיו במקום אחד."
+              : "Credits, alerts, and studio requests in one place."}
           </Text>
         </View>
       </View>
@@ -139,21 +139,24 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 32,
     fontWeight: "900",
   },
   card: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: colors.sand,
-    paddingVertical: 18,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 18,
     gap: 12,
   },
   rowCard: {
-    borderBottomWidth: 1,
-    borderColor: colors.sand,
-    paddingVertical: 18,
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 18,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -162,19 +165,21 @@ const styles = StyleSheet.create({
   rowReverse: {
     flexDirection: "row-reverse",
   },
-  editorialRow: {
+  memberHero: {
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    borderBottomWidth: 1,
-    borderColor: colors.sand,
-    paddingBottom: 18,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 14,
   },
   editorialImage: {
     width: 88,
     height: 110,
-    borderRadius: 8,
-    backgroundColor: colors.sand,
+    borderRadius: radii.small,
+    backgroundColor: fitness.surfaceSoft,
   },
   editorialCopy: {
     flex: 1,
@@ -186,28 +191,29 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   editorialTitle: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 18,
     lineHeight: 23,
     fontWeight: "900",
   },
   editorialBody: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontSize: 14,
     lineHeight: 20,
   },
   label: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontWeight: "900",
     fontSize: 16,
   },
   body: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     lineHeight: 21,
     marginTop: 4,
+    fontWeight: "700",
   },
   statusText: {
-    color: colors.slate,
+    color: fitness.textMuted,
     fontSize: 14,
     lineHeight: 21,
     fontWeight: "700",
@@ -216,7 +222,9 @@ const styles = StyleSheet.create({
   segment: {
     flexDirection: "row",
     borderRadius: 999,
-    backgroundColor: colors.sand,
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.border,
+    borderWidth: 1,
     padding: 4,
   },
   segmentButton: {
@@ -226,33 +234,36 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   selected: {
-    backgroundColor: colors.white,
+    backgroundColor: fitness.goldGlow,
   },
   segmentText: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontWeight: "900",
   },
   premiumCard: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: colors.sand,
-    paddingVertical: 18,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 18,
     gap: 8,
   },
   premiumTitle: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 21,
     fontWeight: "900",
   },
   premiumBody: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontSize: 15,
     lineHeight: 22,
+    fontWeight: "700",
   },
   deleteButton: {
     borderRadius: 999,
     borderWidth: 1,
     borderColor: colors.danger,
+    backgroundColor: fitness.dangerGlow,
     padding: 14,
     alignItems: "center",
   },
