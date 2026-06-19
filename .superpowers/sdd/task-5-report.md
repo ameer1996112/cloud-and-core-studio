@@ -24,3 +24,7 @@ Concerns
 
 Review Follow-up
 - Updated `/Users/ameeramer/Documents/Cloud & Core/cloud-core-studio-app/apps/mobile/app/(tabs)/profile.tsx` to consume `apps/mobile/assets/editorial/instructor-maya.png` with a restrained studio-care portrait row that keeps the profile practical and aligned with the editorial spec.
+- Moved the instructor editorial moment above `MembershipHealthPanel` and `ConciergePanel` so the profile now opens with people/place before account-care status.
+
+Review Fix Verification
+- Re-ran `npm run typecheck` and `npm test` after the profile reorder; both passed.

@@ -23,9 +23,6 @@ export default function ProfileScreen() {
   return (
     <Screen>
       <Text style={[styles.title, { textAlign: align }]}>{t.profile}</Text>
-      <MembershipHealthPanel membership={premiumExperience.membership} />
-      <ConciergePanel requests={premiumExperience.concierge} />
-
       <View style={[styles.editorialRow, direction === "rtl" && styles.rowReverse]}>
         <Image source={require("../../assets/editorial/instructor-maya.png")} style={styles.editorialImage} />
         <View style={styles.editorialCopy}>
@@ -42,6 +39,9 @@ export default function ProfileScreen() {
           </Text>
         </View>
       </View>
+
+      <MembershipHealthPanel membership={premiumExperience.membership} />
+      <ConciergePanel requests={premiumExperience.concierge} />
 
       <View style={styles.card}>
         <Text style={[styles.label, { textAlign: align }]}>{t.language}</Text>
