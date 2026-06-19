@@ -1,12 +1,11 @@
 import { decideBooking } from "@cloud-core/shared";
 import { useLocalSearchParams } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FitScoreRing } from "@/components/FitScoreRing";
+import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
 import { Screen } from "@/components/Screen";
 import { entitlement, sessions } from "@/fixtures/classes";
-import { getLocalizedText, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
+import { getEditorialLine, getLocalizedText, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii, shadows } from "@/theme/colors";
+import { colors, editorial, radii } from "@/theme/colors";
 
 export default function ClassDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -26,16 +25,21 @@ export default function ClassDetailScreen() {
 
   return (
     <Screen>
-      <View style={styles.hero}>
-        <View style={[styles.heroTop, direction === "rtl" && styles.rowReverse]}>
-          <View style={{ flex: 1, gap: 8 }}>
-            <Text style={[styles.kicker, { textAlign: align }]}>{locale === "he" ? "תיק שיעור" : "Class dossier"}</Text>
-            <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
-            <Text style={[styles.description, { textAlign: align }]}>{description}</Text>
-          </View>
-          {insight ? <FitScoreRing score={insight.fitScore} label={locale === "he" ? "התאמה" : "fit"} /> : null}
+      <ImageBackground
+        source={require("../../../assets/editorial/class-stretch-flow.png")}
+        style={styles.hero}
+        imageStyle={styles.heroImage}
+        resizeMode="cover"
+      >
+        <View style={styles.heroScrim}>
+          <Text style={[styles.kicker, { textAlign: align }]}>{locale === "he" ? "תיק שיעור" : "Class dossier"}</Text>
+          <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
+          <Text style={[styles.description, { textAlign: align }]}>{description}</Text>
+          <Text style={[styles.context, { textAlign: align }]}>
+            {getEditorialLine(premiumExperience.editorial.classContext, locale)}
+          </Text>
         </View>
-      </View>
+      </ImageBackground>
 
       <View style={styles.detailGrid}>
         <Info label={t.instructor} value={session.instructor.displayName} />
@@ -104,15 +108,23 @@ function Info({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   hero: {
-    backgroundColor: colors.navy,
-    borderRadius: radii.hero,
-    padding: 22,
-    ...shadows.premium,
+    minHeight: 360,
+    justifyContent: "flex-end",
+    marginHorizontal: -20,
+    marginTop: -12,
   },
-  heroTop: {
-    flexDirection: "row",
-    gap: 18,
-    alignItems: "center",
+  heroImage: {
+    borderBottomLeftRadius: radii.hero,
+    borderBottomRightRadius: radii.hero,
+  },
+  heroScrim: {
+    minHeight: 360,
+    justifyContent: "flex-end",
+    backgroundColor: editorial.navyOverlay,
+    borderBottomLeftRadius: radii.hero,
+    borderBottomRightRadius: radii.hero,
+    padding: 22,
+    gap: 9,
   },
   rowReverse: {
     flexDirection: "row-reverse",
@@ -120,20 +132,24 @@ const styles = StyleSheet.create({
   kicker: {
     color: colors.gold,
     fontWeight: "900",
-    letterSpacing: 1.6,
-    textTransform: "uppercase",
     fontSize: 12,
   },
   title: {
     color: colors.white,
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 38,
+    lineHeight: 43,
     fontWeight: "900",
   },
   description: {
-    color: colors.sand,
+    color: colors.ivory,
     fontSize: 16,
     lineHeight: 24,
+    fontWeight: "800",
+  },
+  context: {
+    color: colors.sand,
+    fontSize: 14,
+    lineHeight: 21,
     fontWeight: "700",
   },
   detailGrid: {
@@ -142,11 +158,9 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: radii.medium,
-    borderWidth: 1,
-    borderColor: colors.sand,
-    padding: 12,
+    borderBottomWidth: 1,
+    borderColor: editorial.hairline,
+    paddingBottom: 10,
     gap: 4,
   },
   infoLabel: {
@@ -160,11 +174,9 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   section: {
-    backgroundColor: colors.white,
-    borderRadius: radii.large,
-    borderWidth: 1,
-    borderColor: colors.sand,
-    padding: 18,
+    borderTopWidth: 1,
+    borderColor: editorial.hairline,
+    paddingTop: 18,
     gap: 9,
   },
   sectionTitle: {
@@ -180,18 +192,18 @@ const styles = StyleSheet.create({
   },
   waitlist: {
     backgroundColor: colors.goldSoft,
-    borderRadius: radii.large,
+    borderRadius: radii.medium,
     padding: 18,
     gap: 8,
   },
   waitlistValue: {
     color: colors.navy,
-    fontSize: 42,
+    fontSize: 36,
     fontWeight: "900",
   },
   primaryButton: {
     backgroundColor: colors.navy,
-    borderRadius: 18,
+    borderRadius: 999,
     paddingVertical: 16,
     alignItems: "center",
   },

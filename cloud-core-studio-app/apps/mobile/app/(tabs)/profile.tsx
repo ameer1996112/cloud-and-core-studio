@@ -6,7 +6,7 @@ import { Screen } from "@/components/Screen";
 import { premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
 import { registerForPushNotificationsAsync } from "@/lib/notifications";
-import { colors, radii } from "@/theme/colors";
+import { colors } from "@/theme/colors";
 
 export default function ProfileScreen() {
   const { t, locale, setLocale, direction } = useCopy();
@@ -69,23 +69,20 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   title: {
     color: colors.navy,
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: "900",
   },
   card: {
-    backgroundColor: colors.white,
-    borderRadius: radii.large,
-    borderWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.sand,
-    padding: 18,
+    paddingVertical: 18,
     gap: 12,
   },
   rowCard: {
-    backgroundColor: colors.white,
-    borderRadius: radii.large,
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.sand,
-    padding: 18,
+    paddingVertical: 18,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -106,7 +103,7 @@ const styles = StyleSheet.create({
   },
   segment: {
     flexDirection: "row",
-    borderRadius: 16,
+    borderRadius: 999,
     backgroundColor: colors.sand,
     padding: 4,
   },
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: 12,
-    borderRadius: 14,
+    borderRadius: 999,
   },
   selected: {
     backgroundColor: colors.white,
@@ -124,23 +121,24 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   premiumCard: {
-    backgroundColor: colors.navy,
-    borderRadius: radii.hero,
-    padding: 20,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: colors.sand,
+    paddingVertical: 18,
     gap: 8,
   },
   premiumTitle: {
-    color: colors.gold,
-    fontSize: 22,
+    color: colors.navy,
+    fontSize: 21,
     fontWeight: "900",
   },
   premiumBody: {
-    color: colors.white,
+    color: colors.slate,
     fontSize: 15,
     lineHeight: 22,
   },
   deleteButton: {
-    borderRadius: 16,
+    borderRadius: 999,
     borderWidth: 1,
     borderColor: colors.danger,
     padding: 14,
