@@ -6,7 +6,7 @@ import { Screen } from "@/components/Screen";
 import { entitlement, sessions } from "@/fixtures/classes";
 import { getEditorialLine, getLocalizedText, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, editorial, radii } from "@/theme/colors";
+import { colors, fitness, radii } from "@/theme/colors";
 
 export default function ClassDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -120,19 +120,25 @@ export default function ClassDetailScreen() {
         </View>
       ) : null}
 
-      <Pressable
-        onPress={handleBookingPress}
-        style={[
-          styles.primaryButton,
-          decision.mode === "waitlist" && styles.waitlistButton,
-          decision.mode === "blocked" && styles.blockedButton,
-        ]}
-      >
-        <Text style={styles.primaryText}>{cta}</Text>
-      </Pressable>
-      {bookingStatusText ? (
-        <Text style={[styles.statusText, { textAlign: align }]}>{bookingStatusText}</Text>
-      ) : null}
+      <View style={[styles.stickyBar, direction === "rtl" && styles.rowReverse]}>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.stickyLabel, { textAlign: align }]}>{locale === "he" ? "הפעולה הבאה" : "Next action"}</Text>
+          <Text style={[styles.stickyStatus, { textAlign: align }]} numberOfLines={2}>
+            {bookingStatusText ?? (locale === "he" ? "המקום עדיין לא נשמר." : "Your spot is not reserved yet.")}
+          </Text>
+        </View>
+        <Pressable
+          onPress={handleBookingPress}
+          style={({ pressed }) => [
+            styles.primaryButton,
+            decision.mode === "waitlist" && styles.waitlistButton,
+            decision.mode === "blocked" && styles.blockedButton,
+            pressed && styles.primaryButtonPressed,
+          ]}
+        >
+          <Text style={styles.primaryText}>{cta}</Text>
+        </Pressable>
+      </View>
     </Screen>
   );
 }
@@ -158,9 +164,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: radii.hero,
   },
   heroScrim: {
-    minHeight: 360,
+    minHeight: 390,
     justifyContent: "flex-end",
-    backgroundColor: editorial.navyOverlay,
+    backgroundColor: fitness.imageScrimStrong,
     borderBottomLeftRadius: radii.hero,
     borderBottomRightRadius: radii.hero,
     padding: 22,
@@ -175,19 +181,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   title: {
-    color: colors.white,
-    fontSize: 38,
-    lineHeight: 43,
+    color: fitness.textPrimary,
+    fontSize: 40,
+    lineHeight: 44,
     fontWeight: "900",
   },
   description: {
-    color: colors.ivory,
+    color: fitness.textSecondary,
     fontSize: 16,
     lineHeight: 24,
     fontWeight: "800",
   },
   context: {
-    color: colors.sand,
+    color: fitness.textMuted,
     fontSize: 14,
     lineHeight: 21,
     fontWeight: "700",
@@ -198,70 +204,97 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    borderBottomWidth: 1,
-    borderColor: editorial.hairline,
-    paddingBottom: 10,
-    gap: 4,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.medium,
+    padding: 12,
+    gap: 5,
   },
   infoLabel: {
-    color: colors.slate,
+    color: fitness.textMuted,
     fontSize: 12,
     fontWeight: "800",
   },
   infoValue: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 16,
     fontWeight: "900",
   },
   section: {
-    borderTopWidth: 1,
-    borderColor: editorial.hairline,
-    paddingTop: 18,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 18,
     gap: 9,
   },
   sectionTitle: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 20,
     fontWeight: "900",
   },
   rowText: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontSize: 15,
     lineHeight: 22,
     fontWeight: "700",
   },
   waitlist: {
-    backgroundColor: colors.goldSoft,
-    borderRadius: radii.medium,
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.borderStrong,
+    borderWidth: 1,
+    borderRadius: radii.large,
     padding: 18,
     gap: 8,
   },
   waitlistValue: {
-    color: colors.navy,
+    color: colors.gold,
     fontSize: 36,
     fontWeight: "900",
   },
+  stickyBar: {
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.borderStrong,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 14,
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+  },
+  stickyLabel: {
+    color: colors.gold,
+    fontSize: 12,
+    fontWeight: "900",
+  },
+  stickyStatus: {
+    color: fitness.textSecondary,
+    fontSize: 13,
+    lineHeight: 19,
+    fontWeight: "700",
+  },
   primaryButton: {
-    backgroundColor: colors.navy,
+    minWidth: 118,
+    backgroundColor: colors.gold,
     borderRadius: 999,
-    paddingVertical: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
     alignItems: "center",
   },
   waitlistButton: {
-    backgroundColor: colors.gold,
+    backgroundColor: colors.warning,
   },
   blockedButton: {
-    backgroundColor: colors.slate,
+    backgroundColor: colors.danger,
+  },
+  primaryButtonPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.98 }],
   },
   primaryText: {
-    color: colors.white,
+    color: colors.ink,
     fontWeight: "900",
-    fontSize: 17,
-  },
-  statusText: {
-    color: colors.slate,
-    fontSize: 14,
-    lineHeight: 21,
-    fontWeight: "700",
+    fontSize: 15,
   },
 });
