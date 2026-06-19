@@ -3,7 +3,7 @@ import { TimelineClassCard } from "@/components/TimelineClassCard";
 import { sessions } from "@/fixtures/classes";
 import { getRecommendedSessions, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii } from "@/theme/colors";
+import { colors } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const intents = {
@@ -19,14 +19,14 @@ export default function ScheduleScreen() {
   return (
     <Screen>
       <Text style={[styles.title, { textAlign: align }]}>{t.schedule}</Text>
-      <View style={styles.heroStrip}>
-        <Text style={[styles.heroTitle, { textAlign: align }]}>
-          {locale === "he" ? "לא רק לוח שיעורים. החלטה טובה יותר." : "Not just a timetable. A better decision."}
+      <View style={styles.intro}>
+        <Text style={[styles.introTitle, { textAlign: align }]}>
+          {locale === "he" ? "השיעור הנכון, לא רק השיעור הקרוב." : "The right class, not just the next class."}
         </Text>
-        <Text style={[styles.heroBody, { textAlign: align }]}>
+        <Text style={[styles.introBody, { textAlign: align }]}>
           {locale === "he"
-            ? "השיעורים מדורגים לפי התאמה, מנוי, זמינות וסיכוי המתנה."
-            : "Classes are ranked by fit, membership, availability, and waitlist odds."}
+            ? "הסטודיו מסדר את היום לפי התאמה, זמינות וקצב המנוי שלך."
+            : "The studio orders today by fit, availability, and your membership rhythm."}
         </Text>
       </View>
       <View style={[styles.filters, direction === "rtl" && styles.rowReverse]}>
@@ -56,20 +56,20 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: "900",
   },
-  heroStrip: {
-    backgroundColor: colors.navy,
-    borderRadius: radii.hero,
-    padding: 20,
-    gap: 8,
+  intro: {
+    borderBottomWidth: 1,
+    borderColor: "rgba(11,29,58,0.12)",
+    paddingBottom: 18,
+    gap: 7,
   },
-  heroTitle: {
-    color: colors.white,
+  introTitle: {
+    color: colors.navy,
     fontSize: 24,
     lineHeight: 30,
     fontWeight: "900",
   },
-  heroBody: {
-    color: colors.blue,
+  introBody: {
+    color: colors.slate,
     fontSize: 15,
     lineHeight: 22,
     fontWeight: "700",
@@ -83,29 +83,24 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   filter: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.sand,
-    borderRadius: 999,
-    paddingHorizontal: 14,
+    paddingHorizontal: 2,
     paddingVertical: 9,
-    backgroundColor: colors.white,
   },
   selectedFilter: {
-    backgroundColor: colors.gold,
     borderColor: colors.gold,
   },
   filterText: {
-    color: colors.navy,
+    color: colors.slate,
     fontWeight: "900",
   },
   selectedFilterText: {
-    color: colors.ink,
+    color: colors.navy,
   },
   dayLabel: {
-    color: colors.slate,
+    color: colors.navy,
     fontWeight: "900",
-    fontSize: 13,
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
+    fontSize: 16,
   },
 });

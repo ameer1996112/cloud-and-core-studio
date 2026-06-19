@@ -1,10 +1,9 @@
 import type { ClassSession } from "@cloud-core/shared";
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FitScoreRing } from "@/components/FitScoreRing";
 import { getLocalizedText, type SessionInsight } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii, shadows } from "@/theme/colors";
+import { colors, editorial } from "@/theme/colors";
 
 function formatTime(value: string) {
   return new Intl.DateTimeFormat("he-IL", { hour: "2-digit", minute: "2-digit" }).format(new Date(value));
@@ -22,28 +21,31 @@ export function TimelineClassCard({
   const title = locale === "he" ? session.titleHe : session.titleEn;
   const spots = Math.max(session.capacity - session.bookedCount, 0);
   const cta = insight ? getLocalizedText(insight.bookingCta, locale) : locale === "he" ? "לראות פרטים" : "View details";
+  const reason = insight?.reasons[0] ? getLocalizedText(insight.reasons[0], locale) : session.instructor.displayName;
 
   return (
     <Link href={`/class/${session.id}`} asChild>
-      <Pressable style={styles.card}>
-        <View style={[styles.row, direction === "rtl" && styles.rowReverse]}>
-          <View style={styles.timeBlock}>
-            <Text style={styles.time}>{formatTime(session.startsAt)}</Text>
-            <Text style={styles.room}>{session.roomName}</Text>
-          </View>
-          <View style={{ flex: 1, gap: 7 }}>
-            <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
-            <Text style={[styles.meta, { textAlign: align }]}>
-              {session.instructor.displayName} ·{" "}
+      <Pressable style={styles.row}>
+        <View style={styles.timeRail}>
+          <Text style={styles.time}>{formatTime(session.startsAt)}</Text>
+          <View style={styles.dot} />
+        </View>
+        <View style={{ flex: 1, gap: 6 }}>
+          <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
+          <Text style={[styles.meta, { textAlign: align }]}>
+            {session.instructor.displayName} · {session.roomName}
+          </Text>
+          <Text style={[styles.reason, { textAlign: align }]}>{reason}</Text>
+          <View style={[styles.footer, direction === "rtl" && styles.rowReverse]}>
+            <Text style={styles.availability}>
               {spots > 0
-                ? `${spots} ${locale === "he" ? "מקומות" : "spots"}`
+                ? `${spots} ${locale === "he" ? "מקומות פנויים" : "spots left"}`
                 : locale === "he"
                   ? "רשימת המתנה"
                   : "Waitlist"}
             </Text>
-            <Text style={[styles.cta, { textAlign: align }]}>{cta}</Text>
+            <Text style={styles.cta}>{cta}</Text>
           </View>
-          {insight ? <FitScoreRing score={insight.fitScore} label={locale === "he" ? "התאמה" : "fit"} /> : null}
         </View>
       </Pressable>
     </Link>
@@ -51,51 +53,60 @@ export function TimelineClassCard({
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: radii.large,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.sand,
-    ...shadows.soft,
-  },
   row: {
     flexDirection: "row",
-    alignItems: "center",
     gap: 14,
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: editorial.hairline,
   },
   rowReverse: {
     flexDirection: "row-reverse",
   },
-  timeBlock: {
-    width: 76,
-    borderRadius: 20,
-    backgroundColor: colors.navy,
+  timeRail: {
+    width: 64,
     alignItems: "center",
-    paddingVertical: 12,
-    gap: 4,
+    gap: 10,
   },
   time: {
-    color: colors.white,
+    color: colors.navy,
     fontSize: 18,
     fontWeight: "900",
   },
-  room: {
-    color: colors.blue,
-    fontSize: 11,
-    fontWeight: "800",
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    backgroundColor: colors.gold,
   },
   title: {
     color: colors.navy,
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "900",
   },
   meta: {
     color: colors.slate,
+    fontWeight: "800",
+  },
+  reason: {
+    color: colors.ink,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: "700",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  availability: {
+    color: colors.slate,
+    fontSize: 12,
+    fontWeight: "900",
   },
   cta: {
     color: colors.gold,
+    fontSize: 12,
     fontWeight: "900",
   },
 });
