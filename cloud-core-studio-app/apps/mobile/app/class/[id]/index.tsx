@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { decideBooking } from "@cloud-core/shared";
 import { useLocalSearchParams } from "expo-router";
-import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
-import { Screen } from "@/components/Screen";
+import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { entitlement, sessions } from "@/fixtures/classes";
 import { getEditorialLine, getLocalizedText, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
@@ -54,92 +54,98 @@ export default function ClassDetailScreen() {
   }
 
   return (
-    <Screen>
-      <ImageBackground
-        source={require("../../../assets/editorial/class-stretch-flow.png")}
-        style={styles.hero}
-        imageStyle={styles.heroImage}
-        resizeMode="cover"
-      >
-        <View style={styles.heroScrim}>
-          <Text style={[styles.kicker, { textAlign: align }]}>{locale === "he" ? "תיק שיעור" : "Class dossier"}</Text>
-          <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
-          <Text style={[styles.description, { textAlign: align }]}>{description}</Text>
-          <Text style={[styles.context, { textAlign: align }]}>
-            {getEditorialLine(premiumExperience.editorial.classContext, locale)}
-          </Text>
-        </View>
-      </ImageBackground>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView contentContainerStyle={[styles.content, { direction }]} showsVerticalScrollIndicator={false}>
+        <View style={styles.inner}>
+          <ImageBackground
+            source={require("../../../assets/editorial/class-stretch-flow.png")}
+            style={styles.hero}
+            imageStyle={styles.heroImage}
+            resizeMode="cover"
+          >
+            <View style={styles.heroScrim}>
+              <Text style={[styles.kicker, { textAlign: align }]}>{locale === "he" ? "תיק שיעור" : "Class dossier"}</Text>
+              <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
+              <Text style={[styles.description, { textAlign: align }]}>{description}</Text>
+              <Text style={[styles.context, { textAlign: align }]}>
+                {getEditorialLine(premiumExperience.editorial.classContext, locale)}
+              </Text>
+            </View>
+          </ImageBackground>
 
-      <View style={styles.detailGrid}>
-        <Info label={t.instructor} value={session.instructor.displayName} />
-        <Info label={t.available} value={`${Math.max(session.capacity - session.bookedCount, 0)} / ${session.capacity}`} />
-        <Info label={t.policy} value={`${session.cancellationWindowHours}h`} />
-      </View>
+          <View style={styles.detailGrid}>
+            <Info label={t.instructor} value={session.instructor.displayName} />
+            <Info label={t.available} value={`${Math.max(session.capacity - session.bookedCount, 0)} / ${session.capacity}`} />
+            <Info label={t.policy} value={`${session.cancellationWindowHours}h`} />
+          </View>
 
-      {insight ? (
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { textAlign: align }]}>
-            {locale === "he" ? "למה זה מתאים לך" : "Why this fits you"}
-          </Text>
-          {insight.reasons.map((reason) => (
-            <Text key={reason.en} style={[styles.rowText, { textAlign: align }]}>
-              • {getLocalizedText(reason, locale)}
+          {insight ? (
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { textAlign: align }]}>
+                {locale === "he" ? "למה זה מתאים לך" : "Why this fits you"}
+              </Text>
+              {insight.reasons.map((reason) => (
+                <Text key={reason.en} style={[styles.rowText, { textAlign: align }]}>
+                  • {getLocalizedText(reason, locale)}
+                </Text>
+              ))}
+            </View>
+          ) : null}
+
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { textAlign: align }]}>
+              {locale === "he" ? "לפני שמגיעים" : "Before you come"}
             </Text>
-          ))}
-        </View>
-      ) : null}
+            {equipment.map((item) => (
+              <Text key={item} style={[styles.rowText, { textAlign: align }]}>
+                • {item}
+              </Text>
+            ))}
+            {insight?.preparation.map((item) => (
+              <Text key={item.en} style={[styles.rowText, { textAlign: align }]}>
+                • {getLocalizedText(item, locale)}
+              </Text>
+            ))}
+          </View>
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { textAlign: align }]}>
-          {locale === "he" ? "לפני שמגיעים" : "Before you come"}
-        </Text>
-        {equipment.map((item) => (
-          <Text key={item} style={[styles.rowText, { textAlign: align }]}>
-            • {item}
-          </Text>
-        ))}
-        {insight?.preparation.map((item) => (
-          <Text key={item.en} style={[styles.rowText, { textAlign: align }]}>
-            • {getLocalizedText(item, locale)}
-          </Text>
-        ))}
+          {insight?.waitlistOdds ? (
+            <View style={styles.waitlist}>
+              <Text style={[styles.sectionTitle, { textAlign: align }]}>
+                {locale === "he" ? "המתנה חכמה" : "Smart waitlist"}
+              </Text>
+              <Text style={[styles.waitlistValue, { textAlign: align }]}>{insight.waitlistOdds}%</Text>
+              <Text style={[styles.rowText, { textAlign: align }]}>
+                {locale === "he"
+                  ? "סיכוי משוער לקידום. אם יתפנה מקום, תקבלי חלון אישור של 30 דקות."
+                  : "Estimated promotion odds. If a spot opens, you will get a 30-minute confirmation window."}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <View style={[styles.stickyBar, direction === "rtl" && styles.rowReverse]}>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.stickyLabel, { textAlign: align }]}>{locale === "he" ? "הפעולה הבאה" : "Next action"}</Text>
+            <Text style={[styles.stickyStatus, { textAlign: align }]} numberOfLines={2}>
+              {bookingStatusText ?? (locale === "he" ? "המקום עדיין לא נשמר." : "Your spot is not reserved yet.")}
+            </Text>
+          </View>
+          <Pressable
+            onPress={handleBookingPress}
+            style={({ pressed }) => [
+              styles.primaryButton,
+              decision.mode === "waitlist" && styles.waitlistButton,
+              decision.mode === "blocked" && styles.blockedButton,
+              pressed && styles.primaryButtonPressed,
+            ]}
+          >
+            <Text style={styles.primaryText}>{cta}</Text>
+          </Pressable>
+        </View>
       </View>
-
-      {insight?.waitlistOdds ? (
-        <View style={styles.waitlist}>
-          <Text style={[styles.sectionTitle, { textAlign: align }]}>
-            {locale === "he" ? "המתנה חכמה" : "Smart waitlist"}
-          </Text>
-          <Text style={[styles.waitlistValue, { textAlign: align }]}>{insight.waitlistOdds}%</Text>
-          <Text style={[styles.rowText, { textAlign: align }]}>
-            {locale === "he"
-              ? "סיכוי משוער לקידום. אם יתפנה מקום, תקבלי חלון אישור של 30 דקות."
-              : "Estimated promotion odds. If a spot opens, you will get a 30-minute confirmation window."}
-          </Text>
-        </View>
-      ) : null}
-
-      <View style={[styles.stickyBar, direction === "rtl" && styles.rowReverse]}>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.stickyLabel, { textAlign: align }]}>{locale === "he" ? "הפעולה הבאה" : "Next action"}</Text>
-          <Text style={[styles.stickyStatus, { textAlign: align }]} numberOfLines={2}>
-            {bookingStatusText ?? (locale === "he" ? "המקום עדיין לא נשמר." : "Your spot is not reserved yet.")}
-          </Text>
-        </View>
-        <Pressable
-          onPress={handleBookingPress}
-          style={({ pressed }) => [
-            styles.primaryButton,
-            decision.mode === "waitlist" && styles.waitlistButton,
-            decision.mode === "blocked" && styles.blockedButton,
-            pressed && styles.primaryButtonPressed,
-          ]}
-        >
-          <Text style={styles.primaryText}>{cta}</Text>
-        </Pressable>
-      </View>
-    </Screen>
+    </SafeAreaView>
   );
 }
 
@@ -153,6 +159,18 @@ function Info({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: fitness.appBg,
+  },
+  content: {
+    padding: 18,
+    paddingBottom: 32,
+    backgroundColor: fitness.appBg,
+  },
+  inner: {
+    gap: 18,
+  },
   hero: {
     minHeight: 360,
     justifyContent: "flex-end",
@@ -252,6 +270,14 @@ const styles = StyleSheet.create({
     color: colors.gold,
     fontSize: 36,
     fontWeight: "900",
+  },
+  footer: {
+    backgroundColor: fitness.appBg,
+    borderTopColor: fitness.border,
+    borderTopWidth: 1,
+    paddingHorizontal: 18,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   stickyBar: {
     backgroundColor: fitness.surfaceRaised,
