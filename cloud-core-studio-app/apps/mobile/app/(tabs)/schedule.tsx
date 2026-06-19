@@ -26,7 +26,7 @@ export default function ScheduleScreen() {
         <Text style={[styles.introBody, { textAlign: align }]}>
           {locale === "he"
             ? "הסטודיו מסדר את היום לפי התאמה, זמינות וקצב המנוי שלך."
-            : "The studio orders today by fit, availability, and your membership rhythm."}
+            : "We shape the day around what feels right, what is open, and what fits your pace."}
         </Text>
       </View>
       <View style={[styles.filters, direction === "rtl" && styles.rowReverse]}>

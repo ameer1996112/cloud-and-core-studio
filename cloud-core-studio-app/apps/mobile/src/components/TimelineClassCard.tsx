@@ -25,7 +25,7 @@ export function TimelineClassCard({
 
   return (
     <Link href={`/class/${session.id}`} asChild>
-      <Pressable style={styles.row}>
+      <Pressable style={[styles.row, direction === "rtl" && styles.rowReverse]}>
         <View style={styles.timeRail}>
           <Text style={styles.time}>{formatTime(session.startsAt)}</Text>
           <View style={styles.dot} />
@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     gap: 12,
   },
@@ -103,10 +105,12 @@ const styles = StyleSheet.create({
     color: colors.slate,
     fontSize: 12,
     fontWeight: "900",
+    flexShrink: 1,
   },
   cta: {
     color: colors.gold,
     fontSize: 12,
     fontWeight: "900",
+    flexShrink: 1,
   },
 });
