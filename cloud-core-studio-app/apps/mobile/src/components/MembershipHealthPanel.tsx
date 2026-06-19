@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import { getLocalizedText, type MembershipHealth } from "@/fixtures/premiumExperience";
+import { getEditorialLine, getLocalizedText, premiumExperience, type MembershipHealth } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii, shadows } from "@/theme/colors";
+import { colors, editorial } from "@/theme/colors";
 
 export function MembershipHealthPanel({ membership }: { membership: MembershipHealth }) {
   const { locale, direction } = useCopy();
@@ -9,60 +9,71 @@ export function MembershipHealthPanel({ membership }: { membership: MembershipHe
   const credits = membership.entitlement.remainingCredits ?? "∞";
 
   return (
-    <View style={styles.panel}>
-      <View style={[styles.header, direction === "rtl" && styles.rowReverse]}>
-        <View>
-          <Text style={[styles.label, { textAlign: align }]}>{getLocalizedText(membership.label, locale)}</Text>
-          <Text style={[styles.status, { textAlign: align }]}>{getLocalizedText(membership.status, locale)}</Text>
+    <View style={styles.band}>
+      <View style={[styles.row, direction === "rtl" && styles.rowReverse]}>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.kicker, { textAlign: align }]}>{getLocalizedText(membership.label, locale)}</Text>
+          <Text style={[styles.title, { textAlign: align }]}>{getLocalizedText(membership.status, locale)}</Text>
         </View>
-        <Text style={styles.credits}>{credits}</Text>
+        <View style={styles.creditBlock}>
+          <Text style={styles.credits}>{credits}</Text>
+          <Text style={styles.creditLabel}>{locale === "he" ? "קרדיטים" : "credits"}</Text>
+        </View>
       </View>
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${membership.score}%` }]} />
       </View>
-      <Text style={[styles.rhythm, { textAlign: align }]}>{getLocalizedText(membership.rhythm, locale)}</Text>
-      <Text style={[styles.advice, { textAlign: align }]}>{getLocalizedText(membership.renewalAdvice, locale)}</Text>
+      <Text style={[styles.body, { textAlign: align }]}>{getEditorialLine(premiumExperience.editorial.membershipLine, locale)}</Text>
+      <Text style={[styles.secondary, { textAlign: align }]}>{getLocalizedText(membership.renewalAdvice, locale)}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: colors.white,
-    borderRadius: radii.large,
-    padding: 18,
+  band: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: editorial.hairline,
+    paddingVertical: 18,
     gap: 12,
-    borderWidth: 1,
-    borderColor: colors.sand,
-    ...shadows.soft,
   },
-  header: {
+  row: {
     flexDirection: "row",
+    alignItems: "flex-end",
     justifyContent: "space-between",
-    alignItems: "center",
-    gap: 16,
+    gap: 18,
   },
   rowReverse: {
     flexDirection: "row-reverse",
   },
-  label: {
+  kicker: {
     color: colors.slate,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "900",
   },
-  status: {
+  title: {
     color: colors.navy,
-    fontSize: 25,
+    fontSize: 27,
     fontWeight: "900",
     marginTop: 2,
   },
+  creditBlock: {
+    alignItems: "center",
+    minWidth: 74,
+  },
   credits: {
     color: colors.gold,
-    fontSize: 42,
+    fontSize: 38,
+    fontWeight: "900",
+    lineHeight: 40,
+  },
+  creditLabel: {
+    color: colors.slate,
+    fontSize: 11,
     fontWeight: "900",
   },
   track: {
-    height: 9,
+    height: 4,
     borderRadius: 999,
     backgroundColor: colors.sand,
     overflow: "hidden",
@@ -70,14 +81,15 @@ const styles = StyleSheet.create({
   fill: {
     height: "100%",
     borderRadius: 999,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.gold,
   },
-  rhythm: {
+  body: {
     color: colors.ink,
     fontSize: 15,
+    lineHeight: 22,
     fontWeight: "800",
   },
-  advice: {
+  secondary: {
     color: colors.slate,
     fontSize: 14,
     lineHeight: 20,

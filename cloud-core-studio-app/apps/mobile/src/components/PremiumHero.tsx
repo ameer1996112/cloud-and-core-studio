@@ -24,6 +24,7 @@ export function PremiumHero({
   const title = locale === "he" ? recommendedSession.titleHe : recommendedSession.titleEn;
   const instructor = recommendedSession.instructor.displayName;
   const primary = getLocalizedText(insight.bookingCta, locale);
+  const metaLine = locale === "he" ? "ערב רגוע, קהילה קטנה" : "Calm evening, small community";
 
   return (
     <View style={styles.wrap}>
@@ -49,9 +50,11 @@ export function PremiumHero({
             <Text style={[styles.context, { textAlign: align }]}>
               {getEditorialLine(experience.editorial.recommendationLine, locale)}
             </Text>
-            <Text style={[styles.meta, { textAlign: align }]}>
-              {instructor} · {locale === "he" ? "ערב רגוע, קהילה קטנה" : "Calm evening, small community"}
-            </Text>
+            <View style={[styles.metaRow, direction === "rtl" && styles.metaRowReverse]}>
+              <Text style={styles.meta}>{instructor}</Text>
+              <Text style={styles.metaDot}>·</Text>
+              <Text style={[styles.meta, { textAlign: align }]}>{metaLine}</Text>
+            </View>
           </View>
 
           <Link href={`/class/${recommendedSession.id}`} asChild>
@@ -125,6 +128,21 @@ const styles = StyleSheet.create({
     maxWidth: 330,
   },
   meta: {
+    color: colors.sand,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "700",
+  },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flexWrap: "wrap",
+  },
+  metaRowReverse: {
+    flexDirection: "row-reverse",
+  },
+  metaDot: {
     color: colors.sand,
     fontSize: 14,
     lineHeight: 20,
