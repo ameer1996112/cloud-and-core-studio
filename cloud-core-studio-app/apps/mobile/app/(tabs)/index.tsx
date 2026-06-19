@@ -1,16 +1,15 @@
-import { ClassCard } from "@/components/ClassCard";
 import { ConciergePanel } from "@/components/ConciergePanel";
 import { MembershipHealthPanel } from "@/components/MembershipHealthPanel";
 import { PremiumHero } from "@/components/PremiumHero";
 import { Screen } from "@/components/Screen";
 import { sessions } from "@/fixtures/classes";
-import { getRecommendedSessions, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
+import { getEditorialLine, getRecommendedSessions, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors } from "@/theme/colors";
+import { colors, editorial } from "@/theme/colors";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
-  const { t, direction } = useCopy();
+  const { locale, direction } = useCopy();
   const orderedSessions = getRecommendedSessions(sessions, premiumExperience);
   const recommendedSession = orderedSessions[0] ?? sessions[0];
   const insight = getSessionInsight(recommendedSession.id, premiumExperience) ?? premiumExperience.sessionInsights[0];
@@ -19,25 +18,39 @@ export default function HomeScreen() {
   return (
     <Screen>
       <PremiumHero experience={premiumExperience} recommendedSession={recommendedSession} insight={insight} />
+
+      <View style={styles.editorialNote}>
+        <Text style={[styles.noteTitle, { textAlign: align }]}>
+          {locale === "he" ? "למה זה נכון להיום" : "Why this works today"}
+        </Text>
+        <Text style={[styles.noteBody, { textAlign: align }]}>
+          {getEditorialLine(premiumExperience.editorial.classContext, locale)}
+        </Text>
+      </View>
+
       <MembershipHealthPanel membership={premiumExperience.membership} />
       <ConciergePanel requests={premiumExperience.concierge} />
-      <View style={styles.listHeader}>
-        <Text style={[styles.sectionTitle, { textAlign: align }]}>{t.classesToday}</Text>
-      </View>
-      {orderedSessions.slice(0, 2).map((session) => (
-        <ClassCard key={session.id} session={session} />
-      ))}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionTitle: {
-    color: colors.slate,
-    fontWeight: "900",
-    fontSize: 14,
+  editorialNote: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: editorial.hairline,
+    paddingVertical: 18,
+    gap: 6,
   },
-  listHeader: {
-    paddingTop: 4,
+  noteTitle: {
+    color: colors.navy,
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  noteBody: {
+    color: colors.slate,
+    fontSize: 15,
+    lineHeight: 23,
+    fontWeight: "700",
   },
 });

@@ -1,15 +1,14 @@
 import type { ClassSession } from "@cloud-core/shared";
 import { Link } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { FitScoreRing } from "@/components/FitScoreRing";
-import { InsightPill } from "@/components/InsightPill";
+import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native";
 import {
+  getEditorialLine,
   getLocalizedText,
   type PremiumExperience,
   type SessionInsight,
 } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii, shadows } from "@/theme/colors";
+import { colors, editorial, radii } from "@/theme/colors";
 
 export function PremiumHero({
   experience,
@@ -23,113 +22,117 @@ export function PremiumHero({
   const { locale, direction } = useCopy();
   const align = direction === "rtl" ? "right" : "left";
   const title = locale === "he" ? recommendedSession.titleHe : recommendedSession.titleEn;
+  const instructor = recommendedSession.instructor.displayName;
+  const primary = getLocalizedText(insight.bookingCta, locale);
 
   return (
-    <View style={styles.hero}>
-      <View style={[styles.logoRow, direction === "rtl" && styles.rowReverse]}>
-        <Image source={require("../../assets/icon.png")} style={styles.logo} resizeMode="contain" />
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.kicker, { textAlign: align }]}>Cloud&Core Studio</Text>
-          <Text style={[styles.greeting, { textAlign: align }]}>
-            {getLocalizedText(experience.member.greeting, locale)}
-          </Text>
+    <View style={styles.wrap}>
+      <ImageBackground
+        source={require("../../assets/editorial/studio-community-hero.png")}
+        style={styles.image}
+        imageStyle={styles.imageRadius}
+        resizeMode="cover"
+      >
+        <View style={styles.scrim}>
+          <View style={styles.identity}>
+            <Text style={[styles.brand, { textAlign: align }]}>Cloud&Core Studio</Text>
+            <Text style={[styles.line, { textAlign: align }]}>
+              {getEditorialLine(experience.editorial.heroLine, locale)}
+            </Text>
+          </View>
+
+          <View style={styles.recommendation}>
+            <Text style={[styles.eyebrow, { textAlign: align }]}>
+              {locale === "he" ? "הבחירה של הסטודיו להיום" : "Studio pick for today"}
+            </Text>
+            <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
+            <Text style={[styles.context, { textAlign: align }]}>
+              {getEditorialLine(experience.editorial.recommendationLine, locale)}
+            </Text>
+            <Text style={[styles.meta, { textAlign: align }]}>
+              {instructor} · {locale === "he" ? "ערב רגוע, קהילה קטנה" : "Calm evening, small community"}
+            </Text>
+          </View>
+
+          <Link href={`/class/${recommendedSession.id}`} asChild>
+            <Pressable style={styles.cta}>
+              <Text style={styles.ctaText}>{primary}</Text>
+            </Pressable>
+          </Link>
         </View>
-      </View>
-
-      <View style={[styles.recommendation, direction === "rtl" && styles.rowReverse]}>
-        <View style={{ flex: 1, gap: 10 }}>
-          <Text style={[styles.headline, { textAlign: align }]}>
-            {getLocalizedText(experience.today.headline, locale)}
-          </Text>
-          <Text style={[styles.classTitle, { textAlign: align }]}>{title}</Text>
-          <Text style={[styles.summary, { textAlign: align }]}>
-            {getLocalizedText(experience.today.summary, locale)}
-          </Text>
-        </View>
-        <FitScoreRing score={insight.fitScore} label={locale === "he" ? "התאמה" : "fit"} />
-      </View>
-
-      <View style={[styles.reasonRow, direction === "rtl" && styles.rowReverse]}>
-        {insight.reasons.slice(0, 2).map((reason) => (
-          <InsightPill key={reason.en} text={getLocalizedText(reason, locale)} />
-        ))}
-      </View>
-
-      <Link href={`/class/${recommendedSession.id}`} asChild>
-        <Pressable style={styles.cta}>
-          <Text style={styles.ctaText}>{getLocalizedText(experience.today.primaryCta, locale)}</Text>
-        </Pressable>
-      </Link>
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.navy,
-    borderRadius: radii.hero,
-    padding: 22,
-    gap: 20,
-    ...shadows.premium,
+  wrap: {
+    marginHorizontal: -20,
+    marginTop: -12,
   },
-  logoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
+  image: {
+    minHeight: 540,
+    justifyContent: "flex-end",
   },
-  rowReverse: {
-    flexDirection: "row-reverse",
+  imageRadius: {
+    borderBottomLeftRadius: radii.hero,
+    borderBottomRightRadius: radii.hero,
   },
-  logo: {
-    width: 58,
-    height: 58,
-    borderRadius: 20,
-    backgroundColor: colors.ivory,
+  scrim: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingHorizontal: 22,
+    paddingTop: 28,
+    paddingBottom: 24,
+    backgroundColor: editorial.navyOverlay,
+    borderBottomLeftRadius: radii.hero,
+    borderBottomRightRadius: radii.hero,
   },
-  kicker: {
+  identity: {
+    gap: 10,
+  },
+  brand: {
+    color: colors.ivory,
+    fontSize: 16,
+    fontWeight: "900",
+  },
+  line: {
+    color: colors.ivory,
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "900",
+    maxWidth: 320,
+  },
+  recommendation: {
+    gap: 8,
+  },
+  eyebrow: {
     color: colors.gold,
     fontSize: 12,
     fontWeight: "900",
-    letterSpacing: 2,
-    textTransform: "uppercase",
   },
-  greeting: {
+  title: {
     color: colors.white,
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 42,
+    lineHeight: 46,
     fontWeight: "900",
-    marginTop: 4,
   },
-  recommendation: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
+  context: {
+    color: colors.ivory,
+    fontSize: 17,
+    lineHeight: 24,
+    fontWeight: "800",
+    maxWidth: 330,
   },
-  headline: {
-    color: colors.blue,
-    fontWeight: "900",
-    fontSize: 14,
-  },
-  classTitle: {
-    color: colors.white,
-    fontWeight: "900",
-    fontSize: 34,
-    lineHeight: 38,
-  },
-  summary: {
+  meta: {
     color: colors.sand,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: "700",
   },
-  reasonRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
   cta: {
-    backgroundColor: colors.gold,
-    borderRadius: 18,
+    backgroundColor: colors.ivory,
+    borderRadius: 999,
     paddingVertical: 16,
     alignItems: "center",
   },

@@ -40,3 +40,17 @@ export const shadows = {
     elevation: 4,
   },
 };
+
+export const editorial = {
+  hairline: "rgba(11,29,58,0.12)",
+  navyOverlay: "rgba(7,19,38,0.48)",
+  ivoryOverlay: "rgba(250,247,242,0.92)",
+  softGold: "rgba(212,175,106,0.22)",
+  quietShadow: {
+    shadowColor: colors.navy,
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 2,
+  },
+};
