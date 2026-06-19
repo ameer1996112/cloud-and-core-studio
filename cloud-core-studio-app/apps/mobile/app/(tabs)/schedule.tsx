@@ -4,7 +4,7 @@ import { TimelineClassCard } from "@/components/TimelineClassCard";
 import { sessions } from "@/fixtures/classes";
 import { getRecommendedSessions, getSessionInsight, premiumExperience } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors } from "@/theme/colors";
+import { colors, fitness, radii } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const intents = {
@@ -30,12 +30,12 @@ export default function ScheduleScreen() {
       <Text style={[styles.title, { textAlign: align }]}>{t.schedule}</Text>
       <View style={styles.intro}>
         <Text style={[styles.introTitle, { textAlign: align }]}>
-          {locale === "he" ? "השיעור הנכון, לא רק השיעור הקרוב." : "The right class, not just the next class."}
+          {locale === "he" ? "בחרו את השיעור הבא." : "Choose your next class."}
         </Text>
         <Text style={[styles.introBody, { textAlign: align }]}>
           {locale === "he"
-            ? "הסטודיו מסדר את היום לפי התאמה, זמינות וקצב המנוי שלך."
-            : "We shape the day around what feels right, what is open, and what fits your pace."}
+            ? "ההמלצות מסודרות לפי התאמה, זמינות וקצב המנוי."
+            : "Recommendations are ordered by fit, availability, and membership rhythm."}
         </Text>
       </View>
       <View style={[styles.filters, direction === "rtl" && styles.rowReverse]}>
@@ -66,24 +66,24 @@ export default function ScheduleScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 34,
     fontWeight: "900",
   },
   intro: {
     borderBottomWidth: 1,
-    borderColor: "rgba(11,29,58,0.12)",
+    borderColor: fitness.border,
     paddingBottom: 18,
     gap: 7,
   },
   introTitle: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontSize: 24,
     lineHeight: 30,
     fontWeight: "900",
   },
   introBody: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontSize: 15,
     lineHeight: 22,
     fontWeight: "700",
@@ -97,28 +97,39 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   filter: {
-    borderBottomWidth: 1,
-    borderColor: colors.sand,
-    paddingHorizontal: 2,
-    paddingVertical: 9,
+    borderWidth: 1,
+    borderRadius: 999,
+    borderColor: fitness.border,
+    backgroundColor: fitness.surface,
+    paddingHorizontal: 13,
+    paddingVertical: 10,
   },
   selectedFilter: {
+    backgroundColor: colors.gold,
     borderColor: colors.gold,
   },
   filterText: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontWeight: "900",
   },
   selectedFilterText: {
-    color: colors.navy,
+    color: colors.ink,
   },
   filterStatus: {
-    color: colors.slate,
+    alignSelf: "flex-start",
+    overflow: "hidden",
+    borderRadius: radii.small,
+    borderWidth: 1,
+    borderColor: fitness.borderStrong,
+    backgroundColor: fitness.goldGlow,
+    color: colors.goldSoft,
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "800",
+    paddingHorizontal: 10,
+    paddingVertical: 7,
   },
   dayLabel: {
-    color: colors.navy,
+    color: fitness.textPrimary,
     fontWeight: "900",
     fontSize: 16,
   },

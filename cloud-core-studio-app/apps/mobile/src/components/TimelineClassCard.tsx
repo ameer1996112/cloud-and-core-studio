@@ -3,10 +3,13 @@ import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getLocalizedText, type SessionInsight } from "@/fixtures/premiumExperience";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, editorial } from "@/theme/colors";
+import { colors, fitness, radii } from "@/theme/colors";
 
-function formatTime(value: string) {
-  return new Intl.DateTimeFormat("he-IL", { hour: "2-digit", minute: "2-digit" }).format(new Date(value));
+function formatTime(value: string, locale: "he" | "en") {
+  return new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
 }
 
 export function TimelineClassCard({
@@ -22,30 +25,37 @@ export function TimelineClassCard({
   const spots = Math.max(session.capacity - session.bookedCount, 0);
   const cta = insight ? getLocalizedText(insight.bookingCta, locale) : locale === "he" ? "לראות פרטים" : "View details";
   const reason = insight?.reasons[0] ? getLocalizedText(insight.reasons[0], locale) : session.instructor.displayName;
+  const durationMinutes = Math.round((new Date(session.endsAt).getTime() - new Date(session.startsAt).getTime()) / 60000);
+  const availabilityText =
+    spots > 0
+      ? `${spots} ${locale === "he" ? "מקומות פנויים" : "spots left"}`
+      : locale === "he"
+        ? "רשימת המתנה"
+        : "Waitlist";
+  const capacityPercent = session.capacity > 0 ? Math.min((session.bookedCount / session.capacity) * 100, 100) : 0;
 
   return (
     <Link href={`/class/${session.id}`} asChild>
-      <Pressable style={[styles.row, direction === "rtl" && styles.rowReverse]}>
-        <View style={styles.timeRail}>
-          <Text style={styles.time}>{formatTime(session.startsAt)}</Text>
-          <View style={styles.dot} />
-        </View>
-        <View style={{ flex: 1, gap: 6 }}>
-          <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
-          <Text style={[styles.meta, { textAlign: align }]}>
-            {session.instructor.displayName} · {session.roomName}
-          </Text>
-          <Text style={[styles.reason, { textAlign: align }]}>{reason}</Text>
-          <View style={[styles.footer, direction === "rtl" && styles.rowReverse]}>
-            <Text style={styles.availability}>
-              {spots > 0
-                ? `${spots} ${locale === "he" ? "מקומות פנויים" : "spots left"}`
-                : locale === "he"
-                  ? "רשימת המתנה"
-                  : "Waitlist"}
-            </Text>
-            <Text style={styles.cta}>{cta}</Text>
+      <Pressable style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
+        <View style={[styles.topRow, direction === "rtl" && styles.rowReverse]}>
+          <View style={styles.timeBlock}>
+            <Text style={styles.time}>{formatTime(session.startsAt, locale)}</Text>
+            <Text style={styles.duration}>{durationMinutes}m</Text>
           </View>
+          <View style={{ flex: 1, gap: 5 }}>
+            <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
+            <Text style={[styles.meta, { textAlign: align }]}>
+              {session.instructor.displayName} · {session.roomName}
+            </Text>
+          </View>
+        </View>
+        <Text style={[styles.reason, { textAlign: align }]}>{reason}</Text>
+        <View style={[styles.footer, direction === "rtl" && styles.rowReverse]}>
+          <View style={styles.capacityTrack}>
+            <View style={[styles.capacityFill, { width: `${capacityPercent}%` }]} />
+          </View>
+          <Text style={[styles.availability, spots === 0 && styles.waitlistText]}>{availabilityText}</Text>
+          <Text style={styles.cta}>{cta}</Text>
         </View>
       </Pressable>
     </Link>
@@ -53,59 +63,95 @@ export function TimelineClassCard({
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
+  card: {
+    backgroundColor: fitness.surfaceRaised,
+    borderColor: fitness.border,
+    borderWidth: 1,
+    borderRadius: radii.large,
+    padding: 16,
     gap: 14,
-    paddingVertical: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: editorial.hairline,
+    shadowColor: colors.ink,
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 14 },
+    elevation: 7,
+  },
+  cardPressed: {
+    opacity: 0.84,
+    transform: [{ scale: 0.99 }],
+  },
+  topRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 13,
   },
   rowReverse: {
     flexDirection: "row-reverse",
   },
-  timeRail: {
-    width: 64,
+  timeBlock: {
+    width: 66,
+    borderRadius: radii.medium,
+    backgroundColor: fitness.surface,
+    borderColor: fitness.borderStrong,
+    borderWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     alignItems: "center",
-    gap: 10,
+    gap: 4,
   },
   time: {
-    color: colors.navy,
-    fontSize: 18,
+    color: fitness.textPrimary,
+    fontSize: 16,
     fontWeight: "900",
   },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 999,
-    backgroundColor: colors.gold,
+  duration: {
+    color: colors.gold,
+    fontSize: 12,
+    fontWeight: "900",
   },
   title: {
-    color: colors.navy,
-    fontSize: 22,
+    color: fitness.textPrimary,
+    fontSize: 20,
+    lineHeight: 25,
     fontWeight: "900",
   },
   meta: {
-    color: colors.slate,
+    color: fitness.textSecondary,
+    fontSize: 13,
     fontWeight: "800",
   },
   reason: {
-    color: colors.ink,
+    color: fitness.textMuted,
     fontSize: 14,
     lineHeight: 20,
     fontWeight: "700",
   },
   footer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: 12,
+    alignItems: "center",
+    gap: 10,
+  },
+  capacityTrack: {
+    flex: 1,
+    minWidth: 72,
+    height: 7,
+    borderRadius: 999,
+    overflow: "hidden",
+    backgroundColor: fitness.surfaceSoft,
+  },
+  capacityFill: {
+    height: "100%",
+    borderRadius: 999,
+    backgroundColor: colors.gold,
   },
   availability: {
-    color: colors.slate,
+    color: fitness.textSecondary,
     fontSize: 12,
     fontWeight: "900",
     flexShrink: 1,
+  },
+  waitlistText: {
+    color: colors.rose,
   },
   cta: {
     color: colors.gold,
