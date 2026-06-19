@@ -4,8 +4,28 @@ const supabase = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
 );
+const internalSecret = Deno.env.get("CLOUD_CORE_INTERNAL_SECRET") ?? "";
+
+function timingSafeEqual(a: string, b: string) {
+  const encoder = new TextEncoder();
+  const left = encoder.encode(a);
+  const right = encoder.encode(b);
+  if (left.length !== right.length) return false;
+  let diff = 0;
+  for (let i = 0; i < left.length; i += 1) diff |= left[i] ^ right[i];
+  return diff === 0;
+}
+
+function isAuthorized(request: Request) {
+  const requestSecret = request.headers.get("x-cloud-core-internal-secret") ?? "";
+  return internalSecret !== "" && timingSafeEqual(requestSecret, internalSecret);
+}
 
 Deno.serve(async (request) => {
+  if (!isAuthorized(request)) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const input = await request.json() as {
     profile_id: string;
     channel: "push" | "email" | "sms" | "whatsapp";

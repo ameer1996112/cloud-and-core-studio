@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { LocaleProvider, useCopy } from "@/i18n/LocaleProvider";
-import { colors } from "@/theme/colors";
+import { fitness } from "@/theme/colors";
 
 export default function RootLayout() {
   return (
@@ -16,13 +16,13 @@ function AppNavigator() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: colors.ivory },
-          headerTintColor: colors.navy,
-          headerTitleStyle: { fontWeight: "700" },
-          contentStyle: { backgroundColor: colors.ivory },
+          headerStyle: { backgroundColor: fitness.appBg },
+          headerTintColor: fitness.textPrimary,
+          headerTitleStyle: { fontWeight: "900" },
+          contentStyle: { backgroundColor: fitness.appBg },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

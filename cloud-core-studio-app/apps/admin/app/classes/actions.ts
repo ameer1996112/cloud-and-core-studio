@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createSupabaseAdminClient } from "@/lib/supabaseServer";
 
 const classSchema = z.object({
+  categoryId: z.string().uuid(),
   titleHe: z.string().min(2),
   titleEn: z.string().min(2),
   startsAt: z.string().datetime(),
@@ -14,6 +15,7 @@ const classSchema = z.object({
 
 export async function createClassSession(_: { message: string }, formData: FormData) {
   const parsed = classSchema.safeParse({
+    categoryId: formData.get("category_id"),
     titleHe: formData.get("title_he"),
     titleEn: formData.get("title_en"),
     startsAt: formData.get("starts_at"),
@@ -27,6 +29,7 @@ export async function createClassSession(_: { message: string }, formData: FormD
 
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from("class_sessions").insert({
+    category_id: parsed.data.categoryId,
     title_he: parsed.data.titleHe,
     title_en: parsed.data.titleEn,
     starts_at: parsed.data.startsAt,
