@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { ConciergePanel } from "@/components/ConciergePanel";
 import { MembershipHealthPanel } from "@/components/MembershipHealthPanel";
 import { Screen } from "@/components/Screen";
@@ -25,6 +25,23 @@ export default function ProfileScreen() {
       <Text style={[styles.title, { textAlign: align }]}>{t.profile}</Text>
       <MembershipHealthPanel membership={premiumExperience.membership} />
       <ConciergePanel requests={premiumExperience.concierge} />
+
+      <View style={[styles.editorialRow, direction === "rtl" && styles.rowReverse]}>
+        <Image source={require("../../assets/editorial/instructor-maya.png")} style={styles.editorialImage} />
+        <View style={styles.editorialCopy}>
+          <Text style={[styles.editorialEyebrow, { textAlign: align }]}>
+            {locale === "he" ? "קשר סטודיו" : "Studio care"}
+          </Text>
+          <Text style={[styles.editorialTitle, { textAlign: align }]}>
+            {locale === "he" ? "מאיה עוקבת אחרי הקצב וההעדפות שלך." : "Maya keeps track of your pace and preferences."}
+          </Text>
+          <Text style={[styles.editorialBody, { textAlign: align }]}>
+            {locale === "he"
+              ? "הערות מדריכה, נוכחות והתאמות נשמרות יחד כדי שההמשך יהיה אישי ושקט."
+              : "Instructor notes, attendance, and class adjustments stay together for a quieter, more personal follow-up."}
+          </Text>
+        </View>
+      </View>
 
       <View style={styles.card}>
         <Text style={[styles.label, { textAlign: align }]}>{t.language}</Text>
@@ -90,6 +107,40 @@ const styles = StyleSheet.create({
   },
   rowReverse: {
     flexDirection: "row-reverse",
+  },
+  editorialRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    borderBottomWidth: 1,
+    borderColor: colors.sand,
+    paddingBottom: 18,
+  },
+  editorialImage: {
+    width: 88,
+    height: 110,
+    borderRadius: 8,
+    backgroundColor: colors.sand,
+  },
+  editorialCopy: {
+    flex: 1,
+    gap: 4,
+  },
+  editorialEyebrow: {
+    color: colors.gold,
+    fontSize: 12,
+    fontWeight: "900",
+  },
+  editorialTitle: {
+    color: colors.navy,
+    fontSize: 18,
+    lineHeight: 23,
+    fontWeight: "900",
+  },
+  editorialBody: {
+    color: colors.slate,
+    fontSize: 14,
+    lineHeight: 20,
   },
   label: {
     color: colors.navy,
