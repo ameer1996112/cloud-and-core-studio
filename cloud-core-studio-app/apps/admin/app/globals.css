@@ -1453,3 +1453,122 @@ button {
 .admin-signout:hover {
   background: var(--ivory-dark);
 }
+
+/* ---------------------------------------------------------------- */
+/* Class detail: roster + attendance                                 */
+/* ---------------------------------------------------------------- */
+.back-link {
+  display: inline-block;
+  color: var(--text-mid);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.back-link:hover { color: var(--text-main); }
+
+.roster-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roster-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--ivory-dark);
+  border-radius: 12px;
+  background: var(--white);
+}
+
+.roster-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.roster-status {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--sand-light);
+  color: var(--text-mid);
+}
+.roster-status[data-attendance="present"] { background: var(--green-bg); color: var(--green-text); }
+.roster-status[data-attendance="absent"],
+.roster-status[data-attendance="no_show"] { background: var(--red-bg); color: var(--red-text); }
+.roster-status[data-attendance="late"] { background: var(--gold-light); color: var(--gold-mid); }
+
+.attendance-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attendance-btn {
+  flex: 1 1 auto;
+  min-width: 72px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--sand-dark);
+  background: var(--ivory);
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 600;
+}
+.attendance-btn:hover:not(:disabled) { background: var(--ivory-dark); }
+.attendance-btn[data-active="true"] {
+  background: var(--text-main);
+  color: var(--white);
+  border-color: var(--text-main);
+}
+.attendance-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.ghost-button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--gold-mid);
+  background: var(--gold-light);
+  color: var(--gold-mid);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ghost-button:hover { background: var(--gold); color: var(--white); }
+
+.empty-block {
+  padding: 18px;
+  border: 1px dashed var(--sand-dark);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.danger-zone {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ivory-dark);
+}
+
+.danger-button {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--red-bar);
+  background: var(--red-bg);
+  color: var(--red-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+.danger-button:hover { background: var(--red-bar); color: var(--white); }
+
+.schedule-row-link { text-decoration: none; color: inherit; display: block; }
+.schedule-row-link:hover .schedule-row { border-color: var(--gold-mid); }

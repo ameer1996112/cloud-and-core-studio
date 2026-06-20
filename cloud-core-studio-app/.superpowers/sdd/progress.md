@@ -53,3 +53,14 @@ PH-4 Customer app wiring (DONE)
 
 NEXT: admin class CRUD completeness (cancel/duplicate/attendance UI), members management UI,
 reports wired to live data, integration/security tests, deployment docs.
+
+PH-5 Admin class detail + attendance (DONE) — completes core loop admin side
+- Migration 202606200007_admin_rpcs.sql: mark_attendance_as / mark_all_present /
+  admin_cancel_class (explicit p_actor for service-role context; refunds on cancel; soft-cancel).
+- Admin route /classes/[classId]: server-loaded roster (confirmed+waitlist), AttendanceControls,
+  mark-all-present, soft-cancel-class with refunds. Schedule rows link to detail.
+- Verified live: present -> booking completed + correct audit actor; cancel refunds 8->9 +
+  status cancelled. Route admin-gated (307), payment pages public (200).
+
+NEXT: members management UI, reports on live data, instructors/studios/settings CRUD,
+integration/security tests, deployment docs (README, Stripe/Supabase setup).

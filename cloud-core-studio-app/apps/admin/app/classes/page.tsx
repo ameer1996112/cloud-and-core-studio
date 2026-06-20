@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClassSession } from "./actions";
 import { fallbackClassSessions, mapClassSessionRow, type AdminClassSession } from "@/lib/adminClasses.mjs";
 import { createSupabaseAdminClient } from "@/lib/supabaseServer";
@@ -217,7 +218,8 @@ export default async function ClassesPage() {
           </div>
           <div className="schedule-list">
             {sessions.map((session) => (
-              <article className="schedule-row" key={session.id}>
+              <Link className="schedule-row-link" href={`/classes/${session.id}`} key={session.id}>
+                <article className="schedule-row">
                 <div className="class-color" style={{ backgroundColor: session.color }} aria-hidden="true" />
                 <div className="class-main">
                   <div className="class-heading">
@@ -240,6 +242,7 @@ export default async function ClassesPage() {
                   <small>{session.waitlistCount} waitlist</small>
                 </div>
               </article>
+              </Link>
             ))}
           </div>
         </section>
