@@ -1,274 +1,201 @@
-import { useState } from "react";
-import { Image, Pressable, StyleSheet, Switch, Text, View } from "react-native";
-import { ConciergePanel } from "@/components/ConciergePanel";
-import { MembershipHealthPanel } from "@/components/MembershipHealthPanel";
-import { Screen } from "@/components/Screen";
-import { premiumExperience } from "@/fixtures/premiumExperience";
+import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { StyleSheet, Text, View } from "react-native";
+import { Header, PrimaryButton, SecondaryButton, StatusBadge, SurfaceCard } from "@/components/design-system";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { registerForPushNotificationsAsync } from "@/lib/notifications";
-import { colors, fitness, radii } from "@/theme/colors";
+import { hasSupabaseMobileConfig } from "@/lib/availableClasses";
+import { fitness, spacing, typography } from "@/theme/colors";
+
+const demoCredentials = {
+  email: "demo.customer@cloudcore.local",
+  password: "CloudCoreDemo123!",
+};
 
 export default function ProfileScreen() {
-  const { t, locale, setLocale, direction } = useCopy();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [notificationsStatus, setNotificationsStatus] = useState<"idle" | "checking" | "enabled" | "disabled" | "unavailable">(
-    "idle",
-  );
-  const [accountDeletionRequested, setAccountDeletionRequested] = useState(false);
-  const align = direction === "rtl" ? "right" : "left";
+  const { locale, direction, textAlign } = useCopy();
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const hasBackend = hasSupabaseMobileConfig();
 
-  async function toggleNotifications(value: boolean) {
-    if (!value) {
-      setNotificationsEnabled(false);
-      setNotificationsStatus("disabled");
+  useEffect(() => {
+    let isMounted = true;
+    let unsubscribe: null | (() => void) = null;
+
+    async function loadSession() {
+      if (!hasBackend) {
+        return;
+      }
+
+      const { supabase } = await import("@/lib/supabase");
+      const { data } = await supabase.auth.getSession();
+
+      if (isMounted) {
+        setSession(data.session);
+      }
+
+      const authListener = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+      });
+
+      unsubscribe = () => authListener.data.subscription.unsubscribe();
+    }
+
+    loadSession();
+
+    return () => {
+      isMounted = false;
+      unsubscribe?.();
+    };
+  }, [hasBackend]);
+
+  async function signInDemoCustomer() {
+    if (!hasBackend || isLoading) {
       return;
     }
 
-    try {
-      setNotificationsStatus("checking");
-      const token = await registerForPushNotificationsAsync();
-      if (token) {
-        setNotificationsEnabled(true);
-        setNotificationsStatus("enabled");
-        return;
-      }
-    } catch {
-      // Keep the UI local and explicit when registration fails.
+    setIsLoading(true);
+    setMessage("");
+    const { supabase } = await import("@/lib/supabase");
+    const { data, error } = await supabase.auth.signInWithPassword(demoCredentials);
+    setIsLoading(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
     }
 
-    setNotificationsEnabled(false);
-    setNotificationsStatus("unavailable");
+    setSession(data.session);
+    setMessage(locale === "he" ? "נכנסת לחשבון הדמו." : "Signed in to the demo account.");
   }
 
-  const notificationsStatusText =
-    notificationsStatus === "enabled"
-      ? locale === "he"
-        ? "ההתראות פעילות במכשיר הזה."
-        : "Notifications are enabled on this device."
-      : notificationsStatus === "disabled"
-        ? locale === "he"
-          ? "ההתראות כבויות כרגע."
-          : "Notifications are currently turned off."
-        : notificationsStatus === "checking"
-          ? locale === "he"
-            ? "בודקים הרשאה והתאמת מכשיר להתראות."
-            : "Checking notification permission and device availability."
-          : notificationsStatus === "unavailable"
-            ? locale === "he"
-              ? "התראות אינן זמינות כרגע במכשיר או בפרויקט הזה."
-              : "Notifications are unavailable on this device or in this project right now."
-            : locale === "he"
-              ? "אפשר להפעיל התראות לאחר שהרישום למכשיר מצליח."
-              : "Notifications can be enabled after device registration succeeds.";
-  const deletionStatusText = accountDeletionRequested
-    ? locale === "he"
-      ? "בקשת המחיקה נשמרה מקומית לבדיקה לפני שליחה."
-      : "Your deletion request was saved locally for review before sending."
-    : locale === "he"
-      ? "כפתור זה שומר בקשה מקומית בלבד בשלב הזה."
-      : "This button stores a local-only request at this stage.";
+  async function signOut() {
+    if (!hasBackend || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage("");
+    const { supabase } = await import("@/lib/supabase");
+    const { error } = await supabase.auth.signOut();
+    setIsLoading(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setSession(null);
+    setMessage(locale === "he" ? "התנתקת מהחשבון." : "Signed out.");
+  }
+
+  const signedIn = Boolean(session);
+  const align = textAlign;
 
   return (
-    <Screen>
-      <Text style={[styles.title, { textAlign: align }]}>{t.profile}</Text>
-      <View style={[styles.memberHero, direction === "rtl" && styles.rowReverse]}>
-        <Image source={require("../../assets/editorial/instructor-maya.png")} style={styles.editorialImage} />
-        <View style={styles.editorialCopy}>
-          <Text style={[styles.editorialEyebrow, { textAlign: align }]}>
-            {locale === "he" ? "חברת סטודיו" : "Studio member"}
-          </Text>
-          <Text style={[styles.editorialTitle, { textAlign: align }]}>
-            {locale === "he" ? "נועה - מנוי פרימיום פעיל" : "Noa - Premium membership active"}
-          </Text>
-          <Text style={[styles.editorialBody, { textAlign: align }]}>
-            {locale === "he"
-              ? "קרדיטים, התראות ובקשות סטודיו במקום אחד."
-              : "Credits, alerts, and studio requests in one place."}
-          </Text>
-        </View>
-      </View>
-
-      <MembershipHealthPanel membership={premiumExperience.membership} />
-      <ConciergePanel requests={premiumExperience.concierge} />
-
-      <View style={styles.card}>
-        <Text style={[styles.label, { textAlign: align }]}>{t.language}</Text>
-        <View style={[styles.segment, direction === "rtl" && styles.rowReverse]}>
-          <Pressable onPress={() => setLocale("he")} style={[styles.segmentButton, locale === "he" && styles.selected]}>
-            <Text style={styles.segmentText}>עברית</Text>
-          </Pressable>
-          <Pressable onPress={() => setLocale("en")} style={[styles.segmentButton, locale === "en" && styles.selected]}>
-            <Text style={styles.segmentText}>English</Text>
-          </Pressable>
-        </View>
-      </View>
-
-      <View style={[styles.rowCard, direction === "rtl" && styles.rowReverse]}>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.label, { textAlign: align }]}>{t.notifications}</Text>
-          <Text style={[styles.body, { textAlign: align }]}>
-            {locale === "he"
-              ? "התראות חכמות להזמנות, המתנה ומנוי."
-              : "Smart alerts for bookings, waitlist, and membership."}
-          </Text>
-          <Text style={[styles.statusText, { textAlign: align }]}>{notificationsStatusText}</Text>
-        </View>
-        <Switch
-          disabled={notificationsStatus === "checking"}
-          value={notificationsEnabled}
-          onValueChange={toggleNotifications}
+    <View style={styles.safe}>
+      <View style={styles.content}>
+        <Header
+          eyebrow={locale === "he" ? "פרופיל" : "Profile"}
+          title={locale === "he" ? "חשבון לקוח" : "Customer account"}
+          subtitle={
+            signedIn
+              ? locale === "he"
+                ? "הזמנות יישמרו מול Supabase."
+                : "Bookings are saved against Supabase."
+              : locale === "he"
+                ? "התחברי כדי לבצע הזמנה אמיתית."
+                : "Sign in to place a real booking."
+          }
+          action={<StatusBadge status={signedIn ? "open" : "waitlist"} label={signedIn ? "Live" : "Guest"} />}
         />
-      </View>
 
-      <View style={styles.premiumCard}>
-        <Text style={[styles.premiumTitle, { textAlign: align }]}>{t.instructorMode}</Text>
-        <Text style={[styles.premiumBody, { textAlign: align }]}>
-          {locale === "he"
-            ? "כניסה מהירה לרשימת משתתפות, נוכחות והערות פנימיות."
-            : "Fast access to participant lists, attendance, and internal notes."}
-        </Text>
-      </View>
+        <SurfaceCard elevated>
+          <View style={styles.identityBlock}>
+            <Text style={[styles.label, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he" ? "חשבון פעיל" : "Active account"}
+            </Text>
+            <Text style={[styles.email, { textAlign: align, writingDirection: direction }]}>
+              {session?.user.email ?? demoCredentials.email}
+            </Text>
+            <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
+              {signedIn
+                ? locale === "he"
+                  ? "אפשר להזמין שיעורי דמו מהרשימה החיה."
+                  : "You can book demo classes from the live schedule."
+                : locale === "he"
+                  ? "חשבון הדמו כולל מנוי פעיל וקרדיטים."
+                  : "The demo account has an active plan and credits."}
+            </Text>
+          </View>
 
-      <Pressable onPress={() => setAccountDeletionRequested(true)} style={styles.deleteButton}>
-        <Text style={styles.deleteText}>{t.accountDeletion}</Text>
-      </Pressable>
-      <Text style={[styles.statusText, { textAlign: align }]}>{deletionStatusText}</Text>
-    </Screen>
+          {signedIn ? (
+            <SecondaryButton icon="log-out-outline" onPress={signOut}>
+              {isLoading ? (locale === "he" ? "מתנתק..." : "Signing out...") : locale === "he" ? "התנתקות" : "Sign out"}
+            </SecondaryButton>
+          ) : (
+            <PrimaryButton icon="person-circle-outline" onPress={signInDemoCustomer} disabled={!hasBackend || isLoading}>
+              {isLoading
+                ? locale === "he"
+                  ? "מתחבר..."
+                  : "Signing in..."
+                : locale === "he"
+                  ? "כניסה כלקוח דמו"
+                  : "Sign in demo customer"}
+            </PrimaryButton>
+          )}
+        </SurfaceCard>
+
+        {!hasBackend ? (
+          <SurfaceCard>
+            <Text style={[styles.body, styles.warning, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he"
+                ? "חסרה הגדרת Supabase מקומית."
+                : "Local Supabase configuration is missing."}
+            </Text>
+          </SurfaceCard>
+        ) : null}
+
+        {message ? (
+          <SurfaceCard>
+            <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>{message}</Text>
+          </SurfaceCard>
+        ) : null}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: fitness.textPrimary,
-    fontSize: 32,
-    fontWeight: "900",
-  },
-  card: {
-    backgroundColor: fitness.surface,
-    borderColor: fitness.border,
-    borderWidth: 1,
-    borderRadius: radii.large,
-    padding: 18,
-    gap: 12,
-  },
-  rowCard: {
-    backgroundColor: fitness.surfaceRaised,
-    borderColor: fitness.border,
-    borderWidth: 1,
-    borderRadius: radii.large,
-    padding: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 14,
-  },
-  rowReverse: {
-    flexDirection: "row-reverse",
-  },
-  memberHero: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    backgroundColor: fitness.surface,
-    borderColor: fitness.border,
-    borderWidth: 1,
-    borderRadius: radii.large,
-    padding: 14,
-  },
-  editorialImage: {
-    width: 88,
-    height: 110,
-    borderRadius: radii.small,
-    backgroundColor: fitness.surfaceSoft,
-  },
-  editorialCopy: {
+  safe: {
     flex: 1,
-    gap: 4,
+    backgroundColor: fitness.appBg,
   },
-  editorialEyebrow: {
-    color: colors.gold,
-    fontSize: 12,
-    fontWeight: "900",
+  content: {
+    flex: 1,
+    gap: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.xl,
   },
-  editorialTitle: {
-    color: fitness.textPrimary,
-    fontSize: 18,
-    lineHeight: 23,
-    fontWeight: "900",
-  },
-  editorialBody: {
-    color: fitness.textSecondary,
-    fontSize: 14,
-    lineHeight: 20,
+  identityBlock: {
+    gap: spacing.xs,
+    marginBottom: spacing.md,
   },
   label: {
+    ...typography.label,
+    color: fitness.textSecondary,
+    textTransform: "uppercase",
+  },
+  email: {
+    ...typography.h2,
     color: fitness.textPrimary,
-    fontWeight: "900",
-    fontSize: 16,
   },
   body: {
+    ...typography.body,
     color: fitness.textSecondary,
-    lineHeight: 21,
-    marginTop: 4,
-    fontWeight: "700",
   },
-  statusText: {
-    color: fitness.textMuted,
-    fontSize: 14,
-    lineHeight: 21,
-    fontWeight: "700",
-    marginTop: 8,
-  },
-  segment: {
-    flexDirection: "row",
-    borderRadius: 999,
-    backgroundColor: fitness.surfaceRaised,
-    borderColor: fitness.border,
-    borderWidth: 1,
-    padding: 4,
-  },
-  segmentButton: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 12,
-    borderRadius: 999,
-  },
-  selected: {
-    backgroundColor: fitness.goldGlow,
-  },
-  segmentText: {
-    color: fitness.textPrimary,
-    fontWeight: "900",
-  },
-  premiumCard: {
-    backgroundColor: fitness.surface,
-    borderColor: fitness.border,
-    borderWidth: 1,
-    borderRadius: radii.large,
-    padding: 18,
-    gap: 8,
-  },
-  premiumTitle: {
-    color: fitness.textPrimary,
-    fontSize: 21,
-    fontWeight: "900",
-  },
-  premiumBody: {
-    color: fitness.textSecondary,
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: "700",
-  },
-  deleteButton: {
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.danger,
-    backgroundColor: fitness.dangerGlow,
-    padding: 14,
-    alignItems: "center",
-  },
-  deleteText: {
-    color: colors.danger,
-    fontWeight: "900",
+  warning: {
+    color: "#A66A1F",
   },
 });

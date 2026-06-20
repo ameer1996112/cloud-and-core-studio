@@ -1,60 +1,104 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, fitness } from "@/theme/colors";
+
+const token = {
+  ivory: "#FAF7F2",
+  goldLight: "#F0E3C4",
+  goldMid: "#C49A45",
+  sand: "#E8DFD1",
+  textMain: "#0B1D3A",
+  textMuted: "#7A8899",
+  white: "#FFFFFF",
+};
 
 export default function TabsLayout() {
-  const { t } = useCopy();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.gold,
-        tabBarInactiveTintColor: fitness.textMuted,
+        headerShown: false,
+        tabBarActiveTintColor: token.goldMid,
+        tabBarInactiveTintColor: token.textMuted,
         tabBarStyle: {
-          backgroundColor: fitness.surface,
-          borderTopColor: fitness.border,
-          height: 88,
-          paddingBottom: 24,
+          height: 74,
           paddingTop: 8,
+          paddingBottom: 14,
+          backgroundColor: token.white,
+          borderTopColor: token.sand,
+          borderTopWidth: 0.5,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "800",
+          fontSize: 10,
+          fontWeight: "500",
         },
-        headerStyle: { backgroundColor: fitness.appBg },
-        headerTintColor: fitness.textPrimary,
-        headerTitleStyle: { fontWeight: "900" },
+        sceneStyle: {
+          backgroundColor: token.ivory,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: t.home,
-          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" color={color} size={size} />,
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => <TabIcon name={focused ? "home" : "home-outline"} color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="schedule"
         options={{
-          title: t.schedule,
-          tabBarIcon: ({ color, size }) => <Ionicons name="calendar-outline" color={color} size={size} />,
+          title: "Schedule",
+          tabBarIcon: ({ color, focused }) => <TabIcon name={focused ? "time" : "time-outline"} color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="bookings"
         options={{
-          title: t.bookings,
-          tabBarIcon: ({ color, size }) => <Ionicons name="checkmark-circle-outline" color={color} size={size} />,
+          title: "Bookings",
+          tabBarIcon: ({ color, focused }) => <TabIcon name={focused ? "calendar" : "calendar-outline"} color={color} focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="plans"
+        options={{
+          title: "Plans",
+          tabBarIcon: ({ color, focused }) => <TabIcon name={focused ? "diamond" : "diamond-outline"} color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: t.profile,
-          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" color={color} size={size} />,
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => <TabIcon name={focused ? "person" : "person-outline"} color={color} focused={focused} />,
         }}
       />
     </Tabs>
+  );
+}
+
+function TabIcon({
+  name,
+  color,
+  focused,
+}: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  color: string;
+  focused: boolean;
+}) {
+  return (
+    <Ionicons
+      name={name}
+      color={color}
+      size={20}
+      style={{
+        width: 38,
+        height: 38,
+        borderRadius: 8,
+        paddingTop: 9,
+        textAlign: "center",
+        overflow: "hidden",
+        backgroundColor: focused ? token.goldLight : "transparent",
+      }}
+    />
   );
 }

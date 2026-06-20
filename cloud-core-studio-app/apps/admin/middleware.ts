@@ -8,7 +8,7 @@ import { createServerClient } from "@supabase/ssr";
  * Role enforcement (admin-only) happens in server components via requireAdmin();
  * middleware only needs to know whether a session exists.
  */
-const PUBLIC_PATHS = ["/login", "/forbidden", "/auth"];
+const PUBLIC_PATHS = ["/login", "/forbidden", "/auth", "/payment"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

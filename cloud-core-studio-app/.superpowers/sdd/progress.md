@@ -41,3 +41,15 @@ PH-3 Stripe payments (DONE — logic verified; edge HTTP runtime blocked in sand
 
 NEXT: customer-side membership/booking surfacing (mobile), admin class CRUD completeness
 (cancel/duplicate/attendance UI), members management UI, reports wired to live data.
+
+PH-4 Customer app wiring (DONE)
+- Data layers (pure + tested): membershipData, myBookingsData, plansData; live API: memberApi
+  (loadMyMembership, loadMyBookings, cancelBooking via RPC, createCheckoutSession via Edge fn, loadPlans).
+- Screens: real bookings tab (upcoming/history, credits card, cancel w/ confirm + early/late
+  messaging, loading/empty/error/success states); plans tab (plan cards, current plan, Stripe
+  checkout -> browser); payment success/cancelled pages in admin (public routes).
+- Tab layout fixed: Bookings + Plans + Profile (was mislabeled Members/Settings).
+- Tests +20. Mobile 39/39, typechecks clean, admin build OK.
+
+NEXT: admin class CRUD completeness (cancel/duplicate/attendance UI), members management UI,
+reports wired to live data, integration/security tests, deployment docs.

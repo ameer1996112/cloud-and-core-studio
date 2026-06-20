@@ -16,7 +16,7 @@ function AppNavigator() {
 
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: fitness.appBg },
@@ -26,7 +26,7 @@ function AppNavigator() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="class/[id]/index" options={{ title: t.classTitle }} />
+        <Stack.Screen name="class/[id]/index" options={{ title: t.classTitle, headerShown: false }} />
       </Stack>
     </>
   );
