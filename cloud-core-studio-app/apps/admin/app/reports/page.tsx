@@ -4,7 +4,7 @@ import { StudioApp } from "@/components/StudioApp";
 export default async function ReportsPage() {
   return (
     <AdminGuard>
-      <StudioApp initialScreen="admin-payments" />
+      <StudioApp initialScreen="analytics" />
     </AdminGuard>
   );
 }

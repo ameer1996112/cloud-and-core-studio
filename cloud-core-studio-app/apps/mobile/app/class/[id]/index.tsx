@@ -489,12 +489,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   metaPillOpen: {
-    borderColor: "rgba(104,176,153,0.34)",
-    backgroundColor: palette.dark.successMuted,
+    borderColor: "rgba(79,111,97,0.28)",
+    backgroundColor: fitness.successGlow,
   },
   metaPillWaitlist: {
-    borderColor: "rgba(224,162,77,0.38)",
-    backgroundColor: palette.dark.warningMuted,
+    borderColor: "rgba(180,123,42,0.34)",
+    backgroundColor: colors.goldSoft,
   },
   metaPillText: {
     ...typography.caption,

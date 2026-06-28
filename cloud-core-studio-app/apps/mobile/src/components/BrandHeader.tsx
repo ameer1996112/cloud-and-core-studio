@@ -3,24 +3,24 @@ import { colors } from "@/theme/colors";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 export function BrandHeader() {
-  const { direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { direction, rowDirection, textAlign } = useCopy();
+  const align = textAlign;
 
   return (
     <View style={styles.wrap}>
-      <View style={[styles.logoRow, direction === "rtl" && styles.rowReverse]}>
-        <Image source={require("../../assets/icon.png")} style={styles.logo} resizeMode="contain" />
+      <View style={[styles.logoRow, { flexDirection: rowDirection }]}>
+        <Image source={require("../../assets/logo-transparent.png")} style={styles.logo} resizeMode="contain" />
         <View style={{ flex: 1 }}>
-          <Text style={[styles.eyebrow, { textAlign: align }]}>Cloud&Core Studio</Text>
-          <Text style={[styles.subline, { textAlign: align }]}>
+          <Text style={[styles.eyebrow, { textAlign: align, writingDirection: direction }]}>Cloud&Core Studio</Text>
+          <Text style={[styles.subline, { textAlign: align, writingDirection: direction }]}>
             {direction === "rtl" ? "בוטיק תנועה חכם" : "Intelligent boutique movement"}
           </Text>
         </View>
       </View>
-      <Text style={[styles.title, { textAlign: align }]}>
+      <Text style={[styles.title, { textAlign: align, writingDirection: direction }]}>
         {direction === "rtl" ? "היום שלך כבר מסודר" : "Your studio day is already curated"}
       </Text>
-      <Text style={[styles.body, { textAlign: align }]}>
+      <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
         {direction === "rtl"
           ? "המלצות, זמינות, מנוי והודעות סטודיו במקום אחד."
           : "Recommendations, availability, membership, and studio messages in one place."}
@@ -39,14 +39,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  rowReverse: {
-    flexDirection: "row-reverse",
-  },
   logo: {
     width: 54,
     height: 54,
     borderRadius: 18,
-    backgroundColor: colors.white,
   },
   eyebrow: {
     color: colors.gold,
@@ -72,3 +68,4 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
 });
+

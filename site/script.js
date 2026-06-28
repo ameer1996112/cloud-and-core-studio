@@ -85,8 +85,28 @@
   hamburger.addEventListener('click', toggleMenu);
   overlay.addEventListener('click', toggleMenu);
   drawer.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      const target = href?.startsWith('#') ? document.querySelector(href) : null;
+
+      if (target) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+
       if (drawer.classList.contains('open')) toggleMenu();
+
+      if (target) {
+        window.setTimeout(() => {
+          const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+          const scrollMarginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+          const targetTop = target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+          document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+          document.documentElement.style.scrollBehavior = previousScrollBehavior;
+          history.pushState(null, '', href);
+        }, 80);
+      }
     });
   });
 
@@ -212,12 +232,28 @@
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      e.preventDefault();
       const href = a.getAttribute('href');
       if (href === '#') return;
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        e.preventDefault();
+        const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
+        const scrollToTarget = () => {
+          const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+          const scrollMarginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+          const targetTop = target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+          if (isMobileViewport) document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: reduceMotion || isMobileViewport ? 'auto' : 'smooth'
+          });
+          if (isMobileViewport) document.documentElement.style.scrollBehavior = previousScrollBehavior;
+        };
+        if (isMobileViewport) {
+          requestAnimationFrame(scrollToTarget);
+        } else {
+          scrollToTarget();
+        }
         history.pushState(null, '', href);
       }
     });
@@ -414,14 +450,22 @@
   const stickyCta = document.getElementById('sticky-cta');
   const heroSection = document.getElementById('hero');
   const contactSection = document.getElementById('contact');
+  const pricingSection = document.getElementById('pricing');
   const whatsappBtn = document.querySelector('.whatsapp-btn');
   if (stickyCta) {
     stickyCta.inert = true;
-    window.addEventListener('scroll', () => {
+    const updateStickyCta = () => {
       if (!heroSection || !contactSection) return;
       const heroBottom = heroSection.getBoundingClientRect().bottom;
       const contactTop = contactSection.getBoundingClientRect().top;
-      if (heroBottom < 0 && contactTop > window.innerHeight) {
+      const pricingRect = pricingSection?.getBoundingClientRect();
+      const pricingInView = pricingRect
+        ? pricingRect.top < window.innerHeight * 0.86 && pricingRect.bottom > window.innerHeight * 0.18
+        : false;
+
+      document.body.classList.toggle('pricing-in-view', pricingInView);
+
+      if (heroBottom < 0 && contactTop > window.innerHeight && !pricingInView) {
         stickyCta.classList.add('visible');
         stickyCta.setAttribute('aria-hidden', 'false');
         stickyCta.inert = false;
@@ -432,7 +476,11 @@
         stickyCta.inert = true;
         if (whatsappBtn) whatsappBtn.classList.remove('lifted');
       }
-    }, { passive: true });
+    };
+
+    updateStickyCta();
+    window.addEventListener('scroll', updateStickyCta, { passive: true });
+    window.addEventListener('resize', updateStickyCta, { passive: true });
   }
 
   // ── 7. Social Proof Toasts ──

@@ -1,833 +1,797 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   buildStudioSnapshot,
   capacityPercent,
   capacityTone,
+  classAction,
   formatIls,
   getClassBookings,
   getDaySchedule,
+  getMemberBookings,
   getMemberCreditsLabel,
   initials,
+  type BookingRecord,
   type StudioClass,
   type StudioMember,
   type StudioSnapshot,
 } from "@/lib/studioApp.mjs";
 
 type Screen =
-  | "admin-home"
-  | "admin-schedule"
-  | "admin-members"
-  | "admin-member"
-  | "admin-class"
-  | "admin-class-form"
-  | "admin-payments"
-  | "admin-settings"
-  | "member-home"
-  | "member-browse";
+  | "dashboard"
+  | "schedule"
+  | "classes"
+  | "bookings"
+  | "clients"
+  | "instructors"
+  | "memberships"
+  | "payments"
+  | "attendance"
+  | "analytics"
+  | "messages"
+  | "settings";
 
-const adminNav: Array<{ screen: Screen; icon: string; label: string }> = [
-  { screen: "admin-home", icon: "⌂", label: "Home" },
-  { screen: "admin-schedule", icon: "◷", label: "Schedule" },
-  { screen: "admin-members", icon: "◇", label: "Members" },
-  { screen: "admin-payments", icon: "₪", label: "Payments" },
-  { screen: "admin-settings", icon: "⚙", label: "Settings" },
+const nav: Array<{ screen: Screen; icon: string; label: string }> = [
+  { screen: "dashboard", icon: "⌂", label: "Dashboard" },
+  { screen: "schedule", icon: "◷", label: "Calendar" },
+  { screen: "classes", icon: "▤", label: "Classes" },
+  { screen: "bookings", icon: "✓", label: "Bookings" },
+  { screen: "clients", icon: "◇", label: "Clients" },
+  { screen: "instructors", icon: "◉", label: "Instructors" },
+  { screen: "memberships", icon: "∞", label: "Memberships" },
+  { screen: "payments", icon: "₪", label: "Payments" },
+  { screen: "attendance", icon: "☑", label: "Attendance" },
+  { screen: "analytics", icon: "↗", label: "Analytics" },
+  { screen: "messages", icon: "✉", label: "Messages" },
+  { screen: "settings", icon: "⚙", label: "Settings" },
 ];
 
-const memberNav: Array<{ screen: Screen; icon: string; label: string }> = [
-  { screen: "member-home", icon: "⌂", label: "Home" },
-  { screen: "member-browse", icon: "◷", label: "Browse" },
-  { screen: "member-home", icon: "↺", label: "History" },
-  { screen: "member-home", icon: "○", label: "Profile" },
-];
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const statusFilters = ["All", "booked", "waitlisted", "cancelled", "checked_in", "no_show"];
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const filters = ["All", "Active", "Monthly", "10-class pack", "Annual", "Expired"];
-const categories = ["All", "Yoga", "Pilates", "Dance", "Meditation", "Cardio"];
-
-export function StudioApp({ initialScreen = "admin-home" }: { initialScreen?: Screen } = {}) {
+export function StudioApp({ initialScreen = "dashboard" }: { initialScreen?: Screen } = {}) {
   const [snapshot] = useState<StudioSnapshot>(() => buildStudioSnapshot());
   const [screen, setScreen] = useState<Screen>(initialScreen);
-  const [selectedDay, setSelectedDay] = useState("Fri");
+  const [selectedDay, setSelectedDay] = useState("Sun");
   const [selectedClassId, setSelectedClassId] = useState("class-1");
   const [selectedMemberId, setSelectedMemberId] = useState("mem-1");
-  const [memberFilter, setMemberFilter] = useState("All");
-  const [memberSearch, setMemberSearch] = useState("");
-  const [classSearch, setClassSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [modal, setModal] = useState<null | "qr" | "booking" | "cancel">(null);
+  const [query, setQuery] = useState("");
+  const [bookingFilter, setBookingFilter] = useState("All");
+  const [drawer, setDrawer] = useState<null | "class" | "client" | "form" | "booking">(null);
   const [toast, setToast] = useState("");
 
   const selectedClass = snapshot.classes.find((item) => item.id === selectedClassId) ?? snapshot.classes[0];
   const selectedMember = snapshot.members.find((item) => item.id === selectedMemberId) ?? snapshot.members[0];
-  const isMemberMode = screen.startsWith("member");
-
-  function openClass(session: StudioClass) {
-    setSelectedClassId(session.id);
-    setScreen("admin-class");
-  }
-
-  function openMember(member: StudioMember) {
-    setSelectedMemberId(member.id);
-    setScreen("admin-member");
-  }
 
   function notify(message: string) {
     setToast(message);
     window.setTimeout(() => setToast(""), 2400);
   }
 
+  function openClass(session: StudioClass) {
+    setSelectedClassId(session.id);
+    setDrawer("class");
+  }
+
+  function openClient(member: StudioMember) {
+    setSelectedMemberId(member.id);
+    setDrawer("client");
+  }
+
   return (
-    <div className="studio-stage">
-      <div className="phone-shell">
-        <div className="phone-notch" />
-        <StatusBar />
+    <div className="studioflow-app">
+      <aside className="app-sidebar" aria-label="StudioFlow admin navigation">
+        <div className="brand-lockup">
+          <span className="brand-mark">S</span>
+          <span>
+            <strong>StudioFlow</strong>
+            <small>{snapshot.studio.location}</small>
+          </span>
+        </div>
+        <nav className="side-nav">
+          {nav.map((item) => (
+            <button key={item.screen} className={screen === item.screen ? "active" : ""} onClick={() => setScreen(item.screen)}>
+              <span>{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-note">
+          <strong>Today</strong>
+          <span>{snapshot.today}</span>
+          <small>{snapshot.stats.waitlistAlerts} waitlist alerts need attention</small>
+        </div>
+      </aside>
 
-        {screen === "admin-home" && (
-          <AdminHome snapshot={snapshot} onNavigate={setScreen} onClass={openClass} onModal={setModal} />
-        )}
-        {screen === "admin-schedule" && (
-          <AdminSchedule
-            snapshot={snapshot}
-            selectedDay={selectedDay}
-            onDay={setSelectedDay}
-            onClass={openClass}
-            onNew={() => setScreen("admin-class-form")}
-          />
-        )}
-        {screen === "admin-members" && (
-          <AdminMembers
-            snapshot={snapshot}
-            filter={memberFilter}
-            search={memberSearch}
-            onFilter={setMemberFilter}
-            onSearch={setMemberSearch}
-            onMember={openMember}
-            onNew={() => setScreen("admin-member")}
-          />
-        )}
-        {screen === "admin-member" && (
-          <AdminMemberProfile
-            member={selectedMember}
-            snapshot={snapshot}
-            onBack={() => setScreen("admin-members")}
-            onToast={notify}
-          />
-        )}
-        {screen === "admin-class" && (
-          <AdminClassDetail
-            session={selectedClass}
-            snapshot={snapshot}
-            onBack={() => setScreen("admin-schedule")}
-            onEdit={() => setScreen("admin-class-form")}
-            onToast={notify}
-          />
-        )}
-        {screen === "admin-class-form" && (
-          <AdminClassForm snapshot={snapshot} onCancel={() => setScreen("admin-schedule")} onSave={() => {
-            notify("Class saved");
-            setScreen("admin-schedule");
-          }} />
-        )}
-        {screen === "admin-payments" && <AdminPayments snapshot={snapshot} onToast={notify} />}
-        {screen === "admin-settings" && <AdminSettings snapshot={snapshot} onToast={notify} onMember={() => setScreen("member-home")} />}
-        {screen === "member-home" && (
-          <MemberHome
-            snapshot={snapshot}
-            onBrowse={() => setScreen("member-browse")}
-            onCancel={() => setModal("cancel")}
-            onBook={() => setModal("booking")}
-          />
-        )}
-        {screen === "member-browse" && (
-          <MemberBrowse
-            snapshot={snapshot}
-            search={classSearch}
-            category={category}
-            onSearch={setClassSearch}
-            onCategory={setCategory}
-            onBook={() => setModal("booking")}
-          />
-        )}
+      <main className="app-main">
+        <TopBar
+          snapshot={snapshot}
+          screen={screen}
+          onAdd={() => setDrawer(screen === "clients" ? "client" : screen === "bookings" ? "booking" : "form")}
+          query={query}
+          onQuery={setQuery}
+        />
 
-        <BottomNav mode={isMemberMode ? "member" : "admin"} active={screen} onNavigate={setScreen} />
-        {modal && <Modal type={modal} session={selectedClass} onClose={() => setModal(null)} onToast={notify} />}
-        {toast && <div className="toast">{toast}</div>}
-      </div>
-    </div>
-  );
-}
+        {screen === "dashboard" && <Dashboard snapshot={snapshot} onNavigate={setScreen} onClass={openClass} onClient={openClient} onToast={notify} />}
+        {screen === "schedule" && <Schedule snapshot={snapshot} selectedDay={selectedDay} onDay={setSelectedDay} onClass={openClass} />}
+        {screen === "classes" && <Classes snapshot={snapshot} query={query} onClass={openClass} />}
+        {screen === "bookings" && (
+          <Bookings snapshot={snapshot} query={query} filter={bookingFilter} onFilter={setBookingFilter} onClass={openClass} onClient={openClient} onToast={notify} />
+        )}
+        {screen === "clients" && <Clients snapshot={snapshot} query={query} onClient={openClient} />}
+        {screen === "instructors" && <Instructors snapshot={snapshot} />}
+        {screen === "memberships" && <Memberships snapshot={snapshot} onToast={notify} />}
+        {screen === "payments" && <Payments snapshot={snapshot} query={query} onToast={notify} />}
+        {screen === "attendance" && <Attendance snapshot={snapshot} onToast={notify} />}
+        {screen === "analytics" && <Analytics snapshot={snapshot} />}
+        {screen === "messages" && <Messages snapshot={snapshot} onToast={notify} />}
+        {screen === "settings" && <Settings snapshot={snapshot} onToast={notify} />}
+      </main>
 
-function StatusBar() {
-  return (
-    <div className="status-bar">
-      <strong>09:41</strong>
-      <span>●●● 5G ▰</span>
+      <nav className="mobile-nav" aria-label="Primary">
+        {nav.slice(0, 5).map((item) => (
+          <button key={item.screen} className={screen === item.screen ? "active" : ""} onClick={() => setScreen(item.screen)}>
+            <span>{item.icon}</span>
+            {item.label}
+          </button>
+        ))}
+      </nav>
+
+      {drawer === "class" && <ClassDrawer session={selectedClass} snapshot={snapshot} onClose={() => setDrawer(null)} onToast={notify} />}
+      {drawer === "client" && <ClientDrawer member={selectedMember} snapshot={snapshot} onClose={() => setDrawer(null)} onToast={notify} />}
+      {drawer === "form" && <ClassFormDrawer snapshot={snapshot} onClose={() => setDrawer(null)} onToast={notify} />}
+      {drawer === "booking" && <BookingDrawer snapshot={snapshot} onClose={() => setDrawer(null)} onToast={notify} />}
+      {toast && <div className="toast" role="status">{toast}</div>}
     </div>
   );
 }
 
 function TopBar({
-  title,
-  subtitle,
-  back,
-  action,
+  snapshot,
+  screen,
+  onAdd,
+  query,
+  onQuery,
 }: {
-  title: string;
-  subtitle?: string;
-  back?: () => void;
-  action?: { label: string; onClick: () => void };
+  snapshot: StudioSnapshot;
+  screen: Screen;
+  onAdd: () => void;
+  query: string;
+  onQuery: (value: string) => void;
 }) {
   return (
-    <header className="top-bar">
+    <header className="app-topbar">
       <div>
-        {back ? (
-          <button className="back-btn" onClick={back}>
-            ‹ Back
-          </button>
-        ) : (
-          <h1>{title}</h1>
-        )}
-        {back && <h1>{title}</h1>}
-        {subtitle && <p>{subtitle}</p>}
+        <p className="eyebrow">Studio operations</p>
+        <h1>{nav.find((item) => item.screen === screen)?.label ?? "Dashboard"}</h1>
       </div>
-      {action && (
-        <button className="icon-btn" aria-label={action.label} onClick={action.onClick}>
-          +
-        </button>
-      )}
+      <label className="search-field">
+        <span>Search</span>
+        <input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Client, class, instructor" />
+      </label>
+      <button className="btn-primary" onClick={onAdd}>Add</button>
+      <div className="admin-pill">
+        <Avatar label={snapshot.admin.name} tone="sage" />
+        <span>
+          <strong>{snapshot.admin.name}</strong>
+          <small>{snapshot.admin.role}</small>
+        </span>
+      </div>
     </header>
   );
 }
 
-function AdminHome({
+function Dashboard({
   snapshot,
   onNavigate,
   onClass,
-  onModal,
+  onClient,
+  onToast,
 }: {
   snapshot: StudioSnapshot;
   onNavigate: (screen: Screen) => void;
   onClass: (session: StudioClass) => void;
-  onModal: (modal: "qr") => void;
+  onClient: (member: StudioMember) => void;
+  onToast: (message: string) => void;
 }) {
-  const todayClasses = getDaySchedule(snapshot, "Fri").slice(0, 5);
+  const todayClasses = getDaySchedule(snapshot, "Sun");
 
   return (
-    <main className="screen active">
-      <section className="home-greeting">
+    <div className="page-grid">
+      <section className="hero-band">
         <div>
-          <h2>Good morning, {snapshot.admin.name}</h2>
-          <p>{snapshot.today}</p>
+          <p className="eyebrow">Good morning, {snapshot.admin.name}</p>
+          <h2>Keep today smooth: check attendance, pressure, waitlists, and failed payments before the evening rush.</h2>
+          <p>{snapshot.studio.bookingRules}</p>
         </div>
-        <Avatar label={snapshot.admin.name} size="md" tone="gold" />
+        <button className="btn-secondary" onClick={() => onNavigate("schedule")}>View calendar</button>
       </section>
-      <div className="scroll-area">
-        <div className="content-pad">
-          <div className="stats-row">
-            <StatCard label="Members" value={String(snapshot.stats.totalMembers)} />
-            <StatCard label="Today" value={String(snapshot.stats.bookingsToday)} />
-            <StatCard label="Revenue" value={formatIls(snapshot.stats.revenueMonth)} />
-          </div>
-          <div className="quick-actions">
-            <QuickAction icon="+" label="Add class" onClick={() => onNavigate("admin-class-form")} />
-            <QuickAction icon="◇" label="Add member" onClick={() => onNavigate("admin-members")} />
-            <QuickAction icon="▦" label="QR Check-in" onClick={() => onModal("qr")} />
-            <QuickAction icon="₪" label="Reports" onClick={() => onNavigate("admin-payments")} />
-          </div>
-          <SectionTitle title="Today's classes" action="View week" onAction={() => onNavigate("admin-schedule")} />
-          <div className="stack">
-            {todayClasses.map((session) => (
-              <ClassCard key={session.id} session={session} onClick={() => onClass(session)} />
-            ))}
-          </div>
-          <SectionTitle title="Recent activity" />
-          <div className="card card-pad">
-            {snapshot.activity.slice(0, 10).map((item, index) => (
-              <ActivityItem key={item} item={item} muted={`${index + 1}m ago`} />
-            ))}
-          </div>
-        </div>
+
+      <div className="metric-grid">
+        <Metric label="Revenue this month" value={formatIls(snapshot.stats.revenueMonth)} note="Answers: are we on target?" />
+        <Metric label="Attendance rate" value={`${snapshot.stats.attendanceRate}%`} note="Answers: are bookings turning into visits?" tone="sage" />
+        <Metric label="Active members" value={String(snapshot.stats.activeMembers)} note="Answers: is recurring revenue healthy?" tone="teal" />
+        <Metric label="Capacity pressure" value={`${snapshot.stats.capacityPressure}%`} note="Answers: where do rooms feel tight?" tone="amber" />
       </div>
-    </main>
+
+      <section className="content-card span-2">
+        <SectionHead title="Today's classes" action="Schedule" onAction={() => onNavigate("schedule")} />
+        <div className="schedule-list compact">
+          {todayClasses.map((session) => <ClassRow key={session.id} session={session} onClick={() => onClass(session)} />)}
+        </div>
+      </section>
+
+      <section className="content-card">
+        <SectionHead title="Attention needed" />
+        <div className="task-list">
+          {snapshot.tasks.map((task) => (
+            <button key={task.id} className={`task-card tone-${task.tone}`} onClick={() => onToast(task.title)}>
+              <strong>{task.title}</strong>
+              <span>{task.detail}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-card">
+        <SectionHead title="Recent bookings" action="Manage" onAction={() => onNavigate("bookings")} />
+        {snapshot.bookings.slice(0, 5).map((booking) => {
+          const member = snapshot.members.find((item) => item.id === booking.memberId);
+          const session = snapshot.classes.find((item) => item.id === booking.classId);
+          if (!member || !session) return null;
+          return <BookingLine key={booking.id} booking={booking} member={member} session={session} onClient={() => onClient(member)} />;
+        })}
+      </section>
+
+      <section className="content-card">
+        <SectionHead title="Capacity pressure" />
+        {snapshot.analytics.topClasses.map(([name, value]) => <BarLine key={name} label={name} value={value} />)}
+      </section>
+    </div>
   );
 }
 
-function AdminSchedule({
+function Schedule({
   snapshot,
   selectedDay,
   onDay,
   onClass,
-  onNew,
 }: {
   snapshot: StudioSnapshot;
   selectedDay: string;
   onDay: (day: string) => void;
   onClass: (session: StudioClass) => void;
-  onNew: () => void;
 }) {
-  const schedule = getDaySchedule(snapshot, selectedDay);
+  const daySchedule = getDaySchedule(snapshot, selectedDay);
 
   return (
-    <main className="screen active">
-      <TopBar title="Schedule" subtitle="Week view" action={{ label: "Add class", onClick: onNew }} />
-      <div className="day-strip">
-        {days.map((day) => (
-          <button key={day} className={`day ${day === "Fri" ? "today" : ""} ${day === selectedDay ? "selected" : ""}`} onClick={() => onDay(day)}>
-            <span>{day}</span>
-            <strong>{day === "Fri" ? "20" : day === "Sat" ? "21" : day === "Sun" ? "22" : "19"}</strong>
-          </button>
-        ))}
-      </div>
-      <div className="scroll-area">
-        <div className="content-pad">
-          {schedule.length ? schedule.map((session) => <ClassCard key={session.id} session={session} detailed onClick={() => onClass(session)} />) : <EmptyState title="No classes" action="Add a class" />}
+    <div className="page-stack">
+      <section className="content-card">
+        <SectionHead title="Week schedule" action="Add class" />
+        <div className="day-strip">
+          {days.map((day, index) => (
+            <button key={day} className={selectedDay === day ? "selected" : ""} onClick={() => onDay(day)}>
+              <span>{day}</span>
+              <strong>{21 + index}</strong>
+            </button>
+          ))}
         </div>
-      </div>
-    </main>
-  );
-}
-
-function AdminMembers({
-  snapshot,
-  filter,
-  search,
-  onFilter,
-  onSearch,
-  onMember,
-  onNew,
-}: {
-  snapshot: StudioSnapshot;
-  filter: string;
-  search: string;
-  onFilter: (value: string) => void;
-  onSearch: (value: string) => void;
-  onMember: (member: StudioMember) => void;
-  onNew: () => void;
-}) {
-  const visible = useMemo(() => {
-    const query = search.toLowerCase();
-    return snapshot.members.filter((member) => {
-      const matchesQuery = [member.name, member.email, member.phone].some((value) => value.toLowerCase().includes(query));
-      const matchesFilter =
-        filter === "All" ||
-        member.status === filter ||
-        member.planType === filter ||
-        (filter === "Expired" && member.status === "Expired");
-      return matchesQuery && matchesFilter;
-    });
-  }, [filter, search, snapshot.members]);
-
-  return (
-    <main className="screen active">
-      <TopBar title="Members" subtitle={`${visible.length} visible`} action={{ label: "Add member", onClick: onNew }} />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <input className="input-field search" value={search} onChange={(event) => onSearch(event.target.value)} placeholder="Search name, email, phone" />
-          <ChipRow values={filters} active={filter} onChange={onFilter} />
-          <div className="card">
-            {visible.map((member) => (
-              <button className="member-row" key={member.id} onClick={() => onMember(member)}>
-                <Avatar label={member.name} tone={member.planType === "Monthly" ? "blue" : member.planType === "Annual" ? "gold" : "sand"} size="sm" />
-                <span>
-                  <strong>{member.name}</strong>
-                  <small>{member.plan} · {member.attended} attended</small>
-                </span>
-                <span className="member-meta">
-                  <Pill tone={member.status === "Expired" ? "red" : member.status === "Paused" ? "sand" : "green"}>{member.status}</Pill>
-                  <small>{getMemberCreditsLabel(member)}</small>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function AdminMemberProfile({
-  member,
-  snapshot,
-  onBack,
-  onToast,
-}: {
-  member: StudioMember;
-  snapshot: StudioSnapshot;
-  onBack: () => void;
-  onToast: (message: string) => void;
-}) {
-  const upcoming = snapshot.classes.slice(0, 3);
-
-  return (
-    <main className="screen active">
-      <TopBar title="Member profile" back={onBack} />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <section className="profile-head card-pad card">
-            <Avatar label={member.name} size="lg" tone="gold" />
-            <h2>{member.name}</h2>
-            <p>{member.email}</p>
-            <p>{member.phone}</p>
-            <Pill tone="gold">{member.plan}</Pill>
-          </section>
-          <div className="stat-pills">
-            <MiniStat label="Total" value={String(member.attended)} />
-            <MiniStat label="Month" value={String(member.month)} />
-            <MiniStat label="Credits" value={getMemberCreditsLabel(member)} />
-          </div>
-          <section className="card card-pad">
-            <SectionTitle title="Current plan" />
-            <div className="plan-line">
-              <strong>{member.plan}</strong>
-              <span>{formatIls(member.price)}</span>
-            </div>
-            <p className="muted">Renews {member.renewal}</p>
-            <div className="progress"><span style={{ width: "68%" }} /></div>
-            <div className="split-actions">
-              <button className="btn-secondary" onClick={() => onToast("Plan paused")}>Pause plan</button>
-              <button className="btn-primary" onClick={() => onToast("Renewal created")}>Renew early</button>
-            </div>
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Upcoming bookings" />
-            {upcoming.map((session) => <CompactClass key={session.id} session={session} />)}
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Admin notes" />
-            <textarea className="input-field notes" defaultValue={member.notes} onBlur={() => onToast("Notes saved")} />
-          </section>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function AdminClassDetail({
-  session,
-  snapshot,
-  onBack,
-  onEdit,
-  onToast,
-}: {
-  session: StudioClass;
-  snapshot: StudioSnapshot;
-  onBack: () => void;
-  onEdit: () => void;
-  onToast: (message: string) => void;
-}) {
-  const bookings = getClassBookings(snapshot, session.id);
-
-  return (
-    <main className="screen active">
-      <TopBar title="Class detail" back={onBack} action={{ label: "Edit", onClick: onEdit }} />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <section className={`class-detail card card-pad accent-${session.color}`}>
-            <h2>{session.name}</h2>
-            <p>{session.date} · {session.time}-{session.endTime} · {session.studio}</p>
-            <div className="info-grid">
-              <MiniStat label="Instructor" value={session.instructor.name} />
-              <MiniStat label="Location" value={session.studio} />
-              <MiniStat label="Capacity" value={`${session.registered}/${session.capacity}`} />
-              <MiniStat label="Duration" value={session.duration} />
-            </div>
-            <CapacityBar session={session} />
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Registered members" />
-            {bookings.map((booking) => (
-              <div className="attendance-row" key={booking.id}>
-                <Avatar label={booking.member.name} size="sm" tone="blue" />
-                <span>
-                  <strong>{booking.member.name}</strong>
-                  <small>{booking.member.plan}</small>
-                </span>
-                <select className="input-field compact" defaultValue={booking.attendance ?? ""} onChange={() => onToast("Attendance updated")}>
-                  <option value="">Not yet</option>
-                  <option value="present">Present</option>
-                  <option value="absent">Absent</option>
-                </select>
+        <div className="calendar-grid">
+          {["07:00", "09:00", "11:00", "13:00", "17:00", "19:00"].map((slot) => (
+            <div className="time-slot" key={slot}>
+              <span>{slot}</span>
+              <div>
+                {daySchedule
+                  .filter((session) => session.time >= slot && session.time < `${String(Number(slot.slice(0, 2)) + 2).padStart(2, "0")}:00`)
+                  .map((session) => <ClassBlock key={session.id} session={session} onClick={() => onClass(session)} />)}
               </div>
-            ))}
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Waitlist" />
-            {session.waitlist ? <p className="muted">{session.waitlist} members waiting. First member auto-promotes after cancellation.</p> : <EmptyState title="No waitlist" />}
-          </section>
-          <button className="btn-primary" onClick={() => onToast("All members marked present")}>Mark all present</button>
-          <button className="btn-secondary" onClick={() => onToast("Reminder queued")}>Send reminder to class</button>
+            </div>
+          ))}
         </div>
-      </div>
-    </main>
+      </section>
+      <section className="content-card">
+        <SectionHead title="List view" />
+        <div className="schedule-list">
+          {daySchedule.length ? daySchedule.map((session) => <ClassRow key={session.id} session={session} onClick={() => onClass(session)} />) : <EmptyState title="No classes on this day" body="Add your first class to start building the weekly schedule." />}
+        </div>
+      </section>
+    </div>
   );
 }
 
-function AdminClassForm({ snapshot, onCancel, onSave }: { snapshot: StudioSnapshot; onCancel: () => void; onSave: () => void }) {
+function Classes({ snapshot, query, onClass }: { snapshot: StudioSnapshot; query: string; onClass: (session: StudioClass) => void }) {
+  const visible = useMemo(() => {
+    const needle = query.toLowerCase();
+    return snapshot.classes.filter((session) => [session.name, session.type, session.instructor.name, session.studio].join(" ").toLowerCase().includes(needle));
+  }, [query, snapshot.classes]);
+
   return (
-    <main className="screen active">
-      <TopBar title="Add class" back={onCancel} />
-      <div className="scroll-area">
-        <form className="content-pad" onSubmit={(event) => { event.preventDefault(); onSave(); }}>
-          <FormField label="Class name" placeholder="Beginner Aerial Yoga" />
-          <FormField label="Class type" as="select" values={["Yoga", "Pilates", "Dance", "Meditation", "Cardio", "Strength", "Other"]} />
-          <label className="input-group">
-            <span className="input-label">Description</span>
-            <textarea className="input-field notes" placeholder="Optional notes for members" />
-          </label>
-          <div className="two-inputs">
-            <FormField label="Date" type="date" />
-            <FormField label="Capacity" type="number" placeholder="10" />
+    <div className="class-grid">
+      {visible.map((session) => (
+        <article className={`class-card tone-${session.color}`} key={session.id}>
+          <div className="class-card-head">
+            <Badge tone={capacityTone(session.registered, session.capacity)}>{session.status}</Badge>
+            <span>{session.time}-{session.endTime}</span>
           </div>
-          <div className="two-inputs">
-            <FormField label="Start" type="time" />
-            <FormField label="End" type="time" />
+          <h2>{session.name}</h2>
+          <p>{session.description}</p>
+          <div className="detail-grid">
+            <SmallDetail label="Instructor" value={session.instructor.name} />
+            <SmallDetail label="Room" value={session.studio} />
+            <SmallDetail label="Level" value={session.level} />
+            <SmallDetail label="Price" value={formatIls(session.price)} />
           </div>
-          <FormField label="Studio/location" as="select" values={["Studio A", "Studio B", "Outdoor", "Online"]} />
-          <FormField label="Repeat" as="select" values={["Does not repeat", "Every week", "Every 2 weeks", "Custom"]} />
-          <FormField label="Instructor" as="select" values={snapshot.instructors.map((instructor) => instructor.name)} />
-          <FormField label="Waitlist" as="select" values={["Enabled", "Disabled"]} />
-          <FormField label="Cancel deadline" as="select" values={["2h before", "4h before", "12h before", "24h before"]} />
-          <ColorDotPicker />
-          <button className="btn-primary" type="submit">Save class</button>
-          <button className="btn-secondary" type="button" onClick={onCancel}>Cancel</button>
-        </form>
-      </div>
-    </main>
+          <CapacityBar session={session} />
+          <button className="btn-secondary" onClick={() => onClass(session)}>Open details</button>
+        </article>
+      ))}
+    </div>
   );
 }
 
-function AdminPayments({ snapshot, onToast }: { snapshot: StudioSnapshot; onToast: (message: string) => void }) {
-  const activePackages = [
-    ["Monthly Unlimited", "4", "₪280", "₪1,120"],
-    ["10-class pack", "3", "₪350", "₪1,050"],
-    ["Annual", "2", "₪2,800", "₪5,600"],
+function Bookings({
+  snapshot,
+  query,
+  filter,
+  onFilter,
+  onClass,
+  onClient,
+  onToast,
+}: {
+  snapshot: StudioSnapshot;
+  query: string;
+  filter: string;
+  onFilter: (value: string) => void;
+  onClass: (session: StudioClass) => void;
+  onClient: (member: StudioMember) => void;
+  onToast: (message: string) => void;
+}) {
+  const rows = snapshot.bookings
+    .map((booking) => ({
+      booking,
+      member: snapshot.members.find((member) => member.id === booking.memberId),
+      session: snapshot.classes.find((session) => session.id === booking.classId),
+    }))
+    .filter((row): row is { booking: BookingRecord; member: StudioMember; session: StudioClass } => Boolean(row.member && row.session))
+    .filter(({ booking, member, session }) => {
+      const needle = query.toLowerCase();
+      const matchesQuery = [member.name, session.name, booking.status, booking.paymentStatus].join(" ").toLowerCase().includes(needle);
+      return matchesQuery && (filter === "All" || booking.status === filter);
+    });
+
+  return (
+    <section className="content-card">
+      <SectionHead title="Booking management" action="Export" onAction={() => onToast("CSV export started")} />
+      <ChipRow values={statusFilters} active={filter} onChange={onFilter} />
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Class</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ booking, member, session }) => (
+              <tr key={booking.id}>
+                <td><button className="table-link" onClick={() => onClient(member)}>{member.name}</button></td>
+                <td><button className="table-link" onClick={() => onClass(session)}>{session.name}<small>{session.date} · {session.time}</small></button></td>
+                <td><Badge tone={statusTone(booking.status)}>{booking.status.replace("_", " ")}</Badge></td>
+                <td>{booking.paymentStatus} · {booking.membershipUsed}</td>
+                <td className="table-actions">
+                  <button onClick={() => onToast("Move booking opened")}>Move</button>
+                  <button onClick={() => onToast("Message queued")}>Message</button>
+                  <button onClick={() => onToast("Refund placeholder opened")}>Refund</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Clients({ snapshot, query, onClient }: { snapshot: StudioSnapshot; query: string; onClient: (member: StudioMember) => void }) {
+  const visible = snapshot.members.filter((member) => [member.name, member.email, member.phone, member.tags.join(" ")].join(" ").toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="client-grid">
+      {visible.map((member) => (
+        <button key={member.id} className="client-card" onClick={() => onClient(member)}>
+          <Avatar label={member.name} tone={member.status === "Expired" ? "red" : member.status === "Paused" ? "amber" : "sage"} />
+          <span>
+            <strong>{member.name}</strong>
+            <small>{member.email}</small>
+          </span>
+          <Badge tone={member.tags.includes("At Risk") ? "red" : member.tags.includes("VIP") ? "gold" : "green"}>{member.tags[0]}</Badge>
+          <SmallDetail label="Membership" value={member.plan} />
+          <SmallDetail label="Attendance" value={`${member.attended} visits`} />
+          <SmallDetail label="No-shows" value={String(member.noShows)} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Instructors({ snapshot }: { snapshot: StudioSnapshot }) {
+  return (
+    <div className="class-grid">
+      {snapshot.instructors.map((instructor) => (
+        <article className={`content-card instructor-card tone-${instructor.color}`} key={instructor.id}>
+          <div className="instructor-head">
+            <Avatar label={instructor.name} tone={instructor.color} />
+            <span>
+              <h2>{instructor.name}</h2>
+              <small>{instructor.status}</small>
+            </span>
+          </div>
+          <p>{instructor.bio}</p>
+          <div className="chip-row static">
+            {instructor.specialties.map((specialty) => <span key={specialty}>{specialty}</span>)}
+          </div>
+          <BarLine label="Utilization" value={instructor.utilization} />
+          <SmallDetail label="Availability" value={instructor.availability} />
+          <SmallDetail label="Contact" value={instructor.email} />
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function Memberships({ snapshot, onToast }: { snapshot: StudioSnapshot; onToast: (message: string) => void }) {
+  return (
+    <div className="class-grid">
+      {snapshot.memberships.map((plan) => (
+        <article className="membership-card" key={plan.id}>
+          <Badge tone={plan.status === "Draft" ? "gold" : "green"}>{plan.status}</Badge>
+          <h2>{plan.name}</h2>
+          <strong>{formatIls(plan.price)}</strong>
+          <p>{plan.billingCycle} · {plan.credits === null ? "unlimited credits" : `${plan.credits} credits`}</p>
+          <SmallDetail label="Active members" value={String(plan.activeMembers)} />
+          <div className="split-actions">
+            <button className="btn-secondary" onClick={() => onToast("Plan editor opened")}>Edit plan</button>
+            <button className="btn-primary" onClick={() => onToast("Pause/cancel controls are placeholders")}>Manage</button>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function Payments({ snapshot, query, onToast }: { snapshot: StudioSnapshot; query: string; onToast: (message: string) => void }) {
+  const visible = snapshot.payments.filter((payment) => [payment.member, payment.type, payment.status, payment.method].join(" ").toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="page-stack">
+      <div className="metric-grid">
+        <Metric label="Gross revenue" value={formatIls(snapshot.payments.filter((p) => p.amount > 0).reduce((sum, p) => sum + p.amount, 0))} note="Paid transactions only" />
+        <Metric label="Failed payments" value="3" note="Needs front-desk follow-up" tone="red" />
+        <Metric label="Refunded" value={formatIls(150)} note="This month" tone="amber" />
+      </div>
+      <section className="content-card">
+        <SectionHead title="Payment ledger" action="Export" onAction={() => onToast("Payment export started")} />
+        {visible.map((payment) => (
+          <div className="payment-row" key={payment.id}>
+            <span className={payment.amount < 0 ? "amount negative" : "amount positive"}>{payment.amount < 0 ? "-" : "+"}{formatIls(payment.amount)}</span>
+            <span>
+              <strong>{payment.member}</strong>
+              <small>{payment.type} · {payment.method} · {payment.date}</small>
+            </span>
+            <Badge tone={payment.status === "Failed" ? "red" : payment.status.includes("refund") ? "gold" : "green"}>{payment.status}</Badge>
+            <button onClick={() => onToast("Refund placeholder opened")}>Refund</button>
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function Attendance({ snapshot, onToast }: { snapshot: StudioSnapshot; onToast: (message: string) => void }) {
+  return (
+    <section className="content-card">
+      <SectionHead title="Today roster" action="Add walk-in" onAction={() => onToast("Walk-in add opened")} />
+      {snapshot.attendance.map((record) => {
+        const member = snapshot.members.find((item) => item.id === record.memberId);
+        const session = snapshot.classes.find((item) => item.id === record.classId);
+        if (!member || !session) return null;
+        return (
+          <div className="attendance-row" key={record.id}>
+            <Avatar label={member.name} tone={record.status === "no_show" ? "red" : record.status === "checked_in" ? "sage" : "amber"} />
+            <span>
+              <strong>{member.name}</strong>
+              <small>{session.name} · {session.time} · {record.note}</small>
+            </span>
+            <Badge tone={statusTone(record.status)}>{record.status.replace("_", " ")}</Badge>
+            <div className="table-actions">
+              <button onClick={() => onToast("Marked checked in")}>Check in</button>
+              <button onClick={() => onToast("Marked no-show")}>No-show</button>
+              <button onClick={() => onToast("Promote next waitlisted client")}>Promote</button>
+            </div>
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
+function Analytics({ snapshot }: { snapshot: StudioSnapshot }) {
+  return (
+    <div className="page-grid">
+      <section className="content-card span-2">
+        <SectionHead title="Revenue trend" />
+        <div className="chart-bars">
+          {snapshot.analytics.revenue.map((value, index) => <span key={value} style={{ height: `${Math.max(24, value / 260)}px` }} data-label={`W${index + 1}`} />)}
+        </div>
+      </section>
+      <Metric label="Attendance trend" value={`${snapshot.analytics.attendanceRate}%`} note="Stable vs last week" tone="sage" />
+      <Metric label="Capacity utilization" value={`${snapshot.analytics.capacityUtilization}%`} note="Peak rooms need relief" tone="amber" />
+      <Metric label="Membership growth" value={`+${snapshot.analytics.membershipGrowth}%`} note="New packs drive growth" tone="teal" />
+      <Metric label="At-risk members" value={String(snapshot.analytics.churnRisk)} note="No visit in 14+ days" tone="red" />
+      <section className="content-card">
+        <SectionHead title="Top classes" />
+        {snapshot.analytics.topClasses.map(([label, value]) => <BarLine key={label} label={label} value={value} />)}
+      </section>
+      <section className="content-card">
+        <SectionHead title="Instructor utilization" />
+        {snapshot.analytics.instructorUtilization.map(([label, value]) => <BarLine key={label} label={label} value={value} />)}
+      </section>
+    </div>
+  );
+}
+
+function Messages({ snapshot, onToast }: { snapshot: StudioSnapshot; onToast: (message: string) => void }) {
+  const templates = [
+    ["Waitlist promotion", "Good news, a spot opened in Pilates Sculpt. Please confirm within 45 minutes."],
+    ["Failed payment", "Your renewal did not go through. Update your card to keep booking without interruption."],
+    ["Class reminder", "Morning Flow starts tomorrow at 07:30. Cancel up to 6 hours before class."],
   ];
 
   return (
-    <main className="screen active">
-      <TopBar title="Payments" subtitle="June 2026" action={{ label: "Export", onClick: () => onToast("CSV export started") }} />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <section className="revenue-card">
-            <p>Revenue this month</p>
-            <strong>{formatIls(snapshot.stats.revenueMonth)}</strong>
-            <span>01/06/2026 - 20/06/2026</span>
-            <div className="revenue-chips">
-              <small>{snapshot.payments.length} transactions</small>
-              <small>₪2,300 avg</small>
-              <small>2 pending</small>
-            </div>
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Active packages" />
-            {activePackages.map(([plan, count, price, mrr]) => (
-              <div className="package-row" key={plan}>
-                <strong>{plan}</strong>
-                <span>{count} members</span>
-                <span>{price}</span>
-                <b>{mrr}</b>
-              </div>
-            ))}
-          </section>
-          <section className="card">
-            {snapshot.payments.map((payment) => (
-              <div className="payment-row" key={payment.id}>
-                <span className={`pay-icon ${payment.amount < 0 ? "refund" : ""}`}>{payment.amount < 0 ? "−" : "+"}</span>
-                <span>
-                  <strong>{payment.member}</strong>
-                  <small>{payment.type} · {payment.date}</small>
-                </span>
-                <b className={payment.amount < 0 ? "negative" : "positive"}>{payment.amount < 0 ? "-" : "+"}{formatIls(payment.amount)}</b>
-              </div>
-            ))}
-          </section>
-          <div className="gold-banner">In-app payments coming soon</div>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function AdminSettings({
-  snapshot,
-  onToast,
-  onMember,
-}: {
-  snapshot: StudioSnapshot;
-  onToast: (message: string) => void;
-  onMember: () => void;
-}) {
-  return (
-    <main className="screen active">
-      <TopBar title="Settings" subtitle="Studio control" />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <section className="profile-head card card-pad horizontal">
-            <Avatar label={snapshot.admin.name} size="md" tone="gold" />
-            <span>
-              <h2>{snapshot.admin.name}</h2>
-              <Pill tone="blue">{snapshot.admin.role}</Pill>
-            </span>
-          </section>
-          <SettingsGroup title="Studio" rows={["Studio profile", "Instructors", "Class packages"]} />
-          <section className="card card-pad">
-            <SectionTitle title="Notifications" />
-            <SettingsRow label="Push notifications" checked onChange={() => onToast("Push notifications updated")} />
-            <SettingsRow label="WhatsApp reminders" checked onChange={() => onToast("WhatsApp reminders updated")} />
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="Booking rules" />
-            <label className="input-group">
-              <span className="input-label">Cancel deadline</span>
-              <select className="input-field" defaultValue={String(snapshot.settings.cancelDeadline)}>
-                <option>2h</option>
-                <option>4h</option>
-                <option>12h</option>
-                <option>24h</option>
-              </select>
-            </label>
-            <SettingsRow label="Waitlist auto-enroll" checked onChange={() => onToast("Waitlist setting updated")} />
-          </section>
-          <section className="card card-pad">
-            <SectionTitle title="App" />
-            <label className="input-group">
-              <span className="input-label">Language</span>
-              <select className="input-field" defaultValue="English">
-                <option>English</option>
-                <option>עברית</option>
-                <option>العربية</option>
-              </select>
-            </label>
-            <button className="btn-secondary" onClick={onMember}>Preview member app</button>
-            <button className="logout" onClick={() => onToast("Logged out")}>Log out</button>
-          </section>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function MemberHome({
-  snapshot,
-  onBrowse,
-  onCancel,
-  onBook,
-}: {
-  snapshot: StudioSnapshot;
-  onBrowse: () => void;
-  onCancel: () => void;
-  onBook: () => void;
-}) {
-  const member = snapshot.member;
-
-  return (
-    <main className="screen active">
-      <section className="member-hero">
-        <div>
-          <h2>Hi, {member.name.split(" ")[0]} ☁</h2>
-          <p>{member.plan} · {member.status}</p>
-        </div>
-        <Avatar label={member.name} size="md" tone="gold" />
-      </section>
-      <div className="scroll-area">
-        <div className="content-pad">
-          <section className="credits-card">
-            <strong>{getMemberCreditsLabel(member)}</strong>
-            <span>{member.plan}</span>
-            <p>Renews {member.renewal}</p>
-            <div className="split-actions">
-              <button className="btn-primary" onClick={onBrowse}>Browse classes</button>
-              <button className="btn-secondary">My plan</button>
-            </div>
-          </section>
-          <SectionTitle title="My upcoming classes" />
-          {snapshot.classes.slice(0, 3).map((session) => (
-            <article className="member-class card card-pad" key={session.id}>
-              <span className="time-badge">{session.time}</span>
-              <strong>{session.name}</strong>
-              <small>{session.instructor.name} · {session.studio} · {session.duration}</small>
-              <button className="link-button" onClick={onCancel}>Cancel</button>
-            </article>
-          ))}
-          <SectionTitle title="You might like" />
-          {snapshot.classes.slice(3, 6).map((session) => (
-            <CompactClass key={session.id} session={session} action="Book" onAction={onBook} />
-          ))}
-          <SectionTitle title="Recent history" />
-          <div className="card card-pad">
-            {["Core Pilates attended", "Stretch & Flow attended", "Meditation Reset late cancel"].map((item) => <ActivityItem key={item} item={item} muted="June" />)}
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function MemberBrowse({
-  snapshot,
-  search,
-  category,
-  onSearch,
-  onCategory,
-  onBook,
-}: {
-  snapshot: StudioSnapshot;
-  search: string;
-  category: string;
-  onSearch: (value: string) => void;
-  onCategory: (value: string) => void;
-  onBook: () => void;
-}) {
-  const visible = snapshot.classes.filter((session) => {
-    const matchesCategory = category === "All" || session.type === category;
-    const query = search.toLowerCase();
-    const matchesSearch = session.name.toLowerCase().includes(query) || session.instructor.name.toLowerCase().includes(query);
-    return matchesCategory && matchesSearch;
-  });
-
-  return (
-    <main className="screen active">
-      <TopBar title="Browse classes" subtitle="Book or join waitlist" />
-      <div className="scroll-area">
-        <div className="content-pad">
-          <input className="input-field search" value={search} onChange={(event) => onSearch(event.target.value)} placeholder="Search class or instructor" />
-          <ChipRow values={categories} active={category} onChange={onCategory} />
-          {visible.map((session) => (
-            <article className={`class-card card accent-${session.color}`} key={session.id}>
-              <div className="class-main">
-                <span className="time-badge">{session.time}</span>
-                <span>
-                  <strong>{session.name}</strong>
-                  <small>{session.studio} · {session.instructor.name}</small>
-                </span>
-              </div>
-              <div className="capacity-line">
-                <span>{session.registered}/{session.capacity}</span>
-                <Pill tone={capacityTone(session.registered, session.capacity)}>{session.registered >= session.capacity ? "Full" : "Spots open"}</Pill>
-              </div>
-              <button className={session.registered >= session.capacity ? "btn-secondary" : "btn-primary"} onClick={onBook}>
-                {session.registered >= session.capacity ? "Join waitlist" : "Book class"}
-              </button>
-            </article>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function BottomNav({ mode, active, onNavigate }: { mode: "admin" | "member"; active: Screen; onNavigate: (screen: Screen) => void }) {
-  const items = mode === "admin" ? adminNav : memberNav;
-
-  return (
-    <nav className="bottom-nav">
-      {items.map((item) => (
-        <button key={`${item.screen}-${item.label}`} className={`nav-item ${active === item.screen ? "active" : ""}`} onClick={() => onNavigate(item.screen)}>
-          <span className="nav-icon">{item.icon}</span>
-          <span>{item.label}</span>
-        </button>
+    <section className="content-card">
+      <SectionHead title="Messages and notifications" action="Send test" onAction={() => onToast("Test message queued")} />
+      {templates.map(([title, body]) => (
+        <article className="message-card" key={title}>
+          <Badge tone="green">Email · SMS · In-app</Badge>
+          <h2>{title}</h2>
+          <p>{body}</p>
+          <button className="btn-secondary" onClick={() => onToast(`${title} queued`)}>Use template</button>
+        </article>
       ))}
-    </nav>
+      <SmallDetail label="Notification defaults" value={`${snapshot.settings.whatsAppReminders ? "WhatsApp on" : "WhatsApp off"} · ${snapshot.settings.pushNotifications ? "Push on" : "Push off"}`} />
+    </section>
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function Settings({ snapshot, onToast }: { snapshot: StudioSnapshot; onToast: (message: string) => void }) {
   return (
-    <article className="stat-card">
+    <div className="settings-grid">
+      <SettingsPanel title="Studio profile">
+        <FormField label="Studio name" defaultValue={snapshot.studio.name} />
+        <FormField label="Location" defaultValue={snapshot.studio.location} />
+        <FormField label="Timezone" defaultValue={snapshot.studio.timezone} />
+      </SettingsPanel>
+      <SettingsPanel title="Rooms">
+        {snapshot.studio.rooms.map((room) => <SmallDetail key={room.id} label={room.name} value={`${room.capacity} capacity`} />)}
+      </SettingsPanel>
+      <SettingsPanel title="Booking rules">
+        <FormField label="Cancellation window" defaultValue={String(snapshot.settings.cancelDeadline)} />
+        <label className="toggle-line"><input type="checkbox" defaultChecked={Boolean(snapshot.settings.waitlistAutoEnroll)} /> Waitlist auto-promote</label>
+        <p>{snapshot.studio.cancellationPolicy}</p>
+      </SettingsPanel>
+      <SettingsPanel title="Payments and team">
+        <FormField label="Payment provider" defaultValue="Stripe placeholder" />
+        <FormField label="Team roles" defaultValue="Owner, Admin, Instructor, Front desk" />
+        <button className="btn-primary" onClick={() => onToast("Settings saved")}>Save settings</button>
+      </SettingsPanel>
+    </div>
+  );
+}
+
+function ClassDrawer({ session, snapshot, onClose, onToast }: { session: StudioClass; snapshot: StudioSnapshot; onClose: () => void; onToast: (message: string) => void }) {
+  const bookings = getClassBookings(snapshot, session.id);
+  const similar = snapshot.classes.filter((item) => item.type === session.type && item.id !== session.id).slice(0, 3);
+
+  return (
+    <Drawer title={session.name} onClose={onClose}>
+      <p>{session.description}</p>
+      <div className="detail-grid">
+        <SmallDetail label="Time" value={`${session.date} · ${session.time}-${session.endTime}`} />
+        <SmallDetail label="Instructor" value={session.instructor.name} />
+        <SmallDetail label="Room" value={session.studio} />
+        <SmallDetail label="Level" value={session.level} />
+        <SmallDetail label="Capacity" value={`${session.registered}/${session.capacity} · ${session.waitlist} waitlist`} />
+        <SmallDetail label="Price" value={formatIls(session.price)} />
+      </div>
+      <CapacityBar session={session} />
+      <div className="policy-box">
+        <strong>Booking policy</strong>
+        <p>Cancel up to {session.cancelDeadlineHours} hours before class. Eligible: {session.eligiblePlans.join(", ")}.</p>
+      </div>
+      <SectionHead title="What to bring" />
+      <div className="chip-row static">{session.bring.map((item) => <span key={item}>{item}</span>)}</div>
+      <SectionHead title="Roster" />
+      {bookings.map((booking) => <BookingLine key={booking.id} booking={booking} member={booking.member} session={session} />)}
+      <SectionHead title="Similar upcoming classes" />
+      {similar.map((item) => <ClassRow key={item.id} session={item} onClick={() => onToast(`${item.name} opened`)} />)}
+      <div className="sticky-actions">
+        <button className="btn-secondary" onClick={() => onToast("Class draft saved")}>Save draft</button>
+        <button className="btn-primary" onClick={() => onToast("Class published")}>{classAction(session)}</button>
+      </div>
+    </Drawer>
+  );
+}
+
+function ClientDrawer({ member, snapshot, onClose, onToast }: { member: StudioMember; snapshot: StudioSnapshot; onClose: () => void; onToast: (message: string) => void }) {
+  const bookings = getMemberBookings(snapshot, member.id);
+
+  return (
+    <Drawer title={member.name} onClose={onClose}>
+      <div className="profile-summary">
+        <Avatar label={member.name} tone={member.tags.includes("At Risk") ? "red" : "sage"} />
+        <span>
+          <strong>{member.email}</strong>
+          <small>{member.phone}</small>
+        </span>
+      </div>
+      <div className="chip-row static">{member.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+      <div className="detail-grid">
+        <SmallDetail label="Membership" value={member.plan} />
+        <SmallDetail label="Credits" value={getMemberCreditsLabel(member)} />
+        <SmallDetail label="Attendance" value={`${member.attended} visits`} />
+        <SmallDetail label="No-shows" value={String(member.noShows)} />
+        <SmallDetail label="Last visit" value={member.lastVisit} />
+        <SmallDetail label="Renewal" value={member.renewal} />
+      </div>
+      <SectionHead title="Upcoming bookings" />
+      {bookings.length ? bookings.map((booking) => booking.session && <ClassRow key={booking.id} session={booking.session} />) : <EmptyState title="No upcoming bookings yet" body="Book a class for this client from the front desk." />}
+      <SectionHead title="Notes" />
+      <textarea className="input-field notes" defaultValue={member.notes} onBlur={() => onToast("Client notes saved")} />
+      <div className="sticky-actions">
+        <button className="btn-secondary" onClick={() => onToast("Message composer opened")}>Message</button>
+        <button className="btn-primary" onClick={() => onToast("Booking flow opened")}>Book for client</button>
+      </div>
+    </Drawer>
+  );
+}
+
+function ClassFormDrawer({ snapshot, onClose, onToast }: { snapshot: StudioSnapshot; onClose: () => void; onToast: (message: string) => void }) {
+  return (
+    <Drawer title="Create class" onClose={onClose}>
+      <form className="form-grid" onSubmit={(event) => { event.preventDefault(); onToast("Class saved"); onClose(); }}>
+        <FormField label="Class name" defaultValue="Morning Flow" />
+        <SelectField label="Class type" values={["Yoga", "Pilates", "Mobility", "Strength", "Recovery"]} />
+        <FormField label="Date" type="date" />
+        <FormField label="Start time" type="time" />
+        <FormField label="Duration" defaultValue="60" />
+        <SelectField label="Instructor" values={snapshot.instructors.map((item) => item.name)} />
+        <SelectField label="Room" values={snapshot.studio.rooms.map((item) => item.name)} />
+        <FormField label="Capacity" type="number" defaultValue="14" />
+        <SelectField label="Recurrence" values={["Does not repeat", "Weekly", "Every 2 weeks", "Custom"]} />
+        <SelectField label="Level" values={["Beginner", "All levels", "Intermediate", "Advanced"]} />
+        <FormField label="Price" type="number" defaultValue="95" />
+        <FormField label="Cancellation window" defaultValue="6 hours" />
+        <label className="field span-all">
+          <span>Description</span>
+          <textarea className="input-field notes" placeholder="Describe the class in plain human language." required />
+        </label>
+        <div className="sticky-actions span-all">
+          <button className="btn-secondary" type="button" onClick={() => onToast("Draft saved")}>Save draft</button>
+          <button className="btn-primary" type="submit">Publish</button>
+        </div>
+      </form>
+    </Drawer>
+  );
+}
+
+function BookingDrawer({ snapshot, onClose, onToast }: { snapshot: StudioSnapshot; onClose: () => void; onToast: (message: string) => void }) {
+  return (
+    <Drawer title="Book for client" onClose={onClose}>
+      <form className="form-grid" onSubmit={(event) => { event.preventDefault(); onToast("You're booked. We saved your mat."); onClose(); }}>
+        <SelectField label="Client" values={snapshot.members.map((item) => item.name)} />
+        <SelectField label="Class" values={snapshot.classes.map((item) => `${item.name} · ${item.time}`)} />
+        <SelectField label="Membership/pass" values={["Use active membership", "10-class pack", "Drop-in payment", "Front-desk comp"]} />
+        <div className="policy-box span-all">
+          <strong>Capacity changed?</strong>
+          <p>If the class fills before confirmation, this booking becomes waitlisted and the client gets a clear notice.</p>
+        </div>
+        <label className="toggle-line span-all"><input type="checkbox" required /> Client acknowledged the cancellation policy.</label>
+        <button className="btn-primary span-all" type="submit">Confirm booking</button>
+      </form>
+    </Drawer>
+  );
+}
+
+function Metric({ label, value, note, tone = "gold" }: { label: string; value: string; note: string; tone?: string }) {
+  return (
+    <article className={`metric-card tone-${tone}`}>
       <span>{label}</span>
       <strong>{value}</strong>
+      <small>{note}</small>
     </article>
   );
 }
 
-function ClassCard({ session, detailed, onClick }: { session: StudioClass; detailed?: boolean; onClick: () => void }) {
-  const tone = capacityTone(session.registered, session.capacity);
-
+function ClassRow({ session, onClick }: { session: StudioClass; onClick?: () => void }) {
   return (
-    <button className={`class-card card accent-${session.color}`} onClick={onClick}>
-      <div className="class-main">
-        <span className="time-badge">{session.time}</span>
-        <span>
-          <strong>{session.name}</strong>
-          <small>{session.instructor.name} · {session.studio}</small>
-        </span>
-        <Pill tone={tone}>{session.registered}/{session.capacity}</Pill>
-      </div>
-      {detailed && (
-        <div className="instructor-line">
-          <Avatar label={session.instructor.name} size="sm" tone={session.instructor.color} />
-          <span>{session.time}-{session.endTime}</span>
-          <span>{session.waitlist ? `${session.waitlist} waitlist` : "Open"}</span>
-        </div>
-      )}
-      <CapacityBar session={session} />
+    <button className="class-row" onClick={onClick}>
+      <span className="time-pill">{session.time}</span>
+      <span>
+        <strong>{session.name}</strong>
+        <small>{session.instructor.name} · {session.studio} · {session.level}</small>
+      </span>
+      <Badge tone={capacityTone(session.registered, session.capacity)}>{session.registered >= session.capacity ? "Full" : `${session.capacity - session.registered} spots`}</Badge>
+      <CapacityBar session={session} compact />
     </button>
   );
 }
 
-function CompactClass({ session, action, onAction }: { session: StudioClass; action?: string; onAction?: () => void }) {
+function ClassBlock({ session, onClick }: { session: StudioClass; onClick: () => void }) {
   return (
-    <div className="compact-class">
-      <span className="time-badge">{session.time}</span>
+    <button className={`class-block tone-${session.color}`} onClick={onClick}>
+      <strong>{session.name}</strong>
+      <small>{session.instructor.name} · {session.registered}/{session.capacity}</small>
+    </button>
+  );
+}
+
+function BookingLine({ booking, member, session, onClient }: { booking: BookingRecord; member: StudioMember; session: StudioClass; onClient?: () => void }) {
+  return (
+    <div className="booking-line">
+      <button className="avatar-button" onClick={onClient} aria-label={`Open ${member.name}`}>
+        <Avatar label={member.name} tone={member.tags.includes("At Risk") ? "red" : "sage"} />
+      </button>
       <span>
-        <strong>{session.name}</strong>
-        <small>{session.instructor.name} · {session.studio}</small>
+        <strong>{member.name}</strong>
+        <small>{session.name} · {session.time} · {booking.membershipUsed}</small>
       </span>
-      {action && <button className="mini-action" onClick={onAction}>{action}</button>}
+      <Badge tone={statusTone(booking.status)}>{booking.status.replace("_", " ")}</Badge>
     </div>
   );
 }
 
-function CapacityBar({ session }: { session: StudioClass }) {
-  const tone = capacityTone(session.registered, session.capacity);
+function CapacityBar({ session, compact = false }: { session: StudioClass; compact?: boolean }) {
   return (
-    <div className={`progress ${tone}`}>
-      <span style={{ width: `${capacityPercent(session.registered, session.capacity)}%` }} />
+    <div className={`capacity-bar ${compact ? "compact" : ""}`}>
+      <span className={`fill ${capacityTone(session.registered, session.capacity)}`} style={{ width: `${capacityPercent(session.registered, session.capacity)}%` }} />
     </div>
   );
 }
 
-function Avatar({ label, size, tone }: { label: string; size: "sm" | "md" | "lg"; tone: string }) {
-  return <span className={`avatar avatar-${size} avatar-${tone}`}>{initials(label)}</span>;
-}
-
-function Pill({ tone, children }: { tone: string; children: React.ReactNode }) {
-  return <span className={`pill pill-${tone}`}>{children}</span>;
-}
-
-function SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
+function BarLine({ label, value }: { label: string; value: number }) {
   return (
-    <div className="section-title">
-      <h3>{title}</h3>
+    <div className="bar-line">
+      <span>{label}</span>
+      <strong>{value}%</strong>
+      <div><i style={{ width: `${value}%` }} /></div>
+    </div>
+  );
+}
+
+function Avatar({ label, tone }: { label: string; tone: string }) {
+  return <span className={`avatar tone-${tone}`}>{initials(label)}</span>;
+}
+
+function Badge({ tone, children }: { tone: string; children: ReactNode }) {
+  return <span className={`badge tone-${tone}`}>{children}</span>;
+}
+
+function SectionHead({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
+  return (
+    <div className="section-head">
+      <h2>{title}</h2>
       {action && <button onClick={onAction}>{action}</button>}
     </div>
   );
 }
 
-function QuickAction({ icon, label, onClick }: { icon: string; label: string; onClick: () => void }) {
+function SmallDetail({ label, value }: { label: string; value: string }) {
   return (
-    <button className="quick-action" onClick={onClick}>
-      <span>{icon}</span>
-      <small>{label}</small>
-    </button>
-  );
-}
-
-function ActivityItem({ item, muted }: { item: string; muted: string }) {
-  return (
-    <div className="activity-row">
-      <span />
-      <strong>{item}</strong>
-      <small>{muted}</small>
-    </div>
-  );
-}
-
-function MiniStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="mini-stat">
+    <div className="small-detail">
       <small>{label}</small>
       <strong>{value}</strong>
     </div>
@@ -838,111 +802,66 @@ function ChipRow({ values, active, onChange }: { values: string[]; active: strin
   return (
     <div className="chip-row">
       {values.map((value) => (
-        <button key={value} className={value === active ? "active" : ""} onClick={() => onChange(value)}>
-          {value}
-        </button>
+        <button key={value} className={value === active ? "active" : ""} onClick={() => onChange(value)}>{value}</button>
       ))}
     </div>
   );
 }
 
-function FormField({
-  label,
-  placeholder,
-  as,
-  values,
-  type = "text",
-}: {
-  label: string;
-  placeholder?: string;
-  as?: "select";
-  values?: string[];
-  type?: string;
-}) {
+function EmptyState({ title, body }: { title: string; body: string }) {
   return (
-    <label className="input-group">
-      <span className="input-label">{label}</span>
-      {as === "select" ? (
-        <select className="input-field" required>
-          {(values ?? []).map((value) => <option key={value}>{value}</option>)}
-        </select>
-      ) : (
-        <input className="input-field" type={type} placeholder={placeholder} required />
-      )}
-    </label>
-  );
-}
-
-function ColorDotPicker() {
-  return (
-    <div className="dot-picker">
-      {["blue", "gold", "sand", "green", "red", "purple"].map((color, index) => (
-        <button type="button" className={`color-dot dot-${color} ${index === 0 ? "selected" : ""}`} key={color} aria-label={color} />
-      ))}
+    <div className="empty-state">
+      <strong>{title}</strong>
+      <span>{body}</span>
     </div>
   );
 }
 
-function SettingsGroup({ title, rows }: { title: string; rows: string[] }) {
+function Drawer({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
   return (
-    <section className="card card-pad">
-      <SectionTitle title={title} />
-      {rows.map((row) => (
-        <div className="settings-link" key={row}>
-          <span>{row}</span>
-          <b>›</b>
-        </div>
-      ))}
+    <div className="drawer-backdrop" onMouseDown={onClose}>
+      <aside className="drawer" onMouseDown={(event) => event.stopPropagation()}>
+        <header>
+          <h2>{title}</h2>
+          <button onClick={onClose} aria-label="Close drawer">×</button>
+        </header>
+        <div className="drawer-body">{children}</div>
+      </aside>
+    </div>
+  );
+}
+
+function SettingsPanel({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="content-card">
+      <SectionHead title={title} />
+      <div className="form-stack">{children}</div>
     </section>
   );
 }
 
-function SettingsRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
+function FormField({ label, type = "text", defaultValue = "" }: { label: string; type?: string; defaultValue?: string }) {
   return (
-    <label className="settings-link">
+    <label className="field">
       <span>{label}</span>
-      <input className="toggle" type="checkbox" defaultChecked={checked} onChange={onChange} />
+      <input className="input-field" type={type} defaultValue={defaultValue} required />
     </label>
   );
 }
 
-function EmptyState({ title, action }: { title: string; action?: string }) {
+function SelectField({ label, values }: { label: string; values: string[] }) {
   return (
-    <div className="empty-state">
-      <strong>{title}</strong>
-      {action && <small>{action}</small>}
-    </div>
+    <label className="field">
+      <span>{label}</span>
+      <select className="input-field" required>
+        {values.map((value) => <option key={value}>{value}</option>)}
+      </select>
+    </label>
   );
 }
 
-function Modal({
-  type,
-  session,
-  onClose,
-  onToast,
-}: {
-  type: "qr" | "booking" | "cancel";
-  session: StudioClass;
-  onClose: () => void;
-  onToast: (message: string) => void;
-}) {
-  const copy = {
-    qr: ["QR Check-in", "Scan a member code at the studio desk.", "Ready"],
-    booking: ["Confirm booking", `${session.name} at ${session.time}`, "Book class"],
-    cancel: ["Cancel booking?", "Cancel deadline rules will be checked before release.", "Cancel booking"],
-  }[type];
-
-  return (
-    <div className="modal-backdrop">
-      <section className="modal-card">
-        <div className="modal-check">{type === "cancel" ? "!" : "✓"}</div>
-        <h2>{copy[0]}</h2>
-        <p>{copy[1]}</p>
-        <button className="btn-primary" onClick={() => { onToast(type === "booking" ? "Booking confirmed" : type === "cancel" ? "Booking cancelled" : "Check-in opened"); onClose(); }}>
-          {copy[2]}
-        </button>
-        <button className="btn-secondary" onClick={onClose}>Done</button>
-      </section>
-    </div>
-  );
+function statusTone(status: string) {
+  if (["failed", "no_show", "cancelled", "Cancelled"].includes(status)) return "red";
+  if (["waitlisted", "pending", "not_arrived"].includes(status)) return "gold";
+  return "green";
 }

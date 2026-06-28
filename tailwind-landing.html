@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud & Core Studio | יוגה אווירית פרימיום</title>
+    <meta name="description" content="סטודיו בוטיק ליוגה ערסלים ואקרו-יוגה פרימיום לנשים וילדים. שחרור עמוד השדרה, חיזוק הליבה ורוגע עמוק באוויר. הרשמי לשיעור היכרות השבוע!">
+    
+    <!-- SEO & Metadata -->
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Cloud & Core Studio | יוגה אווירית פרימיום">
+    <meta property="og:description" content="להתנתק מכוח המשיכה, למצוא את הליבה. שיעורי יוגה ערסלים לנשים וילדים בקבוצות בוטיק קטנות.">
+    <meta property="og:image" content="images/hero.png">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://cloudandcore.co.il/" />
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bellefair&family=Marcellus&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#5995c5',      /* Soft Periwinkle Slate Blue */
+                            deep: '#2c3a4e',      /* Deep Charcoal Navy Text */
+                            dark: '#151f36',      /* Luxury Midnight Blue */
+                            light: '#7ca8d0',     /* Muted Sea Blue */
+                            cream: '#faf8f5',     /* Warm Zen Cream Background */
+                            sand: '#f5f2eb',      /* Alternating Sand Accent */
+                            amber: '#c8a261',     /* Muted Gold Accent */
+                            gold: '#dfc392',      /* Soft Light Gold */
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Bellefair', 'Marcellus', 'serif'],
+                        body: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'zen-sm': '0 4px 12px rgba(44, 58, 78, 0.03)',
+                        'zen-md': '0 12px 36px rgba(44, 58, 78, 0.04)',
+                        'zen-lg': '0 20px 48px rgba(44, 58, 78, 0.06)',
+                        'zen-xl': '0 32px 80px rgba(44, 58, 78, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Luxury Global Editorial Art Frame */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 12px;
+            border: 1px solid rgba(200, 162, 97, 0.25);
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 1px rgba(74, 106, 138, 0.06);
+        }
+        @media (max-width: 768px) {
+            body::after { inset: 6px; }
+        }
+
+        /* Custom smooth transition dynamics */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Ambient spinning and floating animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(0.8deg); }
+        }
+        .animate-float {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-40px, 30px) scale(1.05); }
+        }
+        .animate-drift-1 { animation: drift 25s ease-in-out infinite alternate; }
+
+        @keyframes drift-reverse {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, -30px) scale(0.95); }
+        }
+        .animate-drift-2 { animation: drift-reverse 30s ease-in-out infinite alternate; }
+    </style>
+</head>
+<body class="font-body text-brand-deep bg-brand-cream/35 antialiased selection:bg-brand-amber/20 selection:text-brand-deep p-3 md:p-4 min-h-screen relative overflow-x-hidden">
+
+    <!-- ========== DYNAMIC AMBIENT BACKDROP CLOUDS ========== -->
+    <div class="fixed -z-20 inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-[600px] h-[600px] rounded-full bg-radial from-brand-blue/20 to-transparent blur-[130px] opacity-60 animate-drift-1"></div>
+        <div class="absolute bottom-20 -left-20 w-[700px] h-[700px] rounded-full bg-radial from-brand-amber/15 to-transparent blur-[140px] opacity-40 animate-drift-2"></div>
+        <div class="absolute top-[40%] right-[-10%] w-[500px] h-[500px] rounded-full bg-radial from-brand-blue/10 to-transparent blur-[120px] opacity-50"></div>
+    </div>
+
+    <!-- ========== FIXED FLOATING GLASS NAVBAR ========== -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-12 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between bg-brand-cream/80 backdrop-blur-lg border border-brand-deep/5 rounded-full px-6 py-3 shadow-zen-sm transition-all">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-2">
+                <span class="font-display text-xl md:text-2xl font-bold tracking-wide text-brand-deep">Cloud & Core</span>
+                <span class="text-brand-amber text-xs font-semibold tracking-widest hidden sm:inline">✦ STUDIO</span>
+            </a>
+            
+            <!-- Navigation Links -->
+            <div class="hidden lg:flex items-center gap-8 font-medium text-brand-deep/80 text-xs md:text-sm">
+                <a href="#problem" class="hover:text-brand-blue transition-colors">הקושי</a>
+                <a href="#solution" class="hover:text-brand-blue transition-colors">השיטה</a>
+                <a href="#classes" class="hover:text-brand-blue transition-colors">השיעורים</a>
+                <a href="#testimonials" class="hover:text-brand-blue transition-colors">המלצות</a>
+                <a href="#faq" class="hover:text-brand-blue transition-colors">שאלות נפוצות</a>
+            </div>
+
+            <!-- Header CTA Button -->
+            <a href="#contact" class="bg-brand-blue hover:bg-brand-deep text-white font-semibold text-xs md:text-sm px-6 py-2.5 rounded-full transition-all duration-300 transform hover:-translate-y-0.5 shadow-md shadow-brand-blue/15">
+                שיעור ניסיון ב-₪99
+            </a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <header id="hero" class="min-h-screen flex items-center justify-center pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+            
+            <!-- Hero Copywriting Block -->
+            <div class="lg:col-span-7 space-y-6 text-right order-2 lg:order-1">
+                <h1 class="inline-flex items-center gap-2 bg-brand-amber/10 border border-brand-amber/30 text-brand-amber px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide">
+                    <span>✦ סטודיו הבוטיק ליוגה ערסלים פרימיום</span>
+                </h1>
+                
+                <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-light text-brand-dark leading-[1.18]">
+                    להתנתק מכוח המשיכה.<br>
+                    <span class="text-brand-blue italic font-normal">למצוא את הליבה.</span>
+                </h2>
+                
+                <p class="text-brand-deep/80 text-base md:text-lg leading-relaxed max-w-xl">
+                    חוויית ריחוף יוקרתית לנשים וילדים. סטודיו בוטיק המשלב כוח פיזי, גמישות ושקט נפשי עמוק בתוך ערסלי משי בטוחים. שני מסלולים ייעודיים ונפרדים שנבנו במיוחד עבורכן ועבור הילדים שלכן.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-start">
+                    <a href="#contact" class="bg-brand-amber hover:bg-brand-amber-dark hover:scale-[1.02] text-brand-dark font-semibold text-base py-4 px-8 rounded-full transition-all duration-300 text-center shadow-lg shadow-brand-amber/25">
+                        להזמנת שיעור הטיסה הראשון שלך ✦
+                    </a>
+                    <a href="#classes" class="border border-brand-deep/10 bg-white/40 hover:bg-white/95 text-brand-deep font-semibold text-base py-4 px-8 rounded-full transition-all duration-300 text-center">
+                        גילוי מסלולי הסטודיו
+                    </a>
+                </div>
+
+                <!-- Live Social Proof Metrics -->
+                <div class="grid grid-cols-3 gap-6 pt-8 border-t border-brand-deep/5 max-w-lg">
+                    <div>
+                        <span class="block text-3xl font-bold text-brand-blue font-display">500+</span>
+                        <span class="text-xs text-brand-deep/60 font-medium">מתלמדות פעילות</span>
+                    </div>
+                    <div>
+                        <span class="block text-3xl font-bold text-brand-blue font-display">5.0</span>
+                        <span class="text-xs text-brand-deep/60 font-medium">כוכבים בגוגל (120+ חוות דעת)</span>
+                    </div>
+                    <div>
+                        <span class="block text-3xl font-bold text-brand-blue font-display">100%</span>
+                        <span class="text-xs text-brand-deep/60 font-medium">בטיחות וליווי צמוד</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Real Image Frame with Luxury Editorial Border Overlays -->
+            <div class="lg:col-span-5 order-1 lg:order-2 flex justify-center">
+                <div class="relative w-full max-w-md aspect-[4/5] rounded-[48px] border border-brand-amber/25 p-2 bg-white shadow-zen-xl animate-float">
+                    <div class="w-full h-full rounded-[40px] overflow-hidden bg-brand-sand relative">
+                        <img src="images/hero.png" alt="יוגה ערסלים פרימיום בסטודיו" class="w-full h-full object-cover" fetchpriority="high" loading="eager">
+                        <!-- Luxury Dark Overlay Gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/45 via-transparent to-transparent"></div>
+                        <!-- Micro Brand tag -->
+                        <div class="absolute bottom-6 left-6 right-6 text-center text-white z-10 space-y-1">
+                            <span class="font-display text-lg tracking-wider font-semibold">CLOUD & CORE</span>
+                            <span class="block text-[10px] tracking-widest uppercase opacity-75">— צילום מתוך הסטודיו —</span>
+                        </div>
+                    </div>
+                    <!-- Decorative floating star corner symbols -->
+                    <span class="absolute -top-3 -right-3 text-brand-amber text-lg">✦</span>
+                    <span class="absolute -bottom-3 -left-3 text-brand-amber text-lg">✦</span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ========== TRUST BAR ========== -->
+    <div class="max-w-6xl mx-auto px-6 py-6 bg-white/90 backdrop-blur-md rounded-2xl border border-brand-deep/8 shadow-zen-md flex flex-wrap justify-center items-center gap-8 md:gap-12 relative z-10 -mt-8">
+        <div class="flex items-center gap-3 text-xs md:text-sm font-medium">
+            <span class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center">🛡️</span>
+            <span>100% בטיחות וליווי צמוד</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs md:text-sm font-medium">
+            <span class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center">👩‍🏫</span>
+            <span>מדריכות מוסמכות בינלאומית</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs md:text-sm font-medium">
+            <span class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center">🌸</span>
+            <span>קבוצות בוטיק קטנות (עד 10)</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs md:text-sm font-medium">
+            <span class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center">✨</span>
+            <span>ערסלים בעלי תקן בטיחות מחמיר</span>
+        </div>
+    </div>
+
+    <!-- ========== PROBLEM SECTION ========== -->
+    <section id="problem" class="py-32 bg-brand-sand/30 border-y border-brand-deep/5 mt-12 relative">
+        <div class="max-w-5xl mx-auto px-6 text-center space-y-16">
+            <div class="space-y-4">
+                <span class="text-brand-amber text-xs font-bold tracking-[0.25em] uppercase">✦ להחזיר את האיזון</span>
+                <h2 class="font-display text-3xl md:text-4xl text-brand-deep font-light">לעשות פאוזה לרעש, ולנשום מחדש</h2>
+                <p class="text-brand-deep/70 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                    מרגישה שכולם מחוברים למסכים וללחצים, וקצת פחות לעצמם? שעות של ישיבה מול מחשב, מתח מצטבר בכתפיים ובגב התחתון, ומרוץ יומיומי אינטנסיבי. ומצד שני — הילדים שלנו, שנסחפים אל תוך גירויים דיגיטליים, מאבדים את החיבור לתנועה הטבעית וממעטים לחזק את הביטחון הפיזי והמוטורי שלהם.
+                </p>
+            </div>
+
+            <!-- Problem Cards with Luxury Double-Outlines -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-right max-w-4xl mx-auto">
+                
+                <!-- Card 1 -->
+                <div class="bg-white p-8 md:p-10 rounded-2xl border border-brand-deep/10 shadow-zen-md relative space-y-4 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <span class="text-3xl">💻</span>
+                    <h3 class="font-display text-xl font-medium text-brand-dark">לנשים: שחיקה, לחץ וכאבי גב כרוניים</h3>
+                    <p class="text-brand-deep/70 text-sm leading-relaxed">
+                        הישיבה המשרדית הממושכת והלחץ המנטלי גורמים לדחיסה של חוליות עמוד השדרה ומתח בצוואר. אימון הערסלים משתמש בכוח המשיכה כדי למתוח, לרווח את החוליות ולחזק שרירי ליבה עמוקים.
+                    </p>
+                    <span class="absolute top-4 left-4 text-brand-amber/30 text-xs">✦</span>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-8 md:p-10 rounded-2xl border border-brand-deep/10 shadow-zen-md relative space-y-4 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <span class="text-3xl">📱</span>
+                    <h3 class="font-display text-xl font-medium text-brand-dark">לילדים: שקיעה דיגיטלית והיעדר תנועה</h3>
+                    <p class="text-brand-deep/70 text-sm leading-relaxed">
+                        הילדים ממעטים לזוז ומבלים שעות כפופים מול טאבלטים. אקרו-יוגה וריחוף בערסלים מספקים להם פעילות ספורטיבית מאתגרת ובטוחה שבונה ביטחון פיזי, מודעות מרחבית וקואורדינציה עמוקה.
+                    </p>
+                    <span class="absolute top-4 left-4 text-brand-amber/30 text-xs">✦</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SOLUTION SECTION ========== -->
+    <section id="solution" class="py-32 bg-white">
+        <div class="max-w-6xl mx-auto px-6 space-y-16">
+            
+            <div class="text-center space-y-4">
+                <span class="text-brand-blue text-xs font-bold tracking-[0.25em] uppercase">✦ השיטה הייחודית</span>
+                <h2 class="font-display text-3xl md:text-5xl text-brand-dark font-light leading-tight">לרחף רחוק, להרגיש הכי קרוב</h2>
+                <p class="text-brand-deep/70 max-w-xl mx-auto text-base">
+                    ב-Cloud & Core יצרנו מרחב בוטיק יוקרתי, בטוח ומעצים שמספק לכן ולילדיכן מפלט מושלם של רוגע ותנועה.
+                </p>
+            </div>
+
+            <!-- Split Solution Presentation with Real Photo -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <!-- Text Features -->
+                <div class="lg:col-span-7 space-y-8 text-right order-2 lg:order-1">
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center text-lg shrink-0 mt-1">🛡️</div>
+                            <div>
+                                <h4 class="font-display text-lg font-medium text-brand-deep">בטיחות ללא פשרות</h4>
+                                <p class="text-brand-deep/70 text-xs md:text-sm mt-1 leading-relaxed">
+                                    ערסלי משי ייעודיים עם כושר נשיאה של עד 450 ק"ג, ציוד עיגון לטיפוס הררי מקצועי המחובר לקורות פלדה תעשייתיות ובדיקה יומיומית קפדנית.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center text-lg shrink-0 mt-1">🤸‍♀️</div>
+                            <div>
+                                <h4 class="font-display text-lg font-medium text-brand-deep">מדריכות מוסמכות</h4>
+                                <p class="text-brand-deep/70 text-xs md:text-sm mt-1 leading-relaxed">
+                                    צוות מדריכות בעלות הסמכה וניסיון בינלאומי ביוגה ערסלים, המכירות כל תנועה ויודעות להנחות כל גוף ברכות, בסבלנות ובבטחה.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue flex items-center justify-center text-lg shrink-0 mt-1">🌸</div>
+                            <div>
+                                <h4 class="font-display text-lg font-medium text-brand-deep">קבוצות בוטיק קטנות</h4>
+                                <p class="text-brand-deep/70 text-xs md:text-sm mt-1 leading-relaxed">
+                                    עד 10 משתתפות בלבד לשיעור כדי להבטיח שכל תלמידה תקבל יחס אישי, התאמה אורתופדית מדויקת לחלוטין ותשומת לב מרבית.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Split Image Panel -->
+                <div class="lg:col-span-5 order-1 lg:order-2 flex justify-center">
+                    <div class="relative w-full max-w-sm aspect-square rounded-[40px] overflow-hidden border border-brand-blue/20 p-2 bg-white shadow-zen-lg">
+                        <div class="w-full h-full rounded-[32px] overflow-hidden bg-brand-sand">
+                            <img src="images/studio-interior.png" alt="סטודיו יוגה ערסלים מבפנים" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== CLASSES SECTION ========== -->
+    <section id="classes" class="py-32 bg-brand-cream/60 border-t border-brand-deep/5">
+        <div class="max-w-6xl mx-auto px-6 space-y-16">
+            
+            <div class="text-center space-y-4">
+                <span class="text-brand-amber text-xs font-bold tracking-[0.25em] uppercase">✦ מסלולי הבוטיק שלנו</span>
+                <h2 class="font-display text-3xl md:text-4xl text-brand-deep font-light">למצוא את התרגול המדויק עבורך</h2>
+                <p class="text-brand-deep/70 max-w-xl mx-auto text-sm">
+                    שיעורים ייעודיים ברמות קושי שונות המונחים על ידי המדריכות הבכירות של הסטודיו.
+                </p>
+            </div>
+
+            <!-- Asymmetrical Luxury Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 pb-16">
+                
+                <!-- Class 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-brand-deep/10 shadow-zen-md flex flex-col group hover:-translate-y-2 hover:border-brand-amber/40 transition-all duration-500 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="images/hero.png" alt="יוגה ערסלים לנשים" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <span class="absolute top-4 right-4 bg-brand-blue text-white px-3 py-1 rounded-full text-[10px] tracking-wide font-semibold">מסלול נשים</span>
+                    </div>
+                    <div class="p-8 space-y-4 text-right flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="font-display text-xl font-medium text-brand-deep">יוגה ערסלים פרימיום לנשים</h3>
+                            <p class="text-brand-deep/70 text-xs leading-relaxed">
+                                אימון ייחודי המשלב את עמודי התווך של הפילאטיס והיוגה יחד עם מתיחה הפוכה עדינה (אינברסיה) לשחרור עומס מיידי מעמוד השדרה וחיזוק שרירי הליבה.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-brand-deep/5 text-xs text-brand-deep/60">
+                            <span>⏱ 60 דקות</span>
+                            <span>🌸 שחרור לחצים וליבה</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 2 (Staggered Downward Shift) -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-brand-deep/10 shadow-zen-md flex flex-col group hover:-translate-y-2 hover:border-brand-amber/40 transition-all duration-500 md:transform md:translate-y-8 lg:translate-y-12 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="images/kids-class.png" alt="יוגה ערסלים לילדים" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <span class="absolute top-4 right-4 bg-brand-blue text-white px-3 py-1 rounded-full text-[10px] tracking-wide font-semibold">ילדים ונוער</span>
+                    </div>
+                    <div class="p-8 space-y-4 text-right flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="font-display text-xl font-medium text-brand-deep">אקרו-יוגה וערסלים לילדים</h3>
+                            <p class="text-brand-deep/70 text-xs leading-relaxed">
+                                פעילות ספורטיבית מאתגרת, בטוחה ומעצימה המנתקת אותם מהמסכים. שיפור קואורדינציה, פיתוח מודעות מרחבית עמוקה ובניית ביטחון עצמי וחוסן נפשי.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-brand-deep/5 text-xs text-brand-deep/60">
+                            <span>⏱ 45 דקות</span>
+                            <span>👧 גילאי 7-17</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-brand-deep/10 shadow-zen-md flex flex-col group hover:-translate-y-2 hover:border-brand-amber/40 transition-all duration-500 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="images/private-session.png" alt="סדנאות אמא וילד" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <span class="absolute top-4 right-4 bg-brand-blue text-white px-3 py-1 rounded-full text-[10px] tracking-wide font-semibold">זמן איכות זוגי</span>
+                    </div>
+                    <div class="p-8 space-y-4 text-right flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="font-display text-xl font-medium text-brand-deep">סדנאות אמא וילד</h3>
+                            <p class="text-brand-deep/70 text-xs leading-relaxed">
+                                זמן איכות חווייתי וייחודי בערסלי משי משותפים. סדנאות המיועדות לחיזוק הקשר והאמון ההדדי, ימי הולדת מיוחדים ואירועי בת מצווה מרגשים באוויר.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-brand-deep/5 text-xs text-brand-deep/60">
+                            <span>⏱ 75 דקות</span>
+                            <span>💎 סדנה מותאמת אישית</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 4 (Staggered Downward Shift) -->
+                <div class="bg-white rounded-2xl overflow-hidden border border-brand-deep/10 shadow-zen-md flex flex-col group hover:-translate-y-2 hover:border-brand-amber/40 transition-all duration-500 md:transform md:translate-y-8 lg:translate-y-12 shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="images/women-class.png" alt="אימונים אישיים" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <span class="absolute top-4 right-4 bg-brand-blue text-white px-3 py-1 rounded-full text-[10px] tracking-wide font-semibold">התאמה מלאה</span>
+                    </div>
+                    <div class="p-8 space-y-4 text-right flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="font-display text-xl font-medium text-brand-deep">אימונים אישיים וליווי שיקומי</h3>
+                            <p class="text-brand-deep/70 text-xs leading-relaxed">
+                                תרגול ממוקד אחד-על-אחד עם מדריכה בכירה. מתאים למי שרוצה להאיץ תוצאות, לשקם כאבי גב כרוניים או לקבל התאמה אורתופדית מדויקת לחלוטין.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-brand-deep/5 text-xs text-brand-deep/60">
+                            <span>⏱ 60 דקות</span>
+                            <span>🧘‍♀️ אימון 1-על-1</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section id="how-it-works" class="py-32 bg-brand-cream border-y border-brand-deep/5 relative">
+        <div class="max-w-5xl mx-auto px-6 space-y-16">
+            <div class="text-center space-y-4">
+                <span class="text-brand-amber text-xs font-bold tracking-[0.25em] uppercase">✦ המסע שלך לאוויר</span>
+                <h2 class="font-display text-3xl md:text-4xl text-brand-deep font-light">איך מתחילים לרחף?</h2>
+                <p class="text-brand-deep/70 max-w-md mx-auto text-sm">
+                    שלושה צעדים פשוטים מפרידים בינך לבין תחושת הריחוף והשחרור ב-Cloud & Core
+                </p>
+            </div>
+
+            <!-- Steps layout with elegant connecting elements -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10 max-w-4xl mx-auto">
+                <!-- Step 1 -->
+                <div class="text-center space-y-4 relative">
+                    <div class="w-16 h-16 rounded-full bg-white border border-brand-amber/30 text-brand-amber font-display text-2xl flex items-center justify-center mx-auto shadow-zen-md font-semibold relative z-10 shadow-[inset_0_0_0_3px_#faf8f5,inset_0_0_0_4px_rgba(200,162,97,0.2)]">1</div>
+                    <h3 class="font-display text-lg font-medium text-brand-deep">שריון ערסל היכרות</h3>
+                    <p class="text-brand-deep/70 text-xs leading-relaxed max-w-[240px] mx-auto">
+                        משאירים פרטים בטופס למטה, בוחרים את המסלול המתאים (נשים או ילדים) וקובעים מועד ראשון לשיעור.
+                    </p>
+                </div>
+                <!-- Step 2 -->
+                <div class="text-center space-y-4 relative">
+                    <div class="w-16 h-16 rounded-full bg-white border border-brand-amber/30 text-brand-amber font-display text-2xl flex items-center justify-center mx-auto shadow-zen-md font-semibold relative z-10 shadow-[inset_0_0_0_3px_#faf8f5,inset_0_0_0_4px_rgba(200,162,97,0.2)]">2</div>
+                    <h3 class="font-display text-lg font-medium text-brand-deep">שיעור טיסה ראשון</h3>
+                    <p class="text-brand-deep/70 text-xs leading-relaxed max-w-[240px] mx-auto">
+                        מגיעים לסטודיו הבוטיק שלנו, מקבלים הכוונה אישית והתאמה של הערסל לגוף שלך ומתחילים לחוות את הריחוף.
+                    </p>
+                </div>
+                <!-- Step 3 -->
+                <div class="text-center space-y-4 relative">
+                    <div class="w-16 h-16 rounded-full bg-white border border-brand-amber/30 text-brand-amber font-display text-2xl flex items-center justify-center mx-auto shadow-zen-md font-semibold relative z-10 shadow-[inset_0_0_0_3px_#faf8f5,inset_0_0_0_4px_rgba(200,162,97,0.2)]">3</div>
+                    <h3 class="font-display text-lg font-medium text-brand-deep">אימוץ הליבה</h3>
+                    <p class="text-brand-deep/70 text-xs leading-relaxed max-w-[240px] mx-auto">
+                        מתרגלים קבועים בלוח השיעורים, נהנים משינוי גופני, גב בריא ויציב, ואיזון מנטלי שמלווה אותך לאורך כל השבוע.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS SECTION ========== -->
+    <section id="testimonials" class="py-32 bg-white">
+        <div class="max-w-6xl mx-auto px-6 space-y-16">
+            <div class="text-center space-y-4">
+                <span class="text-brand-blue text-xs font-bold tracking-[0.25em] uppercase">✦ חוות דעת מהערסל</span>
+                <h2 class="font-display text-3xl md:text-4xl text-brand-dark font-light">מה אומרות המרחפות שלנו</h2>
+            </div>
+
+            <!-- Staggered Testimonial Cards Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12">
+                
+                <!-- Card 1 -->
+                <div class="bg-brand-cream/60 p-8 md:p-10 rounded-2xl border border-brand-deep/5 text-right flex flex-col justify-between shadow-zen-md relative shadow-[inset_0_0_0_4px_#ffffff,inset_0_0_0_5px_rgba(200,162,97,0.15)]">
+                    <div class="text-brand-amber text-sm tracking-widest mb-4">★★★★★</div>
+                    <p class="text-brand-deep/80 text-sm leading-relaxed italic mb-8">
+                        "כעורכת דין שעובדת 10 שעות ביום מול מסכים, סבלתי מכאבי גב כרוניים ומתח נוראי בכתפיים. שיעור הערסלים כאן שינה לי את החיים. תחושת הריחוף משחררת את הגב בצורה ששום מתיחה אחרת לא מצליחה, והשקט המנטלי עמוק וממכר."
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-deep/5">
+                        <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue font-bold flex items-center justify-center text-sm font-display shrink-0">מ</div>
+                        <div>
+                            <strong class="block text-sm text-brand-deep">מיכל ר.</strong>
+                            <span class="text-xs text-brand-deep/50">מתלמדת כ-8 חודשים</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 (Staggered translation) -->
+                <div class="bg-brand-cream/60 p-8 md:p-10 rounded-2xl border border-brand-deep/5 text-right flex flex-col justify-between shadow-zen-md relative md:transform md:translate-y-6 lg:translate-y-8 shadow-[inset_0_0_0_4px_#ffffff,inset_0_0_0_5px_rgba(200,162,97,0.15)]">
+                    <div class="text-brand-amber text-sm tracking-widest mb-4">★★★★★</div>
+                    <p class="text-brand-deep/80 text-sm leading-relaxed italic mb-8">
+                        "חיפשתי פעילות לבת שלי בת ה-9 שתעזור לה עם הביטחון העצמי והקואורדינציה. מהרגע הראשון שהיא נכנסה ל-Cloud & Core היא פשוט פרחה. המדריכות רגישות ומקצועיות בטירוף, והיא מחכה לכל שיעור כמו יום הולדת."
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-deep/5">
+                        <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue font-bold flex items-center justify-center text-sm font-display shrink-0">ס</div>
+                        <div>
+                            <strong class="block text-sm text-brand-deep">סופיה ש.</strong>
+                            <span class="text-xs text-brand-deep/50">אמא של יציב (9)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-brand-cream/60 p-8 md:p-10 rounded-2xl border border-brand-deep/5 text-right flex flex-col justify-between shadow-zen-md relative shadow-[inset_0_0_0_4px_#ffffff,inset_0_0_0_5px_rgba(200,162,97,0.15)]">
+                    <div class="text-brand-amber text-sm tracking-widest mb-4">★★★★★</div>
+                    <p class="text-brand-deep/80 text-sm leading-relaxed italic mb-8">
+                        "עשינו סדנה קבוצתית משותפת לאימהות ובנות לחגיגת בת המצווה של הבת שלי — החוויה הייתה מטורפת! הצחוקים, האמון ההדדי שנוצר, וההרגשה המרוממת באוויר. כולן עדיין מדברות על זה. תודה Cloud & Core!"
+                    </p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-deep/5">
+                        <div class="w-10 h-10 rounded-full bg-brand-blue/15 text-brand-blue font-bold flex items-center justify-center text-sm font-display shrink-0">נ</div>
+                        <div>
+                            <strong class="block text-sm text-brand-deep">נועה ד.</strong>
+                            <span class="text-xs text-brand-deep/50">סדנת בת מצווה זוגית</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FAQ SECTION ========== -->
+    <section id="faq" class="py-32 bg-brand-sand/10 border-t border-brand-deep/5 relative">
+        <div class="max-w-4xl mx-auto px-6 space-y-16">
+            <div class="text-center space-y-4">
+                <span class="text-brand-amber text-xs font-bold tracking-[0.25em] uppercase">✦ שאלות נפוצות</span>
+                <h2 class="font-display text-3xl md:text-4xl text-brand-deep font-light">כל מה שרצית לדעת על יוגה ערסלים</h2>
+            </div>
+
+            <!-- Beautiful Accordion Structure -->
+            <div class="space-y-4 max-w-3xl mx-auto relative z-10">
+                
+                <!-- FAQ 1 -->
+                <div class="bg-white rounded-2xl border border-brand-deep/10 shadow-zen-sm overflow-hidden shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <button class="w-full flex justify-between items-center px-8 py-6 text-right font-display text-lg text-brand-deep hover:bg-brand-cream/40 focus:outline-none transition-colors accordion-btn">
+                        <span class="font-medium text-[17px] md:text-[19px]">האם זה בטוח? מה קורה אם הערסל נקרע?</span>
+                        <span class="text-brand-amber text-xl font-bold transition-transform duration-300 transform accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-8 pb-6 text-brand-deep/70 text-sm leading-relaxed">
+                            בטיחות היא אבן היסוד בסטודיו שלנו. כל ערסל משי מחובר ישירות לקורות פלדה הנדסיות באמצעות ציוד טיפוס מקצועי. הערסלים נבדקים מדי יום, עשויים מבד משי ייעודי בעל כושר נשיאה עצום של עד 450 ק"ג, ומאושרים לפי תקני הבטיחות האירופיים המחמירים ביותר.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-white rounded-2xl border border-brand-deep/10 shadow-zen-sm overflow-hidden shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <button class="w-full flex justify-between items-center px-8 py-6 text-right font-display text-lg text-brand-deep hover:bg-brand-cream/40 focus:outline-none transition-colors accordion-btn">
+                        <span class="font-medium text-[17px] md:text-[19px]">אין לי רקע קודם ביוגה או ספורט, האם השיעור יתאים לי?</span>
+                        <span class="text-brand-amber text-xl font-bold transition-transform duration-300 transform accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-8 pb-6 text-brand-deep/70 text-sm leading-relaxed">
+                            בהחלט כן! רוב המשתתפות שלנו מגיעות ללא כל רקע קודם. המדריכות המקצועיות שלנו מתאימות את גובה הערסל וקושי התנוחות באופן אישי לכל מתאמנת, ומלוות אותך צעד אחר צעד בקצב האישי שלך.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="bg-white rounded-2xl border border-brand-deep/10 shadow-zen-sm overflow-hidden shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <button class="w-full flex justify-between items-center px-8 py-6 text-right font-display text-lg text-brand-deep hover:bg-brand-cream/40 focus:outline-none transition-colors accordion-btn">
+                        <span class="font-medium text-[17px] md:text-[19px]">מאיזה גיל מתאימים שיעורי הילדים והנוער?</span>
+                        <span class="text-brand-amber text-xl font-bold transition-transform duration-300 transform accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-8 pb-6 text-brand-deep/70 text-sm leading-relaxed">
+                            השיעורים מותאמים לילדים וילדות החל מגיל 7 ועד גיל 17. הקבוצות מחולקות לפי שכבות גיל כדי להבטיח את רמת העניין הפיזי והחברתי הטובה ביותר.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="bg-white rounded-2xl border border-brand-deep/10 shadow-zen-sm overflow-hidden shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <button class="w-full flex justify-between items-center px-8 py-6 text-right font-display text-lg text-brand-deep hover:bg-brand-cream/40 focus:outline-none transition-colors accordion-btn">
+                        <span class="text-brand-amber text-xl font-bold transition-transform duration-300 transform accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="px-8 pb-6 text-brand-deep/70 text-sm leading-relaxed">
+                            הערסלים ונקודות העיגון הנדסיות מיועדים לשאת משקל עצום ללא שום קושי. מגבלת המשקל המעשית לאימון היא עד 120 ק"ג למתאמנת, על מנת להבטיח תנועה נוחה, גמישה ובטוחה בתוך הבד.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FINAL CTA & HIGH CONVERTING LEAD FORM ========== -->
+    <section id="contact" class="py-32 bg-brand-cream relative">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            <!-- Left Side copywriting block -->
+            <div class="lg:col-span-6 space-y-6 text-right">
+                <span class="text-brand-blue text-xs font-bold tracking-widest uppercase">✦ בואי נתחיל</span>
+                <h2 class="font-display text-3xl md:text-5xl text-brand-deep font-light leading-tight">בואי נתחיל את המסע באוויר השבוע</h2>
+                <p class="text-brand-deep/70 text-sm leading-relaxed max-w-lg">
+                    שערי הסטודיו פתוחים לשיעור היכרות חווייתי. השאירי את פרטייך בטופס כדי לשריין את אחד המקומות המוגבלים השבוע בערסלי המשי.
+                </p>
+                <div class="space-y-4 pt-4 text-xs text-brand-deep/60">
+                    <div class="flex items-center gap-2">
+                        <span class="text-brand-amber font-bold">✓</span>
+                        <span>אין התחייבות למנוי ארוך טווח</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-brand-amber font-bold">✓</span>
+                        <span>הדרכה צמודה ויחס אישי (עד 10 משתתפות בלבד)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-brand-amber font-bold">✓</span>
+                        <span>מקום מאובטח ומאושר בתקני בטיחות אירופאיים מחמירים</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lead Form Container with double outlined luxury frames -->
+            <div class="lg:col-span-6 w-full flex justify-center">
+                <div class="bg-white p-8 md:p-10 rounded-[32px] border border-brand-deep/10 shadow-zen-xl w-full max-w-md relative shadow-[inset_0_0_0_4px_#faf8f5,inset_0_0_0_5px_rgba(200,162,97,0.2)]">
+                    <div class="text-right mb-6">
+                        <h3 class="font-display text-2xl text-brand-dark font-semibold">שריון מקום בשיעור היכרות</h3>
+                        <p class="text-xs text-brand-deep/60 mt-1">אנא מלאי את פרטייך ונחזור אלייך תוך 3 שעות עבודה</p>
+                    </div>
+
+                    <!-- Low Friction Note -->
+                    <div class="bg-brand-amber/10 border border-dashed border-brand-amber rounded-xl p-4 flex items-center gap-3 text-right mb-6">
+                        <span class="text-xl">🔥</span>
+                        <p class="text-xs font-semibold text-brand-amber-dark leading-tight">שימי לב: נותרו 4 מקומות אחרונים לשיעורי ההיכרות השבוע!</p>
+                    </div>
+
+                    <form id="leadForm" class="space-y-4 text-right">
+                        <div class="space-y-1">
+                            <label for="name" class="block text-xs font-semibold text-brand-deep">שם מלא</label>
+                            <input type="text" id="name" name="name" required placeholder="למשל: שירה לוי" class="w-full bg-brand-cream/50 border border-brand-deep/10 focus:border-brand-blue focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:outline-none">
+                        </div>
+                        
+                        <div class="space-y-1">
+                            <label for="phone" class="block text-xs font-semibold text-brand-deep">מספר טלפון</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="למשל: 050-0000000" class="w-full bg-brand-cream/50 border border-brand-deep/10 focus:border-brand-blue focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:outline-none text-left">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label for="track" class="block text-xs font-semibold text-brand-deep">מה מעניין אותך?</label>
+                            <select id="track" name="track" required class="w-full bg-brand-cream/50 border border-brand-deep/10 focus:border-brand-blue focus:bg-white rounded-xl px-4 py-3 text-sm transition-all focus:outline-none">
+                                <option value="">בחרי אפשרות</option>
+                                <option value="women">יוגה ערסלים לנשים (ליבה ושחרור)</option>
+                                <option value="kids">אקרו-יוגה לילדים ונוער (גילאי 7-17)</option>
+                                <option value="private">סדנאות אמא וילד (זמן איכות זוגי)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full bg-brand-blue hover:bg-brand-deep text-white font-semibold py-4 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-md shadow-brand-blue/15 text-center mt-2 flex items-center justify-center gap-2">
+                            <span>שלחי פרטים ועלי לאוויר ✦</span>
+                        </button>
+                    </form>
+                    
+                    <p class="text-[10px] text-center text-brand-deep/40 mt-4">🛡️ פרטייך מאובטחים. נחזור אלייך תוך 3 שעות עבודה.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="py-16 bg-brand-dark text-white/90 rounded-[32px] overflow-hidden px-8 md:px-12 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-white/10 text-right">
+            <!-- Brand Column -->
+            <div class="md:col-span-6 space-y-4">
+                <span class="font-display text-2xl font-bold tracking-wide">Cloud & Core</span>
+                <p class="text-xs text-white/50 max-w-md leading-relaxed">
+                    סטודיו בוטיק ליוגה ערסלים פרימיום — הגוף שלך, השמיים הם הגבול. שיעורים ייעודיים ברמות קושי שונות לנשים, ילדים ונוער.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div class="md:col-span-3 space-y-3">
+                <h4 class="font-display text-lg font-medium text-brand-amber">ניווט מהיר</h4>
+                <ul class="space-y-2 text-xs text-white/70">
+                    <li><a href="#problem" class="hover:text-white transition-colors">מי אנחנו</a></li>
+                    <li><a href="#solution" class="hover:text-white transition-colors">השיטה</a></li>
+                    <li><a href="#classes" class="hover:text-white transition-colors">השיעורים</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors">צרו קשר</a></li>
+                </ul>
+            </div>
+            <!-- Classes -->
+            <div class="md:col-span-3 space-y-3">
+                <h4 class="font-display text-lg font-medium text-brand-amber">השיעורים</h4>
+                <ul class="space-y-2 text-xs text-white/70">
+                    <li><a href="#classes" class="hover:text-white transition-colors">יוגה ערסלים לנשים</a></li>
+                    <li><a href="#classes" class="hover:text-white transition-colors">אקרו-יוגה לילדים</a></li>
+                    <li><a href="#classes" class="hover:text-white transition-colors">סדנאות אמא וילד</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="pt-8 text-center text-xs text-white/40">
+            <p>&copy; 2026 Cloud & Core Studio. כל הזכויות שמורות.</p>
+        </div>
+    </footer>
+
+    <!-- ========== INTERACTIVE FAQ JS ACCORDION & LEAD SCRIPTS ========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Interactive Accordion ---
+            const accordionBtns = document.querySelectorAll('.accordion-btn');
+            
+            accordionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('.accordion-icon');
+                    const isOpen = btn.classList.contains('active');
+                    
+                    // Close all other open accordions
+                    accordionBtns.forEach(otherBtn => {
+                        if (otherBtn !== btn && otherBtn.classList.contains('active')) {
+                            otherBtn.classList.remove('active');
+                            otherBtn.nextElementSibling.style.maxHeight = '0';
+                            otherBtn.querySelector('.accordion-icon').textContent = '+';
+                            otherBtn.querySelector('.accordion-icon').style.transform = 'rotate(0deg)';
+                        }
+                    });
+                    
+                    // Toggle current accordion
+                    if (isOpen) {
+                        btn.classList.remove('active');
+                        content.style.maxHeight = '0';
+                        icon.textContent = '+';
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        btn.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.textContent = '−';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // --- Lead Form Simulation ---
+            const leadForm = document.getElementById('leadForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            leadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const originalContent = submitBtn.innerHTML;
+                
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '⏳ שולח פרטים...';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = '✓ שוריין בהצלחה!';
+                    submitBtn.classList.remove('bg-brand-blue');
+                    submitBtn.classList.add('bg-emerald-500');
+                    
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalContent;
+                        submitBtn.classList.remove('bg-emerald-500');
+                        submitBtn.classList.add('bg-brand-blue');
+                        submitBtn.disabled = false;
+                        leadForm.reset();
+                    }, 4000);
+                }, 1200);
+            });
+
+            // --- Scrolled Navbar Background Effect ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (navbar) {
+                    if (window.scrollY > 50) {
+                        navbar.classList.add('py-2');
+                        navbar.querySelector('div').classList.add('bg-brand-cream/95', 'shadow-zen-md', 'py-2');
+                        navbar.querySelector('div').classList.remove('py-3');
+                    } else {
+                        navbar.classList.remove('py-2');
+                        navbar.querySelector('div').classList.remove('bg-brand-cream/95', 'shadow-zen-md', 'py-2');
+                        navbar.querySelector('div').classList.add('py-3');
+                    }
+                }
+            });
+
+        });
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "האם זה בטוח? מה קורה אם הערסל נקרע?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "בטיחות היא אבן היסוד בסטודיו שלנו. כל ערסל משי מחובר ישירות לקורות פלדה הנדסיות באמצעות ציוד טיפוס מקצועי. הערסלים נבדקים מדי יום, עשויים מבד משי ייעודי בעל כושר נשיאה עצום של עד 450 ק\"ג, ומאושרים לפי תקני הבטיחות האירופיים המחמירים ביותר."
+        }
+      },{
+        "@type": "Question",
+        "name": "אין לי רקע קודם ביוגה או ספורט, האם השיעור יתאים לי?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "בהחלט כן! רוב המשתתפות שלנו מגיעות ללא כל רקע קודם. המדריכות המקצועיות שלנו מתאימות את גובה הערסל וקושי התנוחות באופן אישי לכל מתאמנת, ומלוות אותך צעד אחר צעד בקצב האישי שלך."
+        }
+      },{
+        "@type": "Question",
+        "name": "מאיזה גיל מתאימים שיעורי הילדים והנוער?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "השיעורים מותאמים לילדים וילדות החל מגיל 7 ועד גיל 17. הקבוצות מחולקות לפי שכבות גיל כדי להבטיח את רמת העניין הפיזי והחברתי הטובה ביותר."
+        }
+      },{
+        "@type": "Question",
+        "name": "האם יש הגבלת משקל לאימון על הערסל?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "הערסלים ונקודות העיגון הנדסיות מיועדים לשאת משקל עצום ללא שום קושי. מגבלת המשקל המעשית לאימון היא עד 120 ק\"ג למתאמנת, על מנת להבטיח תנועה נוחה, גמישה ובטוחה בתוך הבד."
+        }
+      }]
+    }
+    </script>
+</body>
+</html>

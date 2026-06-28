@@ -4,7 +4,7 @@ import { StudioApp } from "@/components/StudioApp";
 export default async function MembersPage() {
   return (
     <AdminGuard>
-      <StudioApp initialScreen="admin-members" />
+      <StudioApp initialScreen="clients" />
     </AdminGuard>
   );
 }

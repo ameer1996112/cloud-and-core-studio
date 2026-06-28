@@ -19,8 +19,8 @@ export function TimelineClassCard({
   session: ClassSession;
   insight: SessionInsight | undefined;
 }) {
-  const { locale, direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const align = textAlign;
   const title = locale === "he" ? session.titleHe : session.titleEn;
   const spots = Math.max(session.capacity - session.bookedCount, 0);
   const cta = insight ? getLocalizedText(insight.bookingCta, locale) : locale === "he" ? "לראות פרטים" : "View details";
@@ -37,25 +37,25 @@ export function TimelineClassCard({
   return (
     <Link href={`/class/${session.id}`} asChild>
       <Pressable style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
-        <View style={[styles.topRow, direction === "rtl" && styles.rowReverse]}>
+        <View style={[styles.topRow, { flexDirection: rowDirection }]}>
           <View style={styles.timeBlock}>
             <Text style={styles.time}>{formatTime(session.startsAt, locale)}</Text>
             <Text style={styles.duration}>{durationMinutes}m</Text>
           </View>
           <View style={{ flex: 1, gap: 5 }}>
-            <Text style={[styles.title, { textAlign: align }]}>{title}</Text>
-            <Text style={[styles.meta, { textAlign: align }]}>
+            <Text style={[styles.title, { textAlign: align, writingDirection: direction }]}>{title}</Text>
+            <Text style={[styles.meta, { textAlign: align, writingDirection: direction }]}>
               {session.instructor.displayName} · {session.roomName}
             </Text>
           </View>
         </View>
-        <Text style={[styles.reason, { textAlign: align }]}>{reason}</Text>
-        <View style={[styles.footer, direction === "rtl" && styles.rowReverse]}>
+        <Text style={[styles.reason, { textAlign: align, writingDirection: direction }]}>{reason}</Text>
+        <View style={[styles.footer, { flexDirection: rowDirection }]}>
           <View style={styles.capacityTrack}>
             <View style={[styles.capacityFill, { width: `${capacityPercent}%` }]} />
           </View>
-          <Text style={[styles.availability, spots === 0 && styles.waitlistText]}>{availabilityText}</Text>
-          <Text style={styles.cta}>{cta}</Text>
+          <Text style={[styles.availability, spots === 0 && styles.waitlistText, { writingDirection: direction }]}>{availabilityText}</Text>
+          <Text style={[styles.cta, { writingDirection: direction }]}>{cta}</Text>
         </View>
       </Pressable>
     </Link>
@@ -84,9 +84,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 13,
-  },
-  rowReverse: {
-    flexDirection: "row-reverse",
   },
   timeBlock: {
     width: 66,
@@ -160,3 +157,4 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
 });
+

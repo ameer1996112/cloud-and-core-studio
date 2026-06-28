@@ -6,11 +6,11 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FAF7F2"
+      "backgroundColor": "#050914"
     },
     "ios": {
       "supportsTablet": false,
@@ -23,7 +23,7 @@
       "package": "studio.cloudcore.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FAF7F2"
+        "backgroundColor": "#050914"
       },
       "permissions": [
         "POST_NOTIFICATIONS"

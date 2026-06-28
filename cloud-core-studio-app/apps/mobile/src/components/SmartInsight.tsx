@@ -13,8 +13,8 @@ export function SmartInsight({
   detail: string;
   tone?: "blue" | "gold" | "moss" | "rose";
 }) {
-  const { direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { direction, textAlign } = useCopy();
+  const align = textAlign;
 
   return (
     <View style={[styles.card, styles[tone]]}>

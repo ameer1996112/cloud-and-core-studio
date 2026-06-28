@@ -4,8 +4,8 @@ import { useCopy } from "@/i18n/LocaleProvider";
 import { colors, fitness, radii } from "@/theme/colors";
 
 export function MembershipHealthPanel({ membership }: { membership: MembershipHealth }) {
-  const { locale, direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const align = textAlign;
   const credits = membership.entitlement.remainingCredits ?? "∞";
   const renewal = membership.entitlement.expiresAt
     ? new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", {
@@ -26,25 +26,25 @@ export function MembershipHealthPanel({ membership }: { membership: MembershipHe
 
   return (
     <View style={styles.panel}>
-      <View style={[styles.header, direction === "rtl" && styles.rowReverse]}>
+      <View style={[styles.header, { flexDirection: rowDirection }]}>
         <View style={{ flex: 1 }}>
-          <Text style={[styles.title, { textAlign: align }]}>
+          <Text style={[styles.title, { textAlign: align, writingDirection: direction }]}>
             {locale === "he" ? "דופק המנוי" : "Membership pulse"}
           </Text>
-          <Text style={[styles.subtitle, { textAlign: align }]}>{getLocalizedText(membership.rhythm, locale)}</Text>
+          <Text style={[styles.subtitle, { textAlign: align, writingDirection: direction }]}>{getLocalizedText(membership.rhythm, locale)}</Text>
         </View>
         <View style={styles.scorePill}>
           <Text style={styles.score}>{membership.score}%</Text>
         </View>
       </View>
 
-      <View style={[styles.metrics, direction === "rtl" && styles.rowReverse]}>
+      <View style={[styles.metrics, { flexDirection: rowDirection }]}>
         <Metric label={locale === "he" ? "קרדיטים" : "Credits"} value={`${credits}`} important />
         <Metric label={locale === "he" ? "חידוש" : "Renewal"} value={renewal} />
         <Metric label={locale === "he" ? "הקפאה" : "Freeze"} value={freeze} />
       </View>
 
-      <Text style={[styles.secondary, { textAlign: align }]}>{getLocalizedText(membership.renewalAdvice, locale)}</Text>
+      <Text style={[styles.secondary, { textAlign: align, writingDirection: direction }]}>{getLocalizedText(membership.renewalAdvice, locale)}</Text>
     </View>
   );
 }
@@ -76,9 +76,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "space-between",
     gap: 14,
-  },
-  rowReverse: {
-    flexDirection: "row-reverse",
   },
   title: {
     color: fitness.textPrimary,
@@ -141,3 +138,4 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
 });
+

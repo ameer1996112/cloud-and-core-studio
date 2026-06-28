@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import type { ClassSession } from "@cloud-core/shared";
 import {
   ClassCard,
-  CreditBalanceCard,
   EmptyState,
   Header,
   LoadingSkeleton,
@@ -17,7 +17,7 @@ import { hasSupabaseMobileConfig, loadAvailableClasses } from "@/lib/availableCl
 import { loadMyBookings, loadMyMembership } from "@/lib/memberApi";
 import type { MembershipSummary } from "@/lib/membershipData";
 import type { MyBooking } from "@/lib/myBookingsData";
-import { colors, fitness, spacing, typography } from "@/theme/colors";
+import { colors, fitness, radii, spacing, typography } from "@/theme/colors";
 
 function greeting(locale: "he" | "en", now = new Date()): string {
   const hour = now.getHours();
@@ -45,6 +45,79 @@ function formatWhen(value: string, locale: "he" | "en") {
 
 function isSameDay(a: Date, b: Date) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+function DashboardSummaryCard({
+  planName,
+  creditValue,
+  creditCaption,
+  nextBooking,
+  todayCount,
+}: {
+  planName: string;
+  creditValue: string;
+  creditCaption: string;
+  nextBooking: MyBooking | null;
+  todayCount: number;
+}) {
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const nextLabel = nextBooking
+    ? formatWhen(nextBooking.startsAt, locale)
+    : locale === "he"
+      ? "בחרו שיעור"
+      : "Choose a class";
+
+  return (
+    <View style={styles.dashboardHero}>
+      <View style={[styles.heroTop, { flexDirection: rowDirection }]}>
+        <View style={[styles.heroKicker, { flexDirection: rowDirection }]}>
+          <Ionicons name="sparkles-outline" size={14} color={colors.gold} />
+          <Text style={[styles.heroKickerText, { textAlign, writingDirection: direction }]}>
+            {locale === "he" ? "מנוי סטודיו" : "Studio membership"}
+          </Text>
+        </View>
+        <View style={styles.heroSeal}>
+          <Ionicons name="diamond-outline" size={18} color={colors.gold} />
+        </View>
+      </View>
+
+      <Text style={[styles.heroTitle, { textAlign, writingDirection: direction }]} numberOfLines={2}>
+        {planName}
+      </Text>
+      <Text style={[styles.heroBody, { textAlign, writingDirection: direction }]}>
+        {locale === "he"
+          ? "מבט מהיר על היתרה, השיעור הבא והלו״ז של היום."
+          : "A quick view of your balance, next class, and today’s schedule."}
+      </Text>
+
+      <View style={[styles.heroMetrics, { flexDirection: rowDirection }]}>
+        <View style={styles.heroMetric}>
+          <Text style={[styles.heroMetricValue, { writingDirection: direction }]} numberOfLines={1}>
+            {creditValue}
+          </Text>
+          <Text style={[styles.heroMetricLabel, { textAlign, writingDirection: direction }]} numberOfLines={2}>
+            {creditCaption}
+          </Text>
+        </View>
+        <View style={styles.metricDivider} />
+        <View style={styles.heroMetricWide}>
+          <Text style={[styles.heroMetricValueSmall, { textAlign, writingDirection: direction }]} numberOfLines={1}>
+            {nextLabel}
+          </Text>
+          <Text style={[styles.heroMetricLabel, { textAlign, writingDirection: direction }]} numberOfLines={2}>
+            {locale === "he" ? "השיעור הבא" : "Next class"}
+          </Text>
+        </View>
+        <View style={styles.metricDivider} />
+        <View style={styles.heroMetric}>
+          <Text style={[styles.heroMetricValue, { writingDirection: direction }]}>{todayCount}</Text>
+          <Text style={[styles.heroMetricLabel, { textAlign, writingDirection: direction }]} numberOfLines={2}>
+            {locale === "he" ? "היום" : "Today"}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
 }
 
 export default function HomeScreen() {
@@ -118,6 +191,13 @@ export default function HomeScreen() {
         : "Unlimited"
       : String(membership.remainingCredits ?? 0)
     : "—";
+  const creditCaption = membership?.isUnlimited
+    ? locale === "he"
+      ? "מנוי פעיל"
+      : "Active membership"
+    : locale === "he"
+      ? "קרדיטים נותרו"
+      : "credits remaining";
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -148,18 +228,12 @@ export default function HomeScreen() {
         ) : (
           <>
             {membership ? (
-              <CreditBalanceCard
-                label={membership.planName}
-                value={creditValue}
-                caption={
-                  membership.isUnlimited
-                    ? locale === "he"
-                      ? "מנוי פעיל"
-                      : "Active membership"
-                    : locale === "he"
-                      ? "קרדיטים נותרו"
-                      : "credits remaining"
-                }
+              <DashboardSummaryCard
+                planName={membership.planName}
+                creditValue={creditValue}
+                creditCaption={creditCaption}
+                nextBooking={nextBooking}
+                todayCount={todayClasses.length}
               />
             ) : signedIn ? (
               <SurfaceCard elevated>
@@ -245,6 +319,59 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, gap: spacing.md },
   list: { gap: spacing.md },
   rowBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: spacing.sm },
+  dashboardHero: {
+    overflow: "hidden",
+    borderRadius: radii.fullCard,
+    borderWidth: 1,
+    borderColor: fitness.borderStrong,
+    backgroundColor: "#121722",
+    padding: spacing.lg,
+    gap: spacing.md,
+    shadowColor: "#000000",
+    shadowOpacity: 0.34,
+    shadowRadius: 30,
+    shadowOffset: { width: 0, height: 18 },
+    elevation: 10,
+  },
+  heroTop: { alignItems: "center", justifyContent: "space-between", gap: spacing.md },
+  heroKicker: {
+    alignItems: "center",
+    gap: spacing.xs,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(212,175,106,0.32)",
+    backgroundColor: "rgba(212,175,106,0.12)",
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 7,
+  },
+  heroKickerText: { ...typography.caption, color: colors.gold, textTransform: "uppercase" },
+  heroSeal: {
+    width: 42,
+    height: 42,
+    borderRadius: radii.large,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(212,175,106,0.38)",
+    backgroundColor: "rgba(250,247,242,0.06)",
+  },
+  heroTitle: { ...typography.h1, color: fitness.textPrimary },
+  heroBody: { ...typography.bodySmall, color: fitness.textSecondary },
+  heroMetrics: {
+    alignItems: "stretch",
+    gap: spacing.sm,
+    borderRadius: radii.large,
+    borderWidth: 1,
+    borderColor: "rgba(250,247,242,0.09)",
+    backgroundColor: "rgba(250,247,242,0.045)",
+    padding: spacing.sm,
+  },
+  heroMetric: { flex: 0.78, minWidth: 0, justifyContent: "center", gap: 3 },
+  heroMetricWide: { flex: 1.35, minWidth: 0, justifyContent: "center", gap: 3 },
+  heroMetricValue: { fontSize: 24, lineHeight: 29, fontWeight: "800", color: colors.gold },
+  heroMetricValueSmall: { ...typography.bodySmall, color: fitness.textPrimary, fontWeight: "800" },
+  heroMetricLabel: { ...typography.caption, color: fitness.textMuted },
+  metricDivider: { width: 1, alignSelf: "stretch", backgroundColor: "rgba(250,247,242,0.09)" },
   sectionTitle: { ...typography.h3, color: fitness.textPrimary },
   sectionLabel: { ...typography.label, color: fitness.textSecondary, textTransform: "uppercase" },
   cardTitle: { ...typography.h3, color: fitness.textPrimary, marginTop: spacing.xs },

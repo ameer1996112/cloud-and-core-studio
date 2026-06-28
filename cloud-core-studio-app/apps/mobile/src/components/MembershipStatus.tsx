@@ -4,17 +4,17 @@ import { colors, radii } from "@/theme/colors";
 import { StyleSheet, Text, View } from "react-native";
 
 export function MembershipStatus({ entitlement }: { entitlement: MemberEntitlement }) {
-  const { t, direction } = useCopy();
+  const { t, direction, rowDirection } = useCopy();
   return (
     <View style={styles.card}>
-      <View style={[styles.header, direction === "rtl" && styles.rowReverse]}>
-        <Text style={styles.label}>{t.membership}</Text>
-        <Text style={styles.badge}>{direction === "rtl" ? "בריא" : "Healthy"}</Text>
+      <View style={[styles.header, { flexDirection: rowDirection }]}>
+        <Text style={[styles.label, { writingDirection: direction }]}>{t.membership}</Text>
+        <Text style={[styles.badge, { writingDirection: direction }]}>{direction === "rtl" ? "בריא" : "Healthy"}</Text>
       </View>
-      <Text style={[styles.plan, { textAlign: direction === "rtl" ? "right" : "left" }]}>{entitlement.planName}</Text>
-      <View style={[styles.row, direction === "rtl" && styles.rowReverse]}>
-        <Text style={styles.credits}>{entitlement.remainingCredits}</Text>
-        <Text style={styles.body}>{t.creditsLeft}</Text>
+      <Text style={[styles.plan, { textAlign: direction === "rtl" ? "right" : "left", writingDirection: direction }]}>{entitlement.planName}</Text>
+      <View style={[styles.row, { flexDirection: rowDirection }]}>
+        <Text style={[styles.credits, { writingDirection: direction }]}>{entitlement.remainingCredits}</Text>
+        <Text style={[styles.body, { writingDirection: direction }]}>{t.creditsLeft}</Text>
       </View>
       <View style={styles.track}>
         <View style={styles.trackFill} />
@@ -60,9 +60,6 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     gap: 8,
   },
-  rowReverse: {
-    flexDirection: "row-reverse",
-  },
   credits: {
     color: colors.gold,
     fontSize: 34,
@@ -85,3 +82,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gold,
   },
 });
+

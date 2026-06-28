@@ -1,10 +1,12 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Header, PrimaryButton, SecondaryButton, StatusBadge, SurfaceCard } from "@/components/design-system";
 import { useCopy } from "@/i18n/LocaleProvider";
 import { hasSupabaseMobileConfig } from "@/lib/availableClasses";
-import { fitness, spacing, typography } from "@/theme/colors";
+import { colors, fitness, radii, spacing, typography } from "@/theme/colors";
 
 const demoCredentials = {
   email: "demo.customer@cloudcore.local",
@@ -12,7 +14,8 @@ const demoCredentials = {
 };
 
 export default function ProfileScreen() {
-  const { locale, direction, textAlign } = useCopy();
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const insets = useSafeAreaInsets();
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -91,42 +94,57 @@ export default function ProfileScreen() {
 
   const signedIn = Boolean(session);
   const align = textAlign;
+  const accountEmail = session?.user.email ?? demoCredentials.email;
 
   return (
-    <View style={styles.safe}>
-      <View style={styles.content}>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.content, { paddingBottom: 112 + insets.bottom }]}
+      >
         <Header
-          eyebrow={locale === "he" ? "פרופיל" : "Profile"}
-          title={locale === "he" ? "חשבון לקוח" : "Customer account"}
+          eyebrow={locale === "he" ? "חשבון" : "Account"}
+          title={locale === "he" ? "הפרופיל שלך בסטודיו" : "Your studio profile"}
           subtitle={
             signedIn
               ? locale === "he"
-                ? "הזמנות יישמרו מול Supabase."
-                : "Bookings are saved against Supabase."
+                ? "החשבון מחובר ואפשר להזמין שיעורים אמיתיים."
+                : "You are signed in and ready to book real classes."
               : locale === "he"
-                ? "התחברי כדי לבצע הזמנה אמיתית."
-                : "Sign in to place a real booking."
+                ? "התחברי לדמו כדי לראות הזמנות, קרדיטים ומדיניות."
+                : "Sign in to the demo to see bookings, credits, and policies."
           }
-          action={<StatusBadge status={signedIn ? "open" : "waitlist"} label={signedIn ? "Live" : "Guest"} />}
+          action={<StatusBadge status={signedIn ? "success" : "warning"} label={signedIn ? "Live" : "Guest"} />}
         />
 
-        <SurfaceCard elevated>
-          <View style={styles.identityBlock}>
-            <Text style={[styles.label, { textAlign: align, writingDirection: direction }]}>
-              {locale === "he" ? "חשבון פעיל" : "Active account"}
-            </Text>
-            <Text style={[styles.email, { textAlign: align, writingDirection: direction }]}>
-              {session?.user.email ?? demoCredentials.email}
-            </Text>
-            <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
-              {signedIn
-                ? locale === "he"
-                  ? "אפשר להזמין שיעורי דמו מהרשימה החיה."
-                  : "You can book demo classes from the live schedule."
-                : locale === "he"
-                  ? "חשבון הדמו כולל מנוי פעיל וקרדיטים."
-                  : "The demo account has an active plan and credits."}
-            </Text>
+        <SurfaceCard elevated style={styles.profileHero}>
+          <View style={[styles.identityTop, { flexDirection: rowDirection }]}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{signedIn ? "SF" : "G"}</Text>
+            </View>
+            <View style={styles.identityCopy}>
+              <Text style={[styles.label, { textAlign: align, writingDirection: direction }]}>
+                {signedIn ? (locale === "he" ? "חשבון פעיל" : "Active account") : locale === "he" ? "חשבון דמו" : "Demo account"}
+              </Text>
+              <Text style={[styles.email, { textAlign: align, writingDirection: direction }]} numberOfLines={2}>
+                {accountEmail}
+              </Text>
+              <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
+                {signedIn
+                  ? locale === "he"
+                    ? "הזמנות נשמרות מול Supabase והקרדיטים מתעדכנים בזמן אמת."
+                    : "Bookings save to Supabase and credits update in real time."
+                  : locale === "he"
+                    ? "הדמו כולל מנוי פעיל כדי לבדוק את חוויית הלקוח."
+                    : "The demo includes an active membership for testing the client flow."}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[styles.statsGrid, { flexDirection: rowDirection }]}>
+            <MiniStat label={locale === "he" ? "תוכנית" : "Plan"} value={locale === "he" ? "פעיל" : "Active"} />
+            <MiniStat label={locale === "he" ? "קרדיטים" : "Credits"} value="7" />
+            <MiniStat label={locale === "he" ? "ביטול" : "Cancel"} value="6h" />
           </View>
 
           {signedIn ? (
@@ -146,12 +164,40 @@ export default function ProfileScreen() {
           )}
         </SurfaceCard>
 
+        <View style={styles.twoCards}>
+          <SurfaceCard style={styles.infoCard}>
+            <IconBubble name="calendar-outline" />
+            <Text style={[styles.cardTitle, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he" ? "הזמנות" : "Bookings"}
+            </Text>
+            <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he" ? "שיעורים קרובים, המתנה וביטולים מרוכזים בלשונית אחת." : "Upcoming classes, waitlists, and cancellations stay in one place."}
+            </Text>
+          </SurfaceCard>
+          <SurfaceCard style={styles.infoCard}>
+            <IconBubble name="card-outline" />
+            <Text style={[styles.cardTitle, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he" ? "תשלומים" : "Payments"}
+            </Text>
+            <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
+              {locale === "he" ? "תשלום מאובטח, קרדיטים ומנויים מחוברים לזרימת ההזמנה." : "Secure checkout, credits, and plans are tied to booking."}
+            </Text>
+          </SurfaceCard>
+        </View>
+
+        <SurfaceCard>
+          <Text style={[styles.cardTitle, { textAlign: align, writingDirection: direction }]}>
+            {locale === "he" ? "מדיניות הסטודיו" : "Studio policy"}
+          </Text>
+          <PolicyLine text={locale === "he" ? "אפשר לבטל עד 6 שעות לפני השיעור." : "Cancel up to 6 hours before class."} />
+          <PolicyLine text={locale === "he" ? "בהמתנה, קרדיט יורד רק אחרי אישור מקום." : "Waitlist credits are used only after a spot is confirmed."} />
+          <PolicyLine text={locale === "he" ? "הסטודיו שולח תזכורת לפני כל שיעור." : "The studio sends a reminder before every class."} />
+        </SurfaceCard>
+
         {!hasBackend ? (
           <SurfaceCard>
             <Text style={[styles.body, styles.warning, { textAlign: align, writingDirection: direction }]}>
-              {locale === "he"
-                ? "חסרה הגדרת Supabase מקומית."
-                : "Local Supabase configuration is missing."}
+              {locale === "he" ? "חסרה הגדרת Supabase מקומית." : "Local Supabase configuration is missing."}
             </Text>
           </SurfaceCard>
         ) : null}
@@ -161,7 +207,33 @@ export default function ProfileScreen() {
             <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>{message}</Text>
           </SurfaceCard>
         ) : null}
-      </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.miniStat}>
+      <Text style={styles.miniStatValue}>{value}</Text>
+      <Text style={styles.miniStatLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function IconBubble({ name }: { name: React.ComponentProps<typeof Ionicons>["name"] }) {
+  return (
+    <View style={styles.iconBubble}>
+      <Ionicons name={name} size={18} color={colors.success} />
+    </View>
+  );
+}
+
+function PolicyLine({ text }: { text: string }) {
+  return (
+    <View style={styles.policyLine}>
+      <Ionicons name="checkmark-circle-outline" size={18} color={colors.success} />
+      <Text style={styles.policyText}>{text}</Text>
     </View>
   );
 }
@@ -172,19 +244,39 @@ const styles = StyleSheet.create({
     backgroundColor: fitness.appBg,
   },
   content: {
-    flex: 1,
     gap: spacing.lg,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.xl,
   },
-  identityBlock: {
+  profileHero: {
+    gap: spacing.lg,
+  },
+  identityTop: {
+    alignItems: "center",
+    gap: spacing.md,
+  },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 24,
+    backgroundColor: colors.goldSoft,
+    borderWidth: 1,
+    borderColor: "rgba(184,138,66,0.32)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarText: {
+    color: colors.gold,
+    fontSize: 22,
+    fontWeight: "900",
+  },
+  identityCopy: {
+    flex: 1,
     gap: spacing.xs,
-    marginBottom: spacing.md,
   },
   label: {
     ...typography.label,
-    color: fitness.textSecondary,
+    color: fitness.textMuted,
     textTransform: "uppercase",
   },
   email: {
@@ -195,7 +287,60 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: fitness.textSecondary,
   },
+  statsGrid: {
+    gap: spacing.sm,
+  },
+  miniStat: {
+    flex: 1,
+    minHeight: 82,
+    borderRadius: radii.medium,
+    backgroundColor: colors.ivory,
+    borderWidth: 1,
+    borderColor: fitness.border,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: spacing.sm,
+  },
+  miniStatValue: {
+    color: fitness.textPrimary,
+    fontSize: 20,
+    fontWeight: "900",
+  },
+  miniStatLabel: {
+    color: fitness.textMuted,
+    fontSize: 11,
+    fontWeight: "800",
+    marginTop: 4,
+  },
+  twoCards: {
+    gap: spacing.md,
+  },
+  infoCard: {
+    gap: spacing.sm,
+  },
+  iconBubble: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    backgroundColor: fitness.successGlow,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cardTitle: {
+    ...typography.h3,
+    color: fitness.textPrimary,
+  },
+  policyLine: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  policyText: {
+    ...typography.bodySmall,
+    color: fitness.textSecondary,
+    flex: 1,
+  },
   warning: {
-    color: "#A66A1F",
+    color: colors.warning,
   },
 });

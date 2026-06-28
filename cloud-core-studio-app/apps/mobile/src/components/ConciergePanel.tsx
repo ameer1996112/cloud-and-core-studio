@@ -4,23 +4,23 @@ import { useCopy } from "@/i18n/LocaleProvider";
 import { colors, fitness, radii } from "@/theme/colors";
 
 export function ConciergePanel({ requests }: { requests: ConciergeRequest[] }) {
-  const { locale, direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const align = textAlign;
 
   return (
     <View style={styles.panel}>
-      <Text style={[styles.title, { textAlign: align }]}>
+      <Text style={[styles.title, { textAlign: align, writingDirection: direction }]}>
         {locale === "he" ? "טיפול הסטודיו" : "Studio care"}
       </Text>
-      <Text style={[styles.body, { textAlign: align }]}>
+      <Text style={[styles.body, { textAlign: align, writingDirection: direction }]}>
         {locale === "he" ? "בקשות פעילות ומענה מהיר מהצוות." : "Active requests and quick team follow-up."}
       </Text>
       {requests.map((request) => (
-        <View key={request.id} style={[styles.requestRow, direction === "rtl" && styles.rowReverse]}>
+        <View key={request.id} style={[styles.requestRow, { flexDirection: rowDirection }]}>
           <View style={[styles.requestDot, request.tone === "approved" && styles.requestDotApproved]} />
           <View style={{ flex: 1 }}>
-            <Text style={[styles.requestTitle, { textAlign: align }]}>{getLocalizedText(request.title, locale)}</Text>
-            <Text style={[styles.requestBody, { textAlign: align }]}>{getLocalizedText(request.status, locale)}</Text>
+            <Text style={[styles.requestTitle, { textAlign: align, writingDirection: direction }]}>{getLocalizedText(request.title, locale)}</Text>
+            <Text style={[styles.requestBody, { textAlign: align, writingDirection: direction }]}>{getLocalizedText(request.status, locale)}</Text>
           </View>
         </View>
       ))}
@@ -56,9 +56,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: fitness.border,
   },
-  rowReverse: {
-    flexDirection: "row-reverse",
-  },
   requestDot: {
     width: 9,
     height: 9,
@@ -89,3 +86,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
+

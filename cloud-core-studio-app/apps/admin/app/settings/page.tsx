@@ -4,7 +4,7 @@ import { StudioApp } from "@/components/StudioApp";
 export default async function SettingsPage() {
   return (
     <AdminGuard>
-      <StudioApp initialScreen="admin-settings" />
+      <StudioApp initialScreen="settings" />
     </AdminGuard>
   );
 }

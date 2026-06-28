@@ -9,6 +9,9 @@ import { colors, radii, spacing } from "@/theme/colors";
 import { useCopy } from "@/i18n/LocaleProvider";
 
 const allFilter = "all";
+const timeFilters = ["any", "morning", "afternoon", "evening"];
+const levelFilters = ["any", "beginner", "all_levels", "intermediate", "advanced"];
+const availabilityFilters = ["any", "available", "waitlist"];
 
 function titleFor(session: ClassSession, locale: "he" | "en") {
   return locale === "he" ? session.titleHe : session.titleEn;
@@ -30,6 +33,10 @@ export default function ScheduleScreen() {
   const [message, setMessage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState(allFilter);
+  const [selectedDate, setSelectedDate] = useState(allFilter);
+  const [selectedTime, setSelectedTime] = useState("any");
+  const [selectedLevel, setSelectedLevel] = useState("any");
+  const [selectedAvailability, setSelectedAvailability] = useState("any");
 
   useEffect(() => {
     let isMounted = true;
@@ -59,20 +66,46 @@ export default function ScheduleScreen() {
     return [allFilter, ...types];
   }, [sessions]);
 
+  const dateFilters = useMemo(() => {
+    const dates = Array.from(new Set(sessions.map((session) => new Date(session.startsAt).toDateString())));
+    return [allFilter, ...dates];
+  }, [sessions]);
+
   const filteredSessions = useMemo(() => {
     const needle = search.trim().toLowerCase();
 
     return sessions.filter((session) => {
       const matchesType = selectedType === allFilter || session.categoryId === selectedType;
+      const matchesDate = selectedDate === allFilter || new Date(session.startsAt).toDateString() === selectedDate;
+      const hour = new Date(session.startsAt).getHours();
+      const matchesTime =
+        selectedTime === "any" ||
+        (selectedTime === "morning" && hour < 12) ||
+        (selectedTime === "afternoon" && hour >= 12 && hour < 17) ||
+        (selectedTime === "evening" && hour >= 17);
+      const remaining = session.capacity - session.bookedCount;
+      const matchesAvailability =
+        selectedAvailability === "any" ||
+        (selectedAvailability === "available" && remaining > 0 && session.status !== "cancelled" && session.status !== "closed") ||
+        (selectedAvailability === "waitlist" && (remaining <= 0 || session.status === "waitlist" || session.status === "full"));
+      const matchesLevel = selectedLevel === "any" || session.level === selectedLevel;
       const matchesSearch =
         !needle ||
         titleFor(session, locale).toLowerCase().includes(needle) ||
         session.instructor.displayName.toLowerCase().includes(needle) ||
         session.roomName.toLowerCase().includes(needle);
 
-      return matchesType && matchesSearch;
+      return matchesType && matchesDate && matchesTime && matchesAvailability && matchesLevel && matchesSearch;
     });
-  }, [locale, search, selectedType, sessions]);
+  }, [locale, search, selectedAvailability, selectedDate, selectedLevel, selectedTime, selectedType, sessions]);
+
+  const resetFilters = () => {
+    setSelectedType(allFilter);
+    setSelectedDate(allFilter);
+    setSelectedTime("any");
+    setSelectedLevel("any");
+    setSelectedAvailability("any");
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -110,6 +143,31 @@ export default function ScheduleScreen() {
           />
         </View>
 
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.dateRow, { flexDirection: rowDirection }]}>
+          {dateFilters.map((date) => {
+            const isSelected = selectedDate === date;
+            const dateValue = date === allFilter ? null : new Date(date);
+            return (
+              <Pressable key={date} onPress={() => setSelectedDate(date)} style={[styles.dateChip, isSelected && styles.dateChipSelected]}>
+                <Text style={[styles.dateDay, isSelected && styles.dateTextSelected]}>
+                  {dateValue
+                    ? new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", { weekday: "short" }).format(dateValue)
+                    : locale === "he"
+                      ? "כל השבוע"
+                      : "Week"}
+                </Text>
+                <Text style={[styles.dateNumber, isSelected && styles.dateTextSelected]}>
+                  {dateValue
+                    ? new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", { day: "numeric" }).format(dateValue)
+                    : locale === "he"
+                      ? "הכל"
+                      : "All"}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterRow, { flexDirection: rowDirection }]}>
           {typeFilters.map((type) => {
             const isSelected = selectedType === type;
@@ -122,6 +180,39 @@ export default function ScheduleScreen() {
             );
           })}
         </ScrollView>
+
+        <View style={styles.filterPanel}>
+          <Text style={[styles.filterPanelTitle, { textAlign, writingDirection: direction }]}>
+            {locale === "he" ? "סינון מהיר" : "Quick filters"}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterRow, { flexDirection: rowDirection }]}>
+            {availabilityFilters.map((value) => (
+              <Pressable key={value} onPress={() => setSelectedAvailability(value)} style={[styles.filterChip, selectedAvailability === value && styles.filterChipSelected]}>
+                <Text style={[styles.filterText, selectedAvailability === value && styles.filterTextSelected]}>
+                  {value === "any" ? (locale === "he" ? "כל הזמינות" : "Any availability") : value === "available" ? (locale === "he" ? "מקומות פתוחים" : "Open spots") : locale === "he" ? "המתנה" : "Waitlist"}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterRow, { flexDirection: rowDirection }]}>
+            {timeFilters.map((value) => (
+              <Pressable key={value} onPress={() => setSelectedTime(value)} style={[styles.filterChip, selectedTime === value && styles.filterChipSelected]}>
+                <Text style={[styles.filterText, selectedTime === value && styles.filterTextSelected]}>
+                  {value === "any" ? (locale === "he" ? "כל היום" : "Any time") : value}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterRow, { flexDirection: rowDirection }]}>
+            {levelFilters.map((value) => (
+              <Pressable key={value} onPress={() => setSelectedLevel(value)} style={[styles.filterChip, selectedLevel === value && styles.filterChipSelected]}>
+                <Text style={[styles.filterText, selectedLevel === value && styles.filterTextSelected]}>
+                  {value === "any" ? (locale === "he" ? "כל הרמות" : "Any level") : value.replace("_", " ")}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
 
         {message ? <Text style={[styles.notice, { textAlign, writingDirection: direction }]}>{message}</Text> : null}
 
@@ -139,6 +230,9 @@ export default function ScheduleScreen() {
               <Text style={[styles.emptyBody, { textAlign, writingDirection: direction }]}>
                 {locale === "he" ? "נסו לשנות חיפוש או סוג שיעור." : "Try another search or class type."}
               </Text>
+              <Pressable onPress={resetFilters} style={styles.resetButton}>
+                <Text style={styles.resetButtonText}>{locale === "he" ? "איפוס סינון" : "Reset filters"}</Text>
+              </Pressable>
             </View>
           )}
         </View>
@@ -224,6 +318,38 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingRight: spacing.md,
   },
+  dateRow: {
+    gap: spacing.sm,
+    paddingRight: spacing.md,
+  },
+  dateChip: {
+    width: 76,
+    minHeight: 76,
+    borderRadius: radii.medium,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.sand,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
+  dateChipSelected: {
+    backgroundColor: colors.navy,
+    borderColor: colors.navy,
+  },
+  dateDay: {
+    color: colors.slate,
+    fontSize: 12,
+    fontWeight: "800",
+  },
+  dateNumber: {
+    color: colors.navy,
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  dateTextSelected: {
+    color: colors.white,
+  },
   filterChip: {
     borderWidth: 1,
     borderColor: colors.sand,
@@ -243,6 +369,19 @@ const styles = StyleSheet.create({
   },
   filterTextSelected: {
     color: colors.gold,
+  },
+  filterPanel: {
+    gap: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.sand,
+    borderRadius: radii.large,
+    backgroundColor: colors.white,
+    padding: spacing.md,
+  },
+  filterPanelTitle: {
+    color: colors.navy,
+    fontSize: 13,
+    fontWeight: "900",
   },
   notice: {
     borderRadius: radii.medium,
@@ -274,5 +413,17 @@ const styles = StyleSheet.create({
   emptyBody: {
     color: colors.slate,
     fontSize: 14,
+  },
+  resetButton: {
+    marginTop: spacing.sm,
+    borderRadius: radii.pill,
+    backgroundColor: colors.navy,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+  },
+  resetButtonText: {
+    color: colors.white,
+    fontSize: 13,
+    fontWeight: "900",
   },
 });

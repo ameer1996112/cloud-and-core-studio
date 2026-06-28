@@ -19,8 +19,8 @@ export function PremiumHero({
   recommendedSession: ClassSession;
   insight: SessionInsight;
 }) {
-  const { locale, direction } = useCopy();
-  const align = direction === "rtl" ? "right" : "left";
+  const { locale, direction, rowDirection, textAlign } = useCopy();
+  const align = textAlign;
   const title = locale === "he" ? recommendedSession.titleHe : recommendedSession.titleEn;
   const instructor = recommendedSession.instructor.displayName;
   const primary = getLocalizedText(insight.bookingCta, locale);
@@ -53,14 +53,14 @@ export function PremiumHero({
           </View>
 
           <View style={styles.heroCopy}>
-            <Text style={[styles.eyebrow, { textAlign: align }]}>
+            <Text style={[styles.eyebrow, { textAlign: align, writingDirection: direction }]}>
               {locale === "he" ? "הבחירה החזקה להיום" : "Best match today"}
             </Text>
-            <Text style={[styles.line, { textAlign: align }]}>
+            <Text style={[styles.line, { textAlign: align, writingDirection: direction }]}>
               {getEditorialLine(experience.editorial.heroLine, locale)}
             </Text>
-            <Text style={[styles.classTitle, { textAlign: align }]}>{title}</Text>
-            <Text style={[styles.context, { textAlign: align }]}>
+            <Text style={[styles.classTitle, { textAlign: align, writingDirection: direction }]}>{title}</Text>
+            <Text style={[styles.context, { textAlign: align, writingDirection: direction }]}>
               {timeLine} · {instructor} · {spotLine}
             </Text>
           </View>
@@ -71,7 +71,7 @@ export function PremiumHero({
             </Pressable>
           </Link>
 
-          <View style={[styles.pulseRow, direction === "rtl" && styles.rowReverse]}>
+          <View style={[styles.pulseRow, { flexDirection: rowDirection }]}>
             <Pulse
               label={locale === "he" ? "קרדיטים" : "Credits"}
               value={`${experience.membership.entitlement.remainingCredits ?? "∞"}`}
@@ -189,9 +189,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
   },
-  rowReverse: {
-    flexDirection: "row-reverse",
-  },
   pulse: {
     flex: 1,
     minWidth: 0,
@@ -215,3 +212,4 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
 });
+

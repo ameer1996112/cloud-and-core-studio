@@ -7,8 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:mobile": "npm --workspace @cloud-core/mobile run start",
-    "dev:admin": "npm --workspace @cloud-core/admin run dev",
+    "dev:mobile": "npm --workspace @cloud-core/mobile run start --",
+    "dev:admin": "npm --workspace @cloud-core/admin run dev --",
     "lint": "npm --workspaces run lint",
     "typecheck": "npm --workspaces run typecheck",
     "test": "npm --workspaces run test",

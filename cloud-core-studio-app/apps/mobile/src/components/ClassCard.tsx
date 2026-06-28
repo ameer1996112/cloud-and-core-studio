@@ -1,7 +1,7 @@
 import type { ClassSession, Locale } from "@cloud-core/shared";
 import { Link } from "expo-router";
 import { useCopy } from "@/i18n/LocaleProvider";
-import { colors, radii } from "@/theme/colors";
+import { colors, radii, spacing } from "@/theme/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 function formatTime(value: string) {
@@ -13,29 +13,65 @@ function titleFor(session: ClassSession, locale: Locale) {
 }
 
 export function ClassCard({ session }: { session: ClassSession }) {
-  const { t, locale, direction } = useCopy();
+  const { t, locale, direction, rowDirection } = useCopy();
   const remaining = Math.max(session.capacity - session.bookedCount, 0);
   const waitlisted = session.status === "waitlist" || remaining === 0;
+  const fewSpots = remaining > 0 && remaining <= 2;
+  const isCancelled = session.status === "cancelled" || session.status === "closed";
+  const duration = Math.round((new Date(session.endsAt).getTime() - new Date(session.startsAt).getTime()) / 60000);
+  const actionLabel = isCancelled
+    ? locale === "he"
+      ? "בוטל"
+      : "Cancelled"
+    : waitlisted
+      ? t.joinWaitlist
+      : locale === "he"
+        ? "הזמנה"
+        : "Book";
+  const statusLabel = isCancelled
+    ? locale === "he"
+      ? "בוטל"
+      : "Cancelled"
+    : waitlisted
+      ? `${t.waitlist} · ${session.waitlistCount}`
+      : fewSpots
+        ? locale === "he"
+          ? `נותרו ${remaining} מקומות`
+          : `Only ${remaining} spots left`
+        : `${remaining} ${t.available}`;
 
   return (
     <Link href={`/class/${session.id}`} asChild>
-      <Pressable style={styles.card}>
-        <View style={[styles.top, direction === "rtl" && styles.rowReverse]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${titleFor(session, locale)}, ${statusLabel}`}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed, isCancelled && styles.cancelledCard]}
+      >
+        <View style={[styles.top, { flexDirection: rowDirection }]}>
           <View style={styles.timePill}>
             <Text style={styles.time}>{formatTime(session.startsAt)}</Text>
+            <Text style={styles.timeMeta}>{duration}m</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.title, { textAlign: direction === "rtl" ? "right" : "left" }]}>{titleFor(session, locale)}</Text>
-            <Text style={[styles.meta, { textAlign: direction === "rtl" ? "right" : "left" }]}>
+            <Text style={[styles.title, { textAlign: direction === "rtl" ? "right" : "left", writingDirection: direction }]}>{titleFor(session, locale)}</Text>
+            <Text style={[styles.meta, { textAlign: direction === "rtl" ? "right" : "left", writingDirection: direction }]}>
               {session.instructor.displayName} · {session.roomName}
             </Text>
+            <View style={[styles.metaRow, { flexDirection: rowDirection }]}>
+              <Text style={[styles.metaChip, { writingDirection: direction }]}>{session.level.replace("_", " ")}</Text>
+              <Text style={[styles.metaChip, { writingDirection: direction }]}>
+                {locale === "he" ? `ביטול עד ${session.cancellationWindowHours} שעות` : `Cancel ${session.cancellationWindowHours}h before`}
+              </Text>
+            </View>
           </View>
         </View>
-        <View style={[styles.footer, direction === "rtl" && styles.rowReverse]}>
-          <Text style={[styles.status, waitlisted && styles.waitlist]}>
-            {waitlisted ? `${t.waitlist} · ${session.waitlistCount}` : `${remaining} ${t.available}`}
+        <View style={[styles.footer, { flexDirection: rowDirection }]}>
+          <Text style={[styles.status, waitlisted && styles.waitlist, isCancelled && styles.cancelledText, { writingDirection: direction }]}>
+            {statusLabel}
           </Text>
-          <Text style={styles.level}>{waitlisted ? "86% promotion odds" : session.level.replace("_", " ")}</Text>
+          <View style={[styles.ctaPill, waitlisted && styles.waitlistCta, isCancelled && styles.disabledCta]}>
+            <Text style={[styles.ctaText, waitlisted && styles.waitlistCtaText, isCancelled && styles.cancelledText]}>{actionLabel}</Text>
+          </View>
         </View>
       </Pressable>
     </Link>
@@ -45,8 +81,8 @@ export function ClassCard({ session }: { session: ClassSession }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    borderRadius: radii.large,
-    padding: 16,
+    borderRadius: radii.medium,
+    padding: spacing.md,
     gap: 16,
     borderWidth: 1,
     borderColor: colors.sand,
@@ -55,12 +91,15 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 10 },
   },
+  cardPressed: {
+    transform: [{ scale: 0.985 }],
+  },
+  cancelledCard: {
+    opacity: 0.72,
+  },
   top: {
     flexDirection: "row",
     gap: 14,
-  },
-  rowReverse: {
-    flexDirection: "row-reverse",
   },
   timePill: {
     width: 76,
@@ -75,6 +114,12 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     fontSize: 18,
   },
+  timeMeta: {
+    color: colors.goldSoft,
+    fontSize: 11,
+    fontWeight: "800",
+    marginTop: 2,
+  },
   title: {
     color: colors.navy,
     fontSize: 18,
@@ -84,6 +129,22 @@ const styles = StyleSheet.create({
     color: colors.slate,
     marginTop: 4,
     fontSize: 14,
+  },
+  metaRow: {
+    flexWrap: "wrap",
+    gap: 6,
+    marginTop: 10,
+  },
+  metaChip: {
+    overflow: "hidden",
+    borderRadius: radii.pill,
+    backgroundColor: colors.ivory,
+    color: colors.slate,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 11,
+    fontWeight: "800",
+    textTransform: "capitalize",
   },
   footer: {
     flexDirection: "row",
@@ -97,8 +158,27 @@ const styles = StyleSheet.create({
   waitlist: {
     color: colors.warning,
   },
-  level: {
-    color: colors.slate,
-    textTransform: "capitalize",
+  cancelledText: {
+    color: colors.danger,
+  },
+  ctaPill: {
+    borderRadius: radii.pill,
+    backgroundColor: colors.navy,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  waitlistCta: {
+    backgroundColor: colors.goldSoft,
+  },
+  disabledCta: {
+    backgroundColor: colors.ivory,
+  },
+  ctaText: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: "900",
+  },
+  waitlistCtaText: {
+    color: colors.warning,
   },
 });
